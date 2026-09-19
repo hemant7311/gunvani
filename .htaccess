@@ -1,0 +1,16 @@
+RewriteEngine On
+RewriteBase /
+
+# Serve existing files and directories directly
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# Professional Clean Routes
+RewriteRule ^article/([a-zA-Z0-9_-]+)/?$ article.php?slug=$1 [L,QSA]
+RewriteRule ^category/([a-zA-Z0-9_-]+)/?$ category.php?slug=$1 [L,QSA]
+RewriteRule ^categories/?$ categories.php [L,QSA]
+RewriteRule ^search/?$ search.php [L,QSA]
+RewriteRule ^contact/?$ contact.php [L,QSA]
+RewriteRule ^verification/?$ verification.php [L,QSA]
+RewriteRule ^about-us/?$ about-us.html [L,QSA]

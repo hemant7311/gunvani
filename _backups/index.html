@@ -1,0 +1,2122 @@
+<!DOCTYPE html>
+<html lang="">
+
+<head>
+    <meta charset="utf-8">
+    <title>Gunvani News | Trusted Source for Breaking & Trending News </title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="manifest" href="site.webmanifest">
+    <!-- favicon.ico in the root directory -->
+    <link rel="apple-touch-icon" href="icon.png">
+
+    <meta name="theme-color" content="#030303">
+    <!-- google fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,500;0,700;1,300;1,500&family=Poppins:ital,wght@0,300;0,500;0,700;1,300;1,400&display=swap"
+        rel="stylesheet">
+    <link href="./css/styles.css?537a1bbd0e5129401d28" rel="stylesheet">
+</head>
+
+<body>
+
+    <!-- Header news -->
+    <header>
+    <div class="topbar">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12 col-md-5">
+                    <div class="topbar-left">
+                        <div class="topbar-text" id="date"></div>
+                    </div>
+                </div>
+                <div class="col-sm-12 col-md-7">
+                    <div class="topbar-right">
+                        <ul class="topbar-link">
+                            <li><a href="verification.php" title="">Verification</a></li>
+                            <li><a href="admin/login.php" title="">Admin</a></li>
+                        </ul>
+                        <ul class="topbar-sosmed">
+                            <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+                            <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+                            <li><a href="#"><i class="fa fa-instagram"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <script>
+                const today = new Date();
+                const options = { weekday: "long", month: "long", day: "numeric", year: "numeric" };
+                document.getElementById("date").innerText = today.toLocaleDateString("en-US", options);
+            </script>
+        </div>
+    </div>
+    <div class="navigation-wrap navigation-shadow bg-white">
+        <nav class="navbar navbar-expand-lg navbar-light bg-white">
+            <div class="container">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#main_nav99" aria-controls="main_nav99" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <a class="navbar-brand" href="index.php">
+                    <img src="images/placeholder/logos.png" alt="Gunvani News" class="img-fluid">
+                </a>
+                <div class="collapse navbar-collapse justify-content-between" id="main_nav99">
+                    <ul class="navbar-nav ml-auto" id="category-menu">
+                        <li class="nav-item"><a class="nav-link" href="index.php"> Home </a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+    <script>
+    async function loadMenuCategories() {
+        const menu = document.getElementById("category-menu");
+        if (!menu) return;
+        try {
+            const response = await fetch("categories-json.php");
+            if (!response.ok) return;
+            const categories = await response.json();
+            categories.forEach(category => {
+                const li = document.createElement("li");
+                li.className = "nav-item";
+                const a = document.createElement("a");
+                a.className = "nav-link";
+                a.href = "category.php?slug=" + encodeURIComponent(category.slug);
+                a.textContent = category.name;
+                li.appendChild(a);
+                menu.appendChild(li);
+            });
+        } catch (error) {
+            console.warn("Failed to load categories:", error);
+        }
+    }
+    loadMenuCategories();
+    </script>
+</header>
+    <!-- End Header news -->
+    <!-- Tranding news  carousel-->
+    <section class="bg-light">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="wrapp__list__article-responsive wrapp__list__article-responsive-carousel">
+                        <div class="item">
+                            <!-- Post Article -->
+                            <div class="card__post card__post-list">
+                                <div class="image-sm">
+                                    <a href="#">
+                                        <img src="images/placeholder/first.jpg" class="img-fluid" alt="">
+                                    </a>
+                                </div>
+
+
+                                <div class="card__post__body ">
+                                    <div class="card__post__content">
+
+                                        <div class="card__post__author-info mb-2">
+                                            <ul class="list-inline">
+                                                <li class="list-inline-item">
+                                                    <span class="text-primary">
+                                                        "And So It Begins...": Trump ...
+
+                                                    </span>
+                                                </li>
+                                                <li class="list-inline-item">
+                                                    <span class="text-dark text-capitalize">
+                                                        Nov 05, 2025 11:30 am IST
+                                                    </span>
+                                                </li>
+
+                                            </ul>
+                                        </div>
+                                        <div class="card__post__title">
+                                            <h6>
+                                                <a href="#">
+                                                    Trump was indeed watching, and has taken note. "...
+                                                </a>
+                                            </h6>
+                                            <!-- <p class="d-none d-lg-block d-xl-block">
+                    Maecenas accumsan tortor ut velit pharetra mollis. Proin eu nisl et arcu iaculis placerat
+                    sollicitudin ut est. In fringilla dui dui.
+                </p> -->
+
+                                        </div>
+
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <!-- Post Article -->
+                            <div class="card__post card__post-list">
+                                <div class="image-sm">
+                                    <a href="#">
+                                        <img src="images/placeholder/second.jpg" class="img-fluid" alt="">
+                                    </a>
+                                </div>
+
+
+                                <div class="card__post__body ">
+                                    <div class="card__post__content">
+
+                                        <div class="card__post__author-info mb-2">
+                                            <ul class="list-inline">
+                                                <li class="list-inline-item">
+                                                    <span class="text-primary">
+                                                        Banned Haris Rauf Handed ...
+
+                                                    </span>
+                                                </li>
+                                                <li class="list-inline-item">
+                                                    <span class="text-dark text-capitalize">
+                                                        Nov 05, 2025 11:26 am IST
+                                                    </span>
+                                                </li>
+
+                                            </ul>
+                                        </div>
+                                        <div class="card__post__title">
+                                            <h6>
+                                                <a href="#">
+                                                    A report has claimed that Haris Rauf was not informed ...
+                                                </a>
+                                            </h6>
+                                            <!-- <p class="d-none d-lg-block d-xl-block">
+                    Maecenas accumsan tortor ut velit pharetra mollis. Proin eu nisl et arcu iaculis placerat
+                    sollicitudin ut est. In fringilla dui dui.
+                </p> -->
+
+                                        </div>
+
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <!-- Post Article -->
+                            <div class="card__post card__post-list">
+                                <div class="image-sm">
+                                    <a href="#">
+                                        <img src="images/placeholder/three.webp" class="img-fluid" alt="">
+                                    </a>
+                                </div>
+
+
+                                <div class="card__post__body ">
+                                    <div class="card__post__content">
+
+                                        <div class="card__post__author-info mb-2">
+                                            <ul class="list-inline">
+                                                <li class="list-inline-item">
+                                                    <span class="text-primary">
+                                                        4 Run Over At UP Railway Station ...
+                                                    </span>
+                                                </li>
+                                                <li class="list-inline-item">
+                                                    <span class="text-dark text-capitalize">
+
+                                                        Nov 05, 2025 10:47 am IST
+                                                    </span>
+                                                </li>
+
+                                            </ul>
+                                        </div>
+                                        <div class="card__post__title">
+                                            <h6>
+                                                <a href="#">
+                                                    Four people have been run over by a train in Uttar Pradesh's ..
+                                                </a>
+                                            </h6>
+                                            <!-- <p class="d-none d-lg-block d-xl-block">
+                    Maecenas accumsan tortor ut velit pharetra mollis. Proin eu nisl et arcu iaculis placerat
+                    sollicitudin ut est. In fringilla dui dui.
+                </p> -->
+
+                                        </div>
+
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <!-- Post Article -->
+                            <div class="card__post card__post-list">
+                                <div class="image-sm">
+                                    <a href="#">
+                                        <img src="images/placeholder/four.webp" class="img-fluid" alt="">
+                                    </a>
+                                </div>
+
+
+                                <div class="card__post__body ">
+                                    <div class="card__post__content">
+
+                                        <div class="card__post__author-info mb-2">
+                                            <ul class="list-inline">
+                                                <li class="list-inline-item">
+                                                    <span class="text-primary">
+                                                        Border 2: Varun Dhawan ...
+                                                </li>
+                                                <li class="list-inline-item">
+                                                    <span class="text-dark text-capitalize">
+                                                        Nov 05, 2025 12:39 pm IST
+                                                    </span>
+                                                    </span>
+                                                </li>
+
+                                            </ul>
+                                        </div>
+                                        <div class="card__post__title">
+                                            <h6>
+                                                <a href="#">
+                                                    Border 2, the sequel to 1997's Border, is set to release on ..
+                                                </a>
+                                            </h6>
+                                            <!-- <p class="d-none d-lg-block d-xl-block">
+                    Maecenas accumsan tortor ut velit pharetra mollis. Proin eu nisl et arcu iaculis placerat
+                    sollicitudin ut est. In fringilla dui dui.
+                </p> -->
+
+                                        </div>
+
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <!-- Post Article -->
+                            <div class="card__post card__post-list">
+                                <div class="image-sm">
+                                    <a href="#">
+                                        <img src="images/placeholder/five.webp" class="img-fluid" alt="">
+                                    </a>
+                                </div>
+
+
+                                <div class="card__post__body ">
+                                    <div class="card__post__content">
+
+                                        <div class="card__post__author-info mb-2">
+                                            <ul class="list-inline">
+                                                <li class="list-inline-item">
+                                                    <span class="text-primary">
+                                                        Top Orthopedic Expert ..
+                                                    </span>
+                                                </li>
+                                                <li class="list-inline-item">
+                                                    <span class="text-dark text-capitalize">
+                                                        descember 09, 2016
+                                                    </span>
+                                                </li>
+
+                                            </ul>
+                                        </div>
+                                        <div class="card__post__title">
+                                            <h6>
+                                                <a href="#">
+                                                    Whether You're Struggling with Knee Pain, Osteoarthritis, Joint ..
+                                                </a>
+                                            </h6>
+                                            <!-- <p class="d-none d-lg-block d-xl-block">
+                    Maecenas accumsan tortor ut velit pharetra mollis. Proin eu nisl et arcu iaculis placerat
+                    sollicitudin ut est. In fringilla dui dui.
+                </p> -->
+
+                                        </div>
+
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <!-- Post Article -->
+                            <div class="card__post card__post-list">
+                                <div class="image-sm">
+                                    <a href="#">
+                                        <img src="images/placeholder/six.webp" class="img-fluid" alt="">
+                                    </a>
+                                </div>
+
+
+                                <div class="card__post__body ">
+                                    <div class="card__post__content">
+
+                                        <div class="card__post__author-info mb-2">
+                                            <ul class="list-inline">
+                                                <li class="list-inline-item">
+                                                    <span class="text-primary">
+                                                        Yuvraj Singh Shares Old ..
+                                                    </span>
+                                                </li>
+                                                <li class="list-inline-item">
+                                                    <span class="text-dark text-capitalize">
+                                                        Nov 05, 2025 12:16 pm IST
+
+                                                    </span>
+                                                </li>
+
+                                            </ul>
+                                        </div>
+                                        <div class="card__post__title">
+                                            <h6>
+                                                <a href="#">
+                                                    Yuvraj Singh paid a glorious tribute to 'king' ..
+                                                </a>
+                                            </h6>
+                                            <!-- <p class="d-none d-lg-block d-xl-block">
+                    Maecenas accumsan tortor ut velit pharetra mollis. Proin eu nisl et arcu iaculis placerat
+                    sollicitudin ut est. In fringilla dui dui.
+                </p> -->
+
+                                        </div>
+
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- End Tranding news carousel -->
+
+    <!-- Popular news -->
+    <section>
+        <!-- Popular news  header-->
+        <div class="popular__news-header">
+            <div class="container">
+                <div class="row no-gutters">
+                    <div class="col-md-8 ">
+                        <div class="card__post-carousel">
+                            <div class="item">
+                                <!-- Post Article -->
+                                <div class="card__post">
+                                    <div class="card__post__body">
+                                        <a href="#">
+                                            <img src="images/placeholder/seven.jpg" class="img-fluid" alt="">
+                                        </a>
+                                        <div class="card__post__content bg__post-cover">
+
+                                            <div class="card__post__title">
+                                                <h2>
+                                                    <a href="#">
+                                                        Time For Shubman Gill To Up The Ante As India Look Favourites vs
+                                                        Australia
+
+                                                    </a>
+                                                </h2>
+                                            </div>
+                                            <div class="card__post__author-info">
+                                                <ul class="list-inline">
+
+                                                    <li class="list-inline-item">
+                                                        <span style="color: #c00;">
+                                                            Nov 05, 2025 12:46 pm IST
+                                                        </span>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                            <div class="item">
+                                <!-- Post Article -->
+                                <div class="card__post">
+                                    <div class="card__post__body">
+                                        <a href="#">
+                                            <img src="images/placeholder/eight.webp" class="img-fluid" alt="">
+                                        </a>
+                                        <div class="card__post__content bg__post-cover">
+
+                                            <div class="card__post__title">
+                                                <h2>
+                                                    <a href="#">
+                                                        Call of Duty: Black Ops 7 PC Specifications, Preloading Times
+                                                        Revealed; Activision Confirms Handheld Support
+
+                                                    </a>
+                                                </h2>
+                                            </div>
+                                            <div class="card__post__author-info">
+                                                <ul class="list-inline">
+                                                    <li class="list-inline-item">
+
+                                                    </li>
+                                                    <li class="list-inline-item">
+                                                        <span style="color: #c00;">
+                                                            Nov 05, 2025 13:14 pm
+                                                        </span>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="popular__news-right">
+                            <!-- Post Article -->
+                            <div class="card__post ">
+                                <div class="card__post__body card__post__transition">
+                                    <a href="#">
+                                        <img src="images/placeholder/nine.jpg" class="img-fluid" alt="">
+                                    </a>
+                                    <div class="card__post__content bg__post-cover">
+
+                                        <div class="card__post__title">
+                                            <h5>
+                                                <a href="#">
+                                                    "Call of Duty: Black Ops 7 - PC Specs, Preloading & Handheld Support
+                                                    Revealed!"</a>
+                                            </h5>
+                                        </div>
+                                        <div class="card__post__author-info">
+                                            <ul class="list-inline">
+                                                <li class="list-inline-item">
+
+                                                </li>
+                                                <li class="list-inline-item">
+                                                    <span style="color: #c00;">
+                                                        Descember 09, 2025
+                                                    </span>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <!-- Post Article -->
+                            <div class="card__post ">
+                                <div class="card__post__body card__post__transition">
+                                    <a href="#">
+                                        <img src="images/placeholder/ten.jpg" class="img-fluid" alt="">
+                                    </a>
+                                    <div class="card__post__content bg__post-cover">
+
+                                        <div class="card__post__title">
+                                            <h5>
+                                                <a href="#">
+                                                    "Everything You Need to Know About Call of Duty: Black Ops 7 � PC
+                                                    Requirements, Preloading, and Handheld Play!"</a>
+                                            </h5>
+                                        </div>
+                                        <div class="card__post__author-info">
+                                            <ul class="list-inline">
+                                                <li class="list-inline-item">
+
+                                                </li>
+                                                <li class="list-inline-item">
+                                                    <span style="color: #c00;">
+                                                        Descember 20, 2025
+                                                    </span>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End Popular news header-->
+        <!-- Popular news carousel -->
+        <div class="popular__news-header-carousel">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="top__news__slider">
+                            <div class="item">
+                                <!-- Post Article -->
+                                <div class="article__entry">
+                                    <div class="article__image">
+                                        <a href="#">
+                                            <img src="images/placeholder/eleven.jpg" alt="" class="img-fluid">
+                                        </a>
+                                    </div>
+                                    <div class="article__content">
+                                        <ul class="list-inline">
+
+                                            <li class="list-inline-item">
+                                                <span style="color: #c00;">
+                                                    descember 11, 2025
+                                                </span>
+                                            </li>
+                                        </ul>
+                                        <h5>
+                                            <a href="#">
+                                                The astronomer said that it may have originated from ..
+
+
+                                            </a>
+                                        </h5>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <!-- Post Article -->
+                                <div class="article__entry">
+                                    <div class="article__image">
+                                        <a href="#">
+                                            <img src="images/placeholder/twelve.webp" alt="" class="img-fluid">
+                                        </a>
+                                    </div>
+                                    <div class="article__content">
+                                        <ul class="list-inline">
+
+
+                                            <li class="list-inline-item">
+                                                <span style="color: #c00;">
+                                                    Nov 05, 2025 12:43 pm IST
+                                                </span>
+                                            </li>
+                                        </ul>
+                                        <h5>
+                                            <a href="#">
+                                                Rs 70 Crore Fraud At EPFO Credit Society..
+                                            </a>
+                                        </h5>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <!-- Post Article -->
+                                <div class="article__entry">
+                                    <div class="article__image">
+                                        <a href="#">
+                                            <img src="images/placeholder/first1.jpg" alt="" class="img-fluid">
+                                        </a>
+                                    </div>
+                                    <div class="article__content">
+                                        <ul class="list-inline">
+
+                                            <li class="list-inline-item">
+                                                <span style="color: #c00;">
+                                                    Nov 05, 2025 13:40 pm IST
+                                                </span>
+                                            </li>
+                                        </ul>
+                                        <h5>
+                                            <a href="#">
+                                                Dr Sayammagaru says that individuals ..
+                                            </a>
+                                        </h5>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <!-- Post Article -->
+                                <div class="article__entry">
+                                    <div class="article__image">
+                                        <a href="#">
+                                            <img src="images/placeholder/first2.webp" alt="" class="img-fluid">
+                                        </a>
+                                    </div>
+                                    <div class="article__content">
+                                        <ul class="list-inline">
+
+
+                                            <li class="list-inline-item">
+                                                <span style="color: #c00;">
+                                                    Nov 05, 2025 13:24 pm IST
+                                                </span>
+                                            </li>
+                                        </ul>
+                                        <h5>
+                                            <a href="#">
+                                                With a mazy 90-meter run and clinical finish, ..
+                                            </a>
+                                        </h5>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <!-- Post Article -->
+                                <div class="article__entry">
+                                    <div class="article__image">
+                                        <a href="#">
+                                            <img src="images/placeholder/first3.jpg" alt="" class="img-fluid">
+                                        </a>
+                                    </div>
+                                    <div class="article__content">
+                                        <ul class="list-inline">
+
+
+                                            <li class="list-inline-item">
+                                                <span style="color: #c00;">
+                                                    descember 15, 2025
+                                                </span>
+                                            </li>
+                                        </ul>
+                                        <h5>
+                                            <a href="#">
+                                                NYC Mayoral Election Results Updates:
+                                            </a>
+                                        </h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End Popular news carousel -->
+    </section>
+    <!-- End Popular news -->
+
+    <!-- Popular news category -->
+    <section class="pt-0">
+        <div class="popular__section-news">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12 col-lg-8">
+                        <div class="wrapper__list__article">
+                            <h4 class="border_section">recent post</h4>
+                        </div>
+                        <div class="row ">
+                            <div class="col-sm-12 col-md-6 mb-4">
+                                <!-- Post Article -->
+                                <div class="card__post ">
+                                    <div class="card__post__body card__post__transition">
+                                        <a href="#">
+                                            <img src="images/placeholder/first4.jpg" class="img-fluid" alt="">
+                                        </a>
+                                        <div class="card__post__content bg__post-cover">
+
+                                            <div class="card__post__title">
+                                                <h5>
+                                                    <a href="#">
+                                                        Manjhi faces toughest political battle amid rebellion in
+                                                        HAM(S)</a>
+                                                </h5>
+                                            </div>
+                                            <div class="card__post__author-info">
+                                                <ul class="list-inline">
+                                                    <li class="list-inline-item">
+
+                                                    </li>
+                                                    <li class="list-inline-item">
+                                                        <span style="color: #c00;">
+                                                            Nov 01, 2025
+                                                        </span>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-sm-12 col-md-6 mb-4">
+                                <!-- Post Article -->
+                                <div class="card__post ">
+                                    <div class="card__post__body card__post__transition">
+                                        <a href="#">
+                                            <img src="images/placeholder/first5.jpg" class="img-fluid" alt="">
+                                        </a>
+                                        <div class="card__post__content bg__post-cover">
+
+                                            <div class="card__post__title">
+                                                <h5>
+                                                    <a href="#">
+                                                        Why the Republican party is red � even though red usually means
+                                                        the Left
+                                                    </a>
+                                                </h5>
+                                            </div>
+                                            <div class="card__post__author-info">
+                                                <ul class="list-inline">
+
+                                                    <li class="list-inline-item">
+                                                        <span style="color: #c00;">
+                                                            Nov 02, 2025
+                                                        </span>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row ">
+                            <div class="col-sm-12 col-md-6">
+                                <div class="wrapp__list__article-responsive">
+                                    <div class="mb-3">
+                                        <!-- Post Article -->
+                                        <div class="card__post card__post-list">
+                                            <div class="image-sm">
+                                                <a href="#">
+                                                    <img src="images/placeholder/first6.jpg" class="img-fluid" alt="">
+                                                </a>
+                                            </div>
+
+
+                                            <div class="card__post__body ">
+                                                <div class="card__post__content">
+
+                                                    <div class="card__post__author-info mb-2">
+                                                        <ul class="list-inline">
+
+                                                            <li class="list-inline-item">
+                                                                <span class="text-capitalize"
+                                                                    style="color: #c00 !important;">
+                                                                    Nov 04, 2025
+                                                                </span>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="card__post__title">
+                                                        <h6>
+                                                            <a href="#">
+
+
+                                                                Salman Khan is filming his upcoming movie..
+                                                            </a>
+                                                        </h6>
+                                                        <!-- <p class="d-none d-lg-block d-xl-block">
+                    Maecenas accumsan tortor ut velit pharetra mollis. Proin eu nisl et arcu iaculis placerat
+                    sollicitudin ut est. In fringilla dui dui.
+                </p> -->
+
+                                                    </div>
+
+                                                </div>
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <!-- Post Article -->
+                                        <div class="card__post card__post-list">
+                                            <div class="image-sm">
+                                                <a href="#">
+                                                    <img src="images/placeholder/first7.jpg" class="img-fluid" alt="">
+                                                </a>
+                                            </div>
+
+
+                                            <div class="card__post__body ">
+                                                <div class="card__post__content">
+
+                                                    <div class="card__post__author-info mb-2">
+                                                        <ul class="list-inline">
+
+                                                            <li class="list-inline-item">
+                                                                <span class="text-dark text-capitalize"
+                                                                    style="color: #c00 !important;">
+                                                                    Oct 30, 2025
+                                                                </span>
+                                                            </li>
+
+                                                        </ul>
+                                                    </div>
+                                                    <div class="card__post__title">
+                                                        <h6>
+                                                            <a href="#">
+                                                                Megan Thee Stallion and Klay Thompson have sparked
+                                                            </a>
+                                                        </h6>
+                                                        <!-- <p class="d-none d-lg-block d-xl-block">
+                    Maecenas accumsan tortor ut velit pharetra mollis. Proin eu nisl et arcu iaculis placerat
+                    sollicitudin ut est. In fringilla dui dui.
+                </p> -->
+
+                                                    </div>
+
+                                                </div>
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-12 col-md-6 ">
+                                <div class="wrapp__list__article-responsive">
+                                    <div class="mb-3">
+                                        <!-- Post Article -->
+                                        <div class="card__post card__post-list">
+                                            <div class="image-sm">
+                                                <a href="#">
+                                                    <img src="images/placeholder/first8.jpg" class="img-fluid" alt="">
+                                                </a>
+                                            </div>
+
+
+                                            <div class="card__post__body ">
+                                                <div class="card__post__content">
+
+                                                    <div class="card__post__author-info mb-2">
+                                                        <ul class="list-inline">
+
+                                                            <li class="list-inline-item">
+                                                                <span class="text-dark text-capitalize"
+                                                                    style="color: #c00 !important;">
+                                                                    january 05, 2026
+
+                                                                </span>
+                                                            </li>
+
+                                                        </ul>
+                                                    </div>
+                                                    <div class="card__post__title">
+                                                        <h6>
+                                                            <a href="#">
+                                                                Britney Spears has deleted her social media account
+                                                            </a>
+                                                        </h6>
+                                                        <!-- <p class="d-none d-lg-block d-xl-block">
+                    Maecenas accumsan tortor ut velit pharetra mollis. Proin eu nisl et arcu iaculis placerat
+                    sollicitudin ut est. In fringilla dui dui.
+                </p> -->
+
+                                                    </div>
+
+                                                </div>
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <!-- Post Article -->
+                                        <div class="card__post card__post-list">
+                                            <div class="image-sm">
+                                                <a href="#">
+                                                    <img src="images/placeholder/three.webp " class="img-fluid" alt="">
+                                                </a>
+                                            </div>
+
+
+                                            <div class="card__post__body ">
+                                                <div class="card__post__content">
+
+                                                    <div class="card__post__author-info mb-2">
+                                                        <ul class="list-inline">
+
+                                                            <li class="list-inline-item">
+                                                                <span class="text-dark text-capitalize"
+                                                                    style="color: #c00 !important;">
+                                                                    Nov 04, 2025,
+                                                                </span>
+                                                            </li>
+
+                                                        </ul>
+                                                    </div>
+                                                    <div class="card__post__title">
+                                                        <h6>
+                                                            <a href="#">
+                                                                Fashion designer Joy Crizildaa claims Madhampatty
+                                                            </a>
+                                                        </h6>
+                                                        <!-- <p class="d-none d-lg-block d-xl-block">
+                    Maecenas accumsan tortor ut velit pharetra mollis. Proin eu nisl et arcu iaculis placerat
+                    sollicitudin ut est. In fringilla dui dui.
+                </p> -->
+
+                                                    </div>
+
+                                                </div>
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="col-md-12 col-lg-4">
+                        <aside class="wrapper__list__article">
+                            <h4 class="border_section">popular post</h4>
+                            <div class="wrapper__list-number">
+
+                                <!-- List Article -->
+                                <div class="card__post__list">
+                                    <div class="list-number">
+                                        <span>
+                                            1
+                                        </span>
+                                    </div>
+                                    <a href="#" class="category">
+                                        Delhi
+                                    </a>
+                                    <ul class="list-inline">
+                                        <li class="list-inline-item">
+
+                                            <h5>
+                                                <a href="#">
+                                                    DDA recruitment 2025: Registration window for 1,732 vacancies
+                                                    closing on this date, check how to apply before
+                                                </a>
+                                            </h5>
+                                        </li>
+                                    </ul>
+
+                                </div>
+
+
+                                <div class="card__post__list">
+                                    <div class="list-number">
+                                        <span>
+                                            2
+                                        </span>
+                                    </div>
+                                    <a href="#" class="category">
+                                        British travel
+                                    </a>
+                                    <ul class="list-inline">
+                                        <!-- <li class="list-inline-item">
+            <a href="#" class="author-info">
+                by david hall
+            </a>
+
+        </li>
+        <li class="list-inline-item">
+            <span>
+                <i class="fa fa-calendar"></i>
+                march 01, 2020
+            </span>
+
+        </li> -->
+                                        <li class="list-inline-item">
+                                            <h5>
+                                                <a href="#">
+                                                    British vlogger goes viral over Varkala cliffs trash: �Completely
+                                                    ruined by��
+
+                                                </a>
+                                            </h5>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <!-- List Article -->
+                                <div class="card__post__list">
+                                    <div class="list-number">
+                                        <span>
+                                            1
+                                        </span>
+                                    </div>
+                                    <a href="#" class="category">
+                                        Aktor deepak
+                                    </a>
+                                    <ul class="list-inline">
+                                        <li class="list-inline-item">
+
+                                            <h5>
+                                                <a href="#">
+                                                    Bigg Boss Tamil 9: Ex-contestants Deepak Dinkar and Priyanka
+                                                    Deshpande enter the house
+
+
+                                                </a>
+                                            </h5>
+                                        </li>
+                                    </ul>
+
+                                </div>
+
+
+                                <div class="card__post__list">
+                                    <div class="list-number">
+                                        <span>
+                                            2
+                                        </span>
+                                    </div>
+                                    <a href="#" class="category">
+                                        Actor Kishen
+                                    </a>
+                                    <ul class="list-inline">
+                                        <!-- <li class="list-inline-item">
+            <a href="#" class="author-info">
+                by david hall
+            </a>
+
+        </li>
+        <li class="list-inline-item">
+            <span>
+                <i class="fa fa-calendar"></i>
+                march 01, 2020
+            </span>
+
+        </li> -->
+                                        <li class="list-inline-item">
+                                            <h5>
+                                                <a href="#">
+                                                    Watch: Kishen Das gets emotional as Sivakarthikeyan praises
+                                                    'Aaromaley'; Emotional moment creates hype ahead of its release
+
+
+                                                </a>
+                                            </h5>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </aside>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Post news carousel -->
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <aside class="wrapper__list__article">
+                        <h4 class="border_section">technology</h4>
+                    </aside>
+                </div>
+                <div class="col-md-12">
+
+                    <div class="article__entry-carousel">
+                        <div class="item">
+                            <!-- Post Article -->
+                            <div class="article__entry">
+                                <div class="article__image">
+                                    <a href="#">
+                                        <img src="images/placeholder/four1.jpg" alt="" class="img-fluid">
+                                    </a>
+                                </div>
+                                <div class="article__content">
+                                    <ul class="list-inline">
+
+                                        <li class="list-inline-item">
+                                            <span style="color: #c00 !important;">
+                                                Nov 03, 2025
+                                            </span>
+                                        </li>
+
+                                    </ul>
+                                    <h5>
+                                        <a href="#">
+                                            Bengaluru: In a novel initiative, Visvesvaraya Technological ..
+                                        </a>
+                                    </h5>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <!-- Post Article -->
+                            <div class="article__entry">
+                                <div class="article__image">
+                                    <a href="#">
+                                        <img src="images/placeholder/four2.jpg" alt="" class="img-fluid">
+                                    </a>
+                                </div>
+                                <div class="article__content">
+                                    <ul class="list-inline">
+
+                                        <li class="list-inline-item">
+                                            <span style="color: #c00 !important;">
+                                                Oct 31, 2025
+                                            </span>
+                                        </li>
+
+                                    </ul>
+                                    <h5>
+                                        <a href="#">
+                                            Odisha's BonV Aero has clinched the prestigious SIDM Champio ..
+                                        </a>
+                                    </h5>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <!-- Post Article -->
+                            <div class="article__entry">
+                                <div class="article__image">
+                                    <a href="#">
+                                        <img src="images/placeholder/four3.jpg" alt="" class="img-fluid">
+                                    </a>
+                                </div>
+                                <div class="article__content">
+                                    <ul class="list-inline">
+
+                                        <li class="list-inline-item">
+                                            <span style="color: #c00 !important;">
+                                                Nov 03, 2025
+                                            </span>
+                                        </li>
+
+                                    </ul>
+                                    <h5>
+                                        <a href="#">
+                                            OnePlus has unveiled its new Gaming technology � a system de ..
+                                        </a>
+                                    </h5>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <!-- Post Article -->
+                            <div class="article__entry">
+                                <div class="article__image">
+                                    <a href="#">
+                                        <img src="images/placeholder/four4.jpg" alt="" class="img-fluid">
+                                    </a>
+                                </div>
+                                <div class="article__content">
+                                    <ul class="list-inline">
+
+                                        <li class="list-inline-item">
+                                            <span style="color: #c00 !important;">
+                                                Nov 03, 2025
+                                            </span>
+                                        </li>
+
+                                    </ul>
+                                    <h5>
+                                        <a href="#">
+                                            US tech firm Adeia has sued semiconductor giant AMD in Texas,
+                                        </a>
+                                    </h5>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <!-- Post Article -->
+                            <div class="article__entry">
+                                <div class="article__image">
+                                    <a href="#">
+                                        <img src="images/placeholder/four5.jpg" alt="" class="img-fluid">
+                                    </a>
+                                </div>
+                                <div class="article__content">
+                                    <ul class="list-inline">
+
+                                        <li class="list-inline-item">
+                                            <span style="color: #c00 !important;">
+
+                                                Nov 01, 2025
+                                            </span>
+                                        </li>
+
+                                    </ul>
+                                    <h5>
+                                        <a href="#">
+                                            Nagpur Institute of technology gets �A� Grade by NAAC
+                                        </a>
+                                    </h5>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End Popular news category -->
+
+
+        <!-- Popular news category -->
+        <div class="mt-4">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-8">
+                        <aside class="wrapper__list__article mb-0">
+                            <h4 class="border_section">lifestyle</h4>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <!-- Post Article -->
+                                        <div class="article__entry">
+                                            <div class="article__image">
+                                                <a href="#">
+                                                    <img src="images/placeholder/three1.jpg" alt="" class="img-fluid">
+                                                </a>
+                                            </div>
+                                            <div class="article__content">
+                                                <ul class="list-inline">
+
+
+                                                    <li class="list-inline-item">
+                                                        <span style="color: #c00 !important;">
+                                                            Oct 30, 2025
+                                                        </span>
+                                                    </li>
+
+                                                </ul>
+                                                <h5>
+                                                    <a href="#">
+                                                        A recent appearance saw her don a couture piece from the..
+                                                    </a>
+                                                </h5>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-4">
+                                        <!-- Post Article -->
+                                        <div class="article__entry">
+                                            <div class="article__image">
+                                                <a href="#">
+                                                    <img src="images/placeholder/three2.jpg" alt="" class="img-fluid">
+                                                </a>
+                                            </div>
+                                            <div class="article__content">
+                                                <ul class="list-inline">
+
+                                                    <li class="list-inline-item">
+                                                        <span style="color: #c00 !important;">
+                                                            Nov 01, 2025
+                                                        </span>
+                                                    </li>
+
+                                                </ul>
+                                                <h5>
+                                                    <a href="#">
+                                                        Ishwak Singh champions effortless minimalism in men's..
+                                                    </a>
+                                                </h5>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-4">
+                                        <!-- Post Article -->
+                                        <div class="article__entry">
+                                            <div class="article__image">
+                                                <a href="#">
+                                                    <img src="images/placeholder/three3.jpg" alt="" class="img-fluid">
+                                                </a>
+                                            </div>
+                                            <div class="article__content">
+                                                <ul class="list-inline">
+
+                                                    <li class="list-inline-item">
+                                                        <span style="color: #c00 !important;">
+                                                            Nov 04, 2025
+                                                        </span>
+                                                    </li>
+
+                                                </ul>
+                                                <h5>
+                                                    <a href="#">
+                                                        Malala Yousafzai, often scrutinized for her clothing,..
+                                                    </a>
+                                                </h5>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <!-- Post Article -->
+                                        <div class="article__entry">
+                                            <div class="article__image">
+                                                <a href="#">
+                                                    <img src="images/placeholder/three4.jpg" alt="" class="img-fluid">
+                                                </a>
+                                            </div>
+                                            <div class="article__content">
+                                                <ul class="list-inline">
+
+                                                    <li class="list-inline-item">
+                                                        <span style="color: #c00 !important;">
+                                                            Nov 04, 2025
+                                                        </span>
+                                                    </li>
+
+                                                </ul>
+                                                <h5>
+                                                    <a href="#">
+                                                        Joe Alwyn continues to earn significantly from his songwritin ..
+
+                                                    </a>
+                                                </h5>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-4">
+                                        <!-- Post Article -->
+                                        <div class="article__entry">
+                                            <div class="article__image">
+                                                <a href="#">
+                                                    <img src="images/placeholder/three5.avif" alt="" class="img-fluid">
+                                                </a>
+                                            </div>
+                                            <div class="article__content">
+                                                <ul class="list-inline">
+
+                                                    <li class="list-inline-item">
+                                                        <span style="color: #c00 !important;">
+                                                            Nov 02, 2025
+                                                        </span>
+                                                    </li>
+
+                                                </ul>
+                                                <h5>
+                                                    <a href="#">
+                                                        Model Jin Areum, who married actor Namgoong Min after a seven
+                                                    </a>
+                                                </h5>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-4">
+                                        <!-- Post Article -->
+                                        <div class="article__entry">
+                                            <div class="article__image">
+                                                <a href="#">
+                                                    <img src="images/placeholder/three6.avif" alt="" class="img-fluid">
+                                                </a>
+                                            </div>
+                                            <div class="article__content">
+                                                <ul class="list-inline">
+
+                                                    <li class="list-inline-item">
+                                                        <span style="color: #c00 !important;">
+                                                            Nov 03, 2025
+                                                        </span>
+                                                    </li>
+
+                                                </ul>
+                                                <h5>
+                                                    <a href="#">
+                                                        A new cultural movement is empowering Bengalis
+                                                    </a>
+                                                </h5>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </aside>
+                        <aside class="wrapper__list__article">
+                            <h4 class="border_section">technology</h4>
+
+                            <div class="wrapp__list__article-responsive">
+                                <!-- Post Article List -->
+                                <div class="card__post card__post-list card__post__transition mt-30">
+                                    <div class="row ">
+                                        <div class="col-md-5">
+                                            <div class="card__post__transition">
+                                                <a href="#">
+                                                    <img src="images/placeholder/second1.webp" class="img-fluid w-100"
+                                                        alt="">
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-7 my-auto pl-0">
+                                            <div class="card__post__body ">
+                                                <div class="card__post__content  ">
+
+                                                    <div class="card__post__author-info mb-2">
+                                                        <ul class="list-inline">
+                                                            <!-- <li class="list-inline-item">
+                                <span class="text-primary">
+                                    by david hall
+                                </span>
+                            </li> -->
+                                                            <li class="list-inline-item">
+                                                                <span class="text-dark text-capitalize"
+                                                                    style="color: #c00 !important" ;>
+                                                                    19 October 2025
+                                                                </span>
+                                                            </li>
+
+                                                        </ul>
+                                                    </div>
+                                                    <div class="card__post__title">
+                                                        <h5>
+                                                            <a href="#">
+                                                                Technology heading for Mars is created in Surrey
+                                                            </a>
+                                                        </h5>
+                                                        <p class="d-none d-lg-block d-xl-block mb-0">
+                                                            Founded in 1966, the laboratory sits in a Victorian mansion
+                                                            in 30 acres in the Surrey Hills.
+                                                        </p>
+
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <!-- Post Article List -->
+                                <div class="card__post card__post-list card__post__transition mt-30">
+                                    <div class="row ">
+                                        <div class="col-md-5">
+                                            <div class="card__post__transition">
+                                                <a href="#">
+                                                    <img src="images/placeholder/second2.webp" class="img-fluid w-100"
+                                                        alt="">
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-7 my-auto pl-0">
+                                            <div class="card__post__body ">
+                                                <div class="card__post__content  ">
+
+                                                    <div class="card__post__author-info mb-2">
+                                                        <ul class="list-inline">
+                                                            <!-- <li class="list-inline-item">
+                                <span class="text-primary">
+                                    by david hall
+                                </span>
+                            </li> -->
+                                                            <li class="list-inline-item">
+                                                                <span class="text-dark text-capitalize"
+                                                                    style="color: #c00 !important">
+                                                                    21 October 2025
+                                                                </span>
+                                                            </li>
+
+                                                        </ul>
+                                                    </div>
+                                                    <div class="card__post__title">
+                                                        <h5>
+                                                            <a href="#">
+                                                                Why are police using facial recognition technology?
+                                                            </a>
+                                                        </h5>
+                                                        <p class="d-none d-lg-block d-xl-block mb-0">
+                                                            The software is being used in Greater Manchester for the
+                                                            first time to catch criminals.
+                                                        </p>
+
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <!-- Post Article List -->
+                                <div class="card__post card__post-list card__post__transition mt-30">
+                                    <div class="row ">
+                                        <div class="col-md-5">
+                                            <div class="card__post__transition">
+                                                <a href="#">
+                                                    <img src="images/placeholder/second4.webp" class="img-fluid w-100"
+                                                        alt="">
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-7 my-auto pl-0">
+                                            <div class="card__post__body ">
+                                                <div class="card__post__content  ">
+
+                                                    <div class="card__post__author-info mb-2">
+                                                        <ul class="list-inline">
+                                                            <!-- <li class="list-inline-item">
+                                <span class="text-primary">
+                                    by david hall
+                                </span>
+                            </li> -->
+                                                            <li class="list-inline-item">
+                                                                <span class="text-dark text-capitalize"
+                                                                    style="color: #c00 !important">
+                                                                    december 11, 2025
+                                                                </span>
+                                                            </li>
+
+                                                        </ul>
+                                                    </div>
+                                                    <div class="card__post__title">
+                                                        <h5>
+                                                            <a href="#">
+                                                                Largest robotic surgery training centre opens
+                                                            </a>
+                                                        </h5>
+                                                        <p class="d-none d-lg-block d-xl-block mb-0">
+                                                            The centre will train surgeons from around the world to use
+                                                            robot technology
+
+                                                        </p>
+
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <!-- Post Article List -->
+                                <div class="card__post card__post-list card__post__transition mt-30">
+                                    <div class="row ">
+                                        <div class="col-md-5">
+                                            <div class="card__post__transition">
+                                                <a href="#">
+                                                    <img src="images/placeholder/second5.webp" class="img-fluid w-100"
+                                                        alt="">
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-7 my-auto pl-0">
+                                            <div class="card__post__body ">
+                                                <div class="card__post__content  ">
+
+                                                    <div class="card__post__author-info mb-2">
+                                                        <ul class="list-inline">
+                                                            <!-- <li class="list-inline-item">
+                                <span class="text-primary">
+                                    by david hall
+                                </span>
+                            </li> -->
+                                                            <li class="list-inline-item">
+                                                                <span class="text-dark text-capitalize"
+                                                                    style="color: #c00 !important">
+                                                                    descember 30, 2025
+                                                                </span>
+                                                            </li>
+
+                                                        </ul>
+                                                    </div>
+                                                    <div class="card__post__title">
+                                                        <h5>
+                                                            <a href="#">
+
+                                                            </a>
+                                                        </h5>
+                                                        <p class="d-none d-lg-block d-xl-block mb-0">
+                                                            Why China wants foreign tech graduatesChina hopes its new 'K
+                                                            visa' will attract young science and technology graduates.
+
+                                                        </p>
+
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </aside>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="sticky-top">
+                            <aside class="wrapper__list__article">
+                                <h4 class="border_section">
+                                    Latest post</h4>
+                                <div class="wrapper__list__article-small">
+
+                                    <!-- Post Article -->
+                                    <div class="article__entry">
+                                        <div class="article__image">
+                                            <a href="#">
+                                                <img src="images/placeholder/second6.webp" alt="" class="img-fluid">
+                                            </a>
+                                        </div>
+                                        <div class="article__content">
+
+                                            <ul class="list-inline">
+                                                <!-- <li class="list-inline-item">
+                <span class="text-primary">
+                    by david hall
+                </span>
+            </li> -->
+                                                <li class="list-inline-item">
+                                                    <span class="text-dark text-capitalize"
+                                                        style="color: #c00 !important">
+                                                        descember 07, 2025
+                                                    </span>
+                                                </li>
+
+                                            </ul>
+                                            <h5>
+                                                <a href="#">
+
+                                                    Lake and Ferris Wheel at Billing Aquadrome on a clear and calm
+                                                    autumn day.
+                                                </a>
+                                            </h5>
+                                            <p>
+                                                Waterfowl including swans are swimming on the lake.
+                                                Bird flu cases 'confirmed' at holiday park
+                                                Billing Aquadrome says it is working with Defra and the local council to
+                                                address to outbreak.
+
+                                            </p>
+                                            <a href="#" class="btn btn-outline-primary mb-4 text-capitalize"> read
+                                                more</a>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <!-- Post Article -->
+                                        <div class="card__post card__post-list">
+                                            <div class="image-sm">
+                                                <a href="#">
+                                                    <img src="images/placeholder/second7.webp" class="img-fluid" alt="">
+                                                </a>
+                                            </div>
+
+
+                                            <div class="card__post__body ">
+                                                <div class="card__post__content">
+
+                                                    <div class="card__post__author-info mb-2">
+                                                        <ul class="list-inline">
+                                                            <!-- <li class="list-inline-item">
+                        <span class="text-primary">
+                            by david hall
+                        </span>
+                    </li> -->
+                                                            <li class="list-inline-item">
+                                                                <span class="text-dark text-capitalize"
+                                                                    style="color: #c00 !important">
+                                                                    22 October 2026
+                                                                </span>
+                                                            </li>
+
+                                                        </ul>
+                                                    </div>
+                                                    <div class="card__post__title">
+                                                        <h6>
+                                                            <a href="#">
+                                                                Trump repeats claim India will cut Russian oil imports
+
+
+
+                                                            </a>
+                                                        </h6>
+                                                        <!-- <p class="d-none d-lg-block d-xl-block">
+                    Maecenas accumsan tortor ut velit pharetra mollis. Proin eu nisl et arcu iaculis placerat
+                    sollicitudin ut est. In fringilla dui dui.
+                </p> -->
+
+                                                    </div>
+
+                                                </div>
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <!-- Post Article -->
+                                        <div class="card__post card__post-list">
+                                            <div class="image-sm">
+                                                <a href="#">
+                                                    <img src="images/placeholder/second8.webp" class="img-fluid" alt="">
+                                                </a>
+                                            </div>
+
+
+                                            <div class="card__post__body ">
+                                                <div class="card__post__content">
+
+                                                    <div class="card__post__author-info mb-2">
+                                                        <ul class="list-inline">
+                                                            <li class="list-inline-item">
+                                                                <!-- <span class="text-primary">
+                            by david hall
+                        </span> -->
+                                                            </li>
+                                                            <li class="list-inline-item">
+                                                                <span class="text-dark text-capitalize"
+                                                                    style="color: #c00 !important">
+                                                                    24 Oct 2025
+
+
+                                                                </span>
+                                                            </li>
+
+                                                        </ul>
+                                                    </div>
+                                                    <div class="card__post__title">
+                                                        <h6>
+                                                            <a href="#">
+
+                                                                Canada will restart trade talks when 'Americans
+                                                            </a>
+                                                        </h6>
+                                                        <!-- <p class="d-none d-lg-block d-xl-block">
+                    Maecenas accumsan tortor ut velit pharetra mollis. Proin eu nisl et arcu iaculis placerat
+                    sollicitudin ut est. In fringilla dui dui.
+                </p> -->
+
+                                                    </div>
+
+                                                </div>
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </aside>
+
+                            <aside class="wrapper__list__article">
+                                <h4 class="border_section">stay conected</h4>
+                                <!-- widget Social media -->
+                                <div class="wrap__social__media">
+                                    <a href="#" target="_blank">
+                                        <div class="social__media__widget facebook">
+                                            <span class="social__media__widget-icon">
+                                                <i class="fa fa-facebook"></i>
+                                            </span>
+                                            <span class="social__media__widget-counter">
+                                                19,243 fans
+                                            </span>
+                                            <span class="social__media__widget-name">
+                                                like
+                                            </span>
+                                        </div>
+                                    </a>
+                                    <a href="#" target="_blank">
+                                        <div class="social__media__widget twitter">
+                                            <span class="social__media__widget-icon">
+                                                <i class="fa fa-twitter"></i>
+                                            </span>
+                                            <span class="social__media__widget-counter">
+                                                2.076 followers
+                                            </span>
+                                            <span class="social__media__widget-name">
+                                                follow
+                                            </span>
+                                        </div>
+                                    </a>
+                                    <a href="#" target="_blank">
+                                        <div class="social__media__widget youtube">
+                                            <span class="social__media__widget-icon">
+                                                <i class="fa fa-youtube"></i>
+                                            </span>
+                                            <span class="social__media__widget-counter">
+                                                15,200 followers
+                                            </span>
+                                            <span class="social__media__widget-name">
+                                                subscribe
+                                            </span>
+                                        </div>
+                                    </a>
+
+                                </div>
+                            </aside>
+
+                            <!-- <aside class="wrapper__list__article">
+                                <h4 class="border_section">tags</h4>
+                                <div class="blog-tags p-0">
+    <ul class="list-inline">
+
+        <li class="list-inline-item">
+            <a href="#">
+                #property
+            </a>
+        </li>
+        <li class="list-inline-item">
+            <a href="#">
+                #sea
+            </a>
+        </li>
+        <li class="list-inline-item">
+            <a href="#">
+                #programming
+            </a>
+        </li>
+        <li class="list-inline-item">
+            <a href="#">
+                #sea
+            </a>
+        </li>
+        <li class="list-inline-item">
+            <a href="#">
+                #property
+            </a>
+        </li>
+        <li class="list-inline-item">
+            <a href="#">
+                #life style
+            </a>
+        </li>
+        <li class="list-inline-item">
+            <a href="#">
+                #technology
+            </a>
+        </li>
+        <li class="list-inline-item">
+            <a href="#">
+                #framework
+            </a>
+        </li>
+        <li class="list-inline-item">
+            <a href="#">
+                #sport
+            </a>
+        </li>
+        <li class="list-inline-item">
+            <a href="#">
+                #game
+            </a>
+        </li>
+        <li class="list-inline-item">
+            <a href="#">
+                #wfh
+            </a>
+        </li>
+        <li class="list-inline-item">
+            <a href="#">
+                #sport
+            </a>
+        </li>
+        <li class="list-inline-item">
+            <a href="#">
+                #game
+            </a>
+        </li>
+        <li class="list-inline-item">
+            <a href="#">
+                #wfh
+            </a>
+        </li>
+        <li class="list-inline-item">
+            <a href="#">
+                #framework
+            </a>
+        </li>
+
+    </ul>
+</div> -->
+                            </aside>
+
+                            <aside class="wrapper__list__article">
+                                <h4 class="border_section">Advertise</h4>
+                                <a href="#">
+                                    <figure>
+                                        <img src="images/placeholder/second9.jpg" alt="" class="img-fluid">
+                                    </figure>
+                                </a>
+                            </aside>
+
+                            <aside class="wrapper__list__article">
+                                <h4 class="border_section">newsletter</h4>
+                                <!-- Form Subscribe -->
+                                <div class="widget__form-subscribe bg__card-shadow">
+                                    <h6>
+                                        The most important world news and events of the day.
+                                    </h6>
+                                    <p><small>Get magzrenvi daily newsletter on your inbox.</small></p>
+                                    <div class="input-group ">
+                                        <input type="text" class="form-control" placeholder="Your email address">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-primary" type="button">sign up</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </aside>
+                        </div>
+                    </div>
+                    <div class="mx-auto">
+                        <!-- Pagination -->
+                        <div class="pagination-area">
+                            <div class="pagination wow fadeIn animated" data-wow-duration="2s" data-wow-delay="0.5s"
+                                style="visibility: visible; animation-duration: 2s; animation-delay: 0.5s; animation-name: fadeIn;">
+                                <a href="#">
+                                    �
+                                </a>
+                                <a href="category-style-v1.html">
+                                    1
+                                </a>
+                                <a class="active" href="category-style-v1.html">
+                                    2
+                                </a>
+                                <a href="category-style-v1.html">
+                                    3
+                                </a>
+                                <a href="category-style-v1.html">
+                                    4
+                                </a>
+                                <a href="category-style-v1.html">
+                                    5
+                                </a>
+
+                                <a href="category-style-v1.html">
+                                    �
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- End Popular news category -->
+
+    <!-- ? Fully Responsive Footer -->
+    <footer
+        style="background:#0b0b0b; padding:50px 0 25px; color:#e0e0e0; font-family:Poppins, sans-serif; width:100%;">
+        <div class="footer-main" style="
+        max-width:1350px; 
+        margin:0 auto; 
+        display:flex; 
+        justify-content:space-between;
+        align-items:flex-start; 
+        padding:0 100px;
+        gap:40px;
+        flex-wrap:wrap;
+    ">
+
+            <!-- LEFT SECTION -->
+            <div class="footer-logo" style="flex:1; min-width:260px;">
+                <img src="images/placeholder/logos.png" alt="logo"
+                    style="width:100px; margin-bottom:15px; opacity:1; border-radius:10px;">
+                <p style="font-size:14px; color:#bebebe; line-height:1.7; max-width:260px;">
+                    Gunvani News ek ????????? ?? ???????? ?????? ??? ?? ?? ???? ???-?????? ?? ?? ?????????? ???? ?????
+                    ?? ?????? ?? ??? ???????? ?? ??? ??????? ???
+                    ????? ???????? ?? ???? ?? ?????, ??????? ?? ???? ?????? ??????? ???????? � ???? ???? ??????? ?? ????
+                    ???
+                </p>
+            </div>
+
+            <!-- CENTER SECTION -->
+            <div class="footer-center" style="flex:1; min-width:200px; text-align:left;">
+                <h4 style="color:#fff; margin-bottom:15px; font-size:18px;">Quick Links</h4>
+                <ul style="list-style:none; padding:0; margin:0;">
+                    <li style="margin-bottom:10px;">
+                        <a href="#" style="color:#d0d0d0; text-decoration:none; font-size:15px;">About Us</a>
+                    </li>
+                    <li style="margin-bottom:10px;">
+                        <a href="contact.html" style="color:#d0d0d0; text-decoration:none; font-size:15px;">Contact</a>
+                    </li>
+                    <li style="margin-bottom:10px;">
+                        <a href="#" style="color:#d0d0d0; text-decoration:none; font-size:15px;">Terms & Conditions</a>
+                    </li>
+                    <li style="margin-bottom:10px;">
+                        <a href="#" style="color:#d0d0d0; text-decoration:none; font-size:15px;">Privacy Policy</a>
+                    </li>
+                   <li style="margin-bottom:10px;">
+                        <a href="verification.php" style="color:#d0d0d0; text-decoration:none; font-size:15px;">Verification</a>
+                    </li>
+                  
+                </ul>
+            </div>
+
+            <!-- RIGHT SECTION -->
+            <div class="footer-right" style="flex:1; min-width:260px; text-align:right;">
+                <h4 style="color:#fff; margin-bottom:15px; font-size:18px;">Follow Us</h4>
+                <div style="margin-bottom:15px;">
+                    <a href="#" style="display:inline-block; width:40px; height:40px; background:#161616;
+                text-align:center; line-height:40px; border-radius:6px; color:#fff;
+                font-size:17px; margin-left:7px; text-decoration:none;">
+                        <i class="fa fa-facebook"></i>
+                    </a>
+                    <a href="#" style="display:inline-block; width:40px; height:40px; background:#161616;
+                text-align:center; line-height:40px; border-radius:6px; color:#fff;
+                font-size:17px; margin-left:7px; text-decoration:none;">
+                        <i class="fa fa-twitter"></i>
+                    </a>
+                    <a href="#" style="display:inline-block; width:40px; height:40px; background:#161616;
+                text-align:center; line-height:40px; border-radius:6px; color:#fff;
+                font-size:17px; margin-left:7px; text-decoration:none;">
+                        <i class="fa fa-whatsapp"></i>
+                    </a>
+                    <a href="#" style="display:inline-block; width:40px; height:40px; background:#161616;
+                text-align:center; line-height:40px; border-radius:6px; color:#fff;
+                font-size:17px; margin-left:7px; text-decoration:none;">
+                        <i class="fa fa-telegram"></i>
+                    </a>
+                </div>
+                <p style="font-size:14px; color:#bcbcbc; margin-top:10px;">
+                    Janta ki awaaz, Gunvani News ke saath
+                </p>
+            </div>
+        </div>
+
+        <div style="text-align:center; margin-top:35px; color:#999; font-size:13px;">
+            � 2025 Gunvani News � All Rights Reserved.
+        </div>
+    </footer>
+
+    <!-- ? Responsive CSS -->
+    <style>
+        @media(max-width:1024px) {
+            .footer-main {
+                padding: 0 60px !important;
+            }
+        }
+
+        @media(max-width:768px) {
+            .footer-main {
+                padding: 0 40px !important;
+                flex-direction: column !important;
+                text-align: left !important;
+            }
+
+            .footer-center,
+            .footer-right {
+                margin-top: 25px !important;
+                text-align: left !important;
+            }
+
+            .footer-right a {
+                margin-left: 0 !important;
+                margin-right: 7px !important;
+            }
+        }
+
+        @media(max-width:480px) {
+            .footer-main {
+                padding: 0 20px !important;
+            }
+
+            .footer-logo img {
+                width: 80px !important;
+            }
+
+            .footer-center h4,
+            .footer-right h4 {
+                font-size: 16px !important;
+            }
+        }
+    </style>
+
+    <a href="javascript:" id="return-to-top"><i class="fa fa-chevron-up"></i></a>
+
+    <script type="text/javascript" src="./js/index.bundle.js?537a1bbd0e5129401d28"></script>
+</body>
+
+</html>
+
+
+

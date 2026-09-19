@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>About Us | Gunvani News</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="manifest" href="site.webmanifest">
+    <link rel="apple-touch-icon" href="icon.png">
+    <meta name="theme-color" content="#116530">
+
+    <!-- Google Fonts & FontAwesome 6 -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --gn-green: #116530;
+            --gn-green-dark: #0b4520;
+            --gn-green-light: #eaf4ed;
+            --gn-red: #dc2626;
+            --gn-bg: #f8faf9;
+            --gn-card-bg: #ffffff;
+            --gn-border: #e2e8f0;
+            --gn-text-dark: #1e293b;
+            --gn-text-muted: #64748b;
+            --container-max-w: 1360px;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--gn-bg);
+            color: var(--gn-text-dark);
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        .gn-container {
+            max-width: var(--container-max-w);
+            margin: 0 auto;
+            padding: 0 16px;
+        }
+
+        /* Top Utility Bar */
+        .gn-utility-bar {
+            background-color: var(--gn-green);
+            color: #ffffff;
+            font-size: 0.82rem;
+            padding: 6px 0;
+        }
+        .gn-utility-bar a {
+            color: #ffffff;
+            text-decoration: none;
+        }
+
+        .lang-pill-box {
+            background: rgba(0,0,0,0.25);
+            border-radius: 4px;
+            padding: 2px;
+            display: inline-flex;
+            gap: 2px;
+        }
+        .lang-pill-btn {
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 2px 10px;
+            border-radius: 3px;
+            border: none;
+            color: #ffffff;
+            background: transparent;
+            cursor: pointer;
+        }
+        .lang-pill-btn.active {
+            background-color: var(--gn-green-dark);
+            color: #ffffff;
+        }
+
+        /* Navigation Header */
+        .gn-main-header {
+            background: #ffffff;
+            border-bottom: 1px solid var(--gn-border);
+            position: sticky;
+            top: 0;
+            z-index: 1020;
+        }
+        .gn-logo {
+            height: 80px;
+            max-height: 80px;
+            width: auto;
+            object-fit: contain;
+            transition: height 0.3s ease;
+        }
+        @media (max-width: 991px) {
+            .gn-logo {
+                height: 65px;
+                max-height: 65px;
+            }
+        }
+        @media (max-width: 575px) {
+            .gn-logo {
+                height: 50px;
+                max-height: 50px;
+            }
+        }
+
+        /* Hide Google Translate Top Banner Frame & prevent body push down */
+        iframe.goog-te-banner-frame,
+        .goog-te-banner-frame,
+        #goog-gt-tt,
+        .goog-gt-tt,
+        .goog-te-balloon-frame {
+            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+            height: 0 !important;
+            width: 0 !important;
+        }
+
+        html, body {
+            top: 0px !important;
+            position: static !important;
+            margin-top: 0px !important;
+            padding-top: 0px !important;
+        }
+
+        .goog-te-combo {
+            display: none !important;
+        }
+        .gn-nav-link {
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: #334155;
+            padding: 8px 12px;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+        .gn-nav-link:hover, .gn-nav-link.active {
+            color: var(--gn-green);
+            font-weight: 700;
+        }
+
+        /* Hero Banner */
+        .about-hero {
+            background: linear-gradient(135deg, var(--gn-green-dark) 0%, var(--gn-green) 100%);
+            color: #ffffff;
+            padding: 50px 0;
+            margin-bottom: 40px;
+        }
+
+        /* Content Cards */
+        .feature-card {
+            background: #ffffff;
+            border-radius: 12px;
+            border: 1px solid var(--gn-border);
+            padding: 28px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+            height: 100%;
+        }
+        .feature-icon-box {
+            width: 50px;
+            height: 50px;
+            background: var(--gn-green-light);
+            color: var(--gn-green);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            margin-bottom: 16px;
+        }
+
+        /* Footer */
+        .gn-footer {
+            background-color: #0b1e13;
+            color: #e2e8f0 !important;
+            padding: 40px 0 20px 0;
+            margin-top: 50px;
+            border-top: 3px solid var(--gn-green);
+        }
+        .gn-footer h5 {
+            color: #ffffff !important;
+            font-size: 0.95rem;
+            font-weight: 700;
+            margin-bottom: 14px;
+        }
+        .gn-footer p, .gn-footer span, .gn-footer div, .gn-footer li, .gn-footer .text-muted {
+            color: #cbd5e1 !important;
+        }
+        .gn-footer a {
+            color: #e2e8f0 !important;
+            text-decoration: none;
+            font-size: 0.85rem;
+        }
+        .gn-footer a:hover {
+            color: #4ade80 !important;
+        }
+
+
+    </style>
+</head>
+<body>
+
+    <!-- 1. Top Utility Bar -->
+    <div class="gn-utility-bar">
+        <div class="gn-container">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                <div class="d-flex align-items-center gap-2">
+                    <i class="fa-regular fa-calendar-days"></i>
+                    <span id="top-date-display" class="fw-semibold">Monday, September 14, 2026</span>
+                </div>
+
+                <div class="d-flex align-items-center gap-3">
+                    <a href="verification.php"><i class="fa-regular fa-circle-check me-1"></i>Verification</a>
+                    <span class="opacity-25">|</span>
+                    <a href="admin/login.php"><i class="fa-solid fa-lock me-1"></i>Admin</a>
+                    <span class="opacity-25">|</span>
+                    
+                    <div class="lang-pill-box">
+                        <button type="button" class="lang-pill-btn active" id="btn-lang-hi" onclick="changeLanguage('hi')">हिंदी</button>
+                        <button type="button" class="lang-pill-btn" id="btn-lang-en" onclick="changeLanguage('en')">English</button>
+                    </div>
+                    <div id="google_translate_element" style="display:none;"></div>
+
+                    <span class="opacity-25">|</span>
+                    <div class="d-flex gap-2">
+                        <a href="#" class="text-white me-2" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+                        <a href="#" class="text-white me-2" aria-label="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+                        <a href="#" class="text-white me-2" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="#" class="text-white" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. Navigation Header -->
+    <header class="gn-main-header">
+        <div class="gn-container">
+            <nav class="navbar navbar-expand-xl navbar-light py-2">
+                <a class="navbar-brand me-4" href="index.php">
+                    <img src="images/placeholder/logos.png" alt="Gunvani News Logo" class="gn-logo" onerror="this.src='icon.png'">
+                </a>
+
+                <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbarNav" aria-controls="mainNavbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse justify-content-between" id="mainNavbarNav">
+                    <div class="d-flex flex-wrap gap-1 my-2 my-xl-0">
+                        <a href="index.php" class="gn-nav-link">Home</a>
+                        <a href="category.php?slug=agra" class="gn-nav-link">Agra</a>
+                        <a href="category.php?slug=lucknow" class="gn-nav-link">Lucknow</a>
+                        <a href="category.php?slug=mathura" class="gn-nav-link">Mathura</a>
+                        <a href="category.php?slug=noida" class="gn-nav-link">Noida</a>
+                        <a href="category.php?slug=uttar-pradesh" class="gn-nav-link">Uttar Pradesh</a>
+                        <a href="category.php?slug=india" class="gn-nav-link">India</a>
+                        <a href="contact.php" class="gn-nav-link">Contact Us</a>
+                    </div>
+
+                    <div class="d-flex align-items-center gap-2">
+                        <button class="btn btn-sm btn-outline-secondary rounded-circle p-2" style="width:34px; height:34px;" title="Search">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </button>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- 3. Hero Banner -->
+    <section class="about-hero">
+        <div class="gn-container">
+            <h1 class="display-5 fw-bold mb-2">About Gunvani News</h1>
+            <p class="lead m-0 opacity-85">Delivering trusted, unbiased, and authentic news from the heart of Uttar Pradesh to the world.</p>
+        </div>
+    </section>
+
+    <!-- 4. Content Section -->
+    <main class="gn-container mb-5">
+        <div class="row g-4 mb-5">
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon-box"><i class="fa-solid fa-bullseye"></i></div>
+                    <h3 class="fw-bold mb-2">Our Mission</h3>
+                    <p class="text-muted m-0">To empower citizens with prompt, factual, and verified journalism, holding public institutions accountable while giving voice to local communities.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon-box"><i class="fa-solid fa-scale-balanced"></i></div>
+                    <h3 class="fw-bold mb-2">Editorial Ethics</h3>
+                    <p class="text-muted m-0">We strictly adhere to core press principles: zero sensationalism, independent reporting, multi-source verification, and transparent corrections.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon-box"><i class="fa-solid fa-network-wired"></i></div>
+                    <h3 class="fw-bold mb-2">Coverage Network</h3>
+                    <p class="text-muted m-0">Our accredited reporters span major urban hubs including Agra, Lucknow, Noida, Mathura, and regional districts across Uttar Pradesh and India.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white border rounded-3 p-4 p-md-5 text-center">
+            <h2 class="fw-bold mb-3">Have a Story or Editorial Tip?</h2>
+            <p class="text-muted max-w-700 mx-auto mb-4" style="max-width:650px;">Reach out to our newsroom directly. Our team of senior editors and investigative reporters review all verified submissions.</p>
+            <a href="contact.php" class="btn btn-success fw-bold px-4 py-2" style="background:var(--gn-green); border-color:var(--gn-green);">
+                <i class="fa-solid fa-paper-plane me-2"></i>Contact News Bureau
+            </a>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="gn-footer">
+        <div class="gn-container">
+            <div class="row g-4">
+                <div class="col-lg-4">
+                    <a href="index.php"><img src="images/placeholder/logos.png" alt="Gunvani News" style="height:46px; margin-bottom:14px;" onerror="this.src='icon.png'"></a>
+                    <p class="small text-muted pe-lg-4">Gunvani News ek vishwasniya aur nishpaksh samachar manch hai jo desh-duniya ki mahatvapurn khabrein tezi aur satyata ke saath pahunchata hai.</p>
+                </div>
+                <div class="col-6 col-lg-2">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="index.php">Home</a></li>
+                        <li class="mb-2"><a href="categories.php">Categories</a></li>
+                        <li class="mb-2"><a href="verification.php">Verification</a></li>
+                        <li class="mb-2"><a href="contact.php">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div class="col-6 col-lg-3">
+                    <h5>News Categories</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="category.php?slug=agra">Agra</a></li>
+                        <li class="mb-2"><a href="category.php?slug=lucknow">Lucknow</a></li>
+                        <li class="mb-2"><a href="category.php?slug=mathura">Mathura</a></li>
+                        <li class="mb-2"><a href="category.php?slug=noida">Noida</a></li>
+                        <li class="mb-2"><a href="category.php?slug=uttar-pradesh">Uttar Pradesh</a></li>
+                        <li class="mb-2"><a href="category.php?slug=india">India</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3">
+                    <h5>Follow Us</h5>
+                    <p class="small text-muted mb-3">Janta ki awaaz, Gunvani News ke saath</p>
+                    <div class="d-flex gap-2">
+                        <a href="#" class="btn btn-sm btn-outline-light rounded-circle d-inline-flex align-items-center justify-content-center" style="width:36px; height:36px;" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+                        <a href="#" class="btn btn-sm btn-outline-light rounded-circle d-inline-flex align-items-center justify-content-center" style="width:36px; height:36px;" aria-label="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+                        <a href="#" class="btn btn-sm btn-outline-light rounded-circle d-inline-flex align-items-center justify-content-center" style="width:36px; height:36px;" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="#" class="btn btn-sm btn-outline-light rounded-circle d-inline-flex align-items-center justify-content-center" style="width:36px; height:36px;" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="border-top border-secondary opacity-25 my-4"></div>
+
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 small">
+                <div>© 2026 Gunvani News — All Rights Reserved.</div>
+                <div class="d-flex gap-3">
+                    <a href="#" class="text-muted text-decoration-none">Privacy Policy</a>
+                    <a href="#" class="text-muted text-decoration-none">Terms of Use</a>
+                    <a href="#" class="text-muted text-decoration-none">Sitemap</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript">
+    function googleTranslateElementInit() {
+        new google.translate.TranslateElement({
+            pageLanguage: 'en',
+            includedLanguages: 'en,hi',
+            autoDisplay: false
+        }, 'google_translate_element');
+    }
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+    <script>
+    function changeLanguage(lang) {
+        localStorage.setItem('gunvani_lang', lang);
+        updateLangBtnUI(lang);
+        setCookieLanguage(lang);
+        
+        var select = document.querySelector('.goog-te-combo');
+        if (select) {
+            select.value = lang;
+            select.dispatchEvent(new Event('change'));
+        }
+        
+        setTimeout(function() {
+            location.reload();
+        }, 150);
+    }
+
+    function setCookieLanguage(lang) {
+        var cookieVal = (lang === 'hi') ? '/en/hi' : '/en/en';
+        document.cookie = "googtrans=" + cookieVal + "; path=/;";
+        document.cookie = "googtrans=" + cookieVal + "; path=/; expires=Thu, 01 Jan 2099 00:00:00 UTC;";
+        if (location.hostname && location.hostname !== 'localhost') {
+            document.cookie = "googtrans=" + cookieVal + "; domain=" + location.hostname + "; path=/;";
+        }
+    }
+
+    function updateLangBtnUI(lang) {
+        var btnHi = document.getElementById('btn-lang-hi');
+        var btnEn = document.getElementById('btn-lang-en');
+        if (!btnHi || !btnEn) return;
+        if (lang === 'hi') {
+            btnHi.classList.add('active');
+            btnEn.classList.remove('active');
+        } else {
+            btnEn.classList.add('active');
+            btnHi.classList.remove('active');
+        }
+    }
+
+    function hideGoogleTranslateFrames() {
+        document.documentElement.style.top = '0px';
+        document.body.style.top = '0px';
+        document.body.style.marginTop = '0px';
+        
+        var bannerFrames = document.querySelectorAll('iframe.goog-te-banner-frame, .goog-te-banner-frame, #goog-gt-tt, .goog-te-balloon-frame');
+        bannerFrames.forEach(function(f) {
+            f.style.setProperty('display', 'none', 'important');
+            f.style.setProperty('visibility', 'hidden', 'important');
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        var savedLang = localStorage.getItem('gunvani_lang') || 'hi';
+        updateLangBtnUI(savedLang);
+        setCookieLanguage(savedLang);
+        
+        setTimeout(function() {
+            var select = document.querySelector('.goog-te-combo');
+            if (select && select.value !== savedLang) {
+                select.value = savedLang;
+                select.dispatchEvent(new Event('change'));
+            }
+            hideGoogleTranslateFrames();
+        }, 400);
+        setInterval(hideGoogleTranslateFrames, 300);
+    });
+    </script>
+</body>
+</html>

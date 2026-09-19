@@ -1,0 +1,91 @@
+/* ==============================
+   1. GOOGLE FONT
+================================*/
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+
+/* ==============================
+   2. ROOT VARIABLES (COLORS)
+================================*/
+
+:root{
+
+--primary-color:#f5b84d;
+--dark-color:#1a0d08;
+--background-color:#0f0704;
+--text-color:#ffffff;
+--hover-color:#ffcc66;
+--border-color:rgba(255,255,255,0.08);
+
+}
+
+
+/* ==============================
+   3. GLOBAL RESET
+================================*/
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+
+/* ==============================
+   4. GLOBAL BODY STYLE
+================================*/
+
+body{
+font-family:'Poppins',sans-serif;
+background:var(--background-color);
+color:var(--text-color);
+}
+
+
+/* ==============================
+   5. CONTAINER
+================================*/
+
+.container{
+max-width:1200px;
+margin:auto;
+padding:0 20px;
+}
+
+
+/* ==============================
+   6. NAVBAR
+================================*/
+
+.ishqana-navbar{
+background:var(--dark-color);
+border-bottom:1px solid var(--border-color);
+}
+
+
+/* ==============================
+   7. BUTTON STYLE
+================================*/
+
+.btn-primary{
+background:var(--primary-color);
+color:#000;
+padding:10px 22px;
+border-radius:30px;
+text-decoration:none;
+transition:0.3s;
+}
+
+.btn-primary:hover{
+background:var(--hover-color);
+}
+
+
+/* ==============================
+   8. SECTION SPACING
+================================*/
+
+.section{
+padding:80px 0;
+}

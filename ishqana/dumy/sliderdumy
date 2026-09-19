@@ -1,0 +1,366 @@
+<style>
+
+/* =========================
+HERO (PRO VERSION)
+========================= */
+
+.hero{
+width:100%;
+min-height:70vh; /* 🔥 FIX (no cut on large screens) */
+background:linear-gradient(135deg,var(--chocolate-light),var(--chocolate));
+position:relative;
+display:flex;
+align-items:center;
+color:var(--white);
+overflow:hidden;
+}
+
+/* GLOW */
+
+.hero::before,
+.hero::after{
+content:"";
+position:absolute;
+width:350px;
+height:350px;
+background:var(--primary);
+filter:blur(120px);
+opacity:0.15;
+}
+
+.hero::before{top:-100px; left:-100px;}
+.hero::after{bottom:-100px; right:-100px;}
+
+/* SLIDER */
+
+.slider-track{
+position:relative;
+width:100%;
+height:100%;
+}
+
+/* SLIDE */
+
+.slide{
+position:absolute;
+width:100%;
+height:100%;
+top:0;
+left:0;
+display:flex;
+align-items:center;
+justify-content:center;
+padding:40px 20px;
+opacity:0;
+transform:translateX(100%);
+transition:.6s ease;
+}
+
+.slide.active{
+opacity:1;
+transform:translateX(0);
+z-index:2;
+}
+
+.slide.prev{
+transform:translateX(-100%);
+}
+
+/* CONTENT */
+
+.slide-content{
+display:flex;
+align-items:center;
+justify-content:space-between;
+max-width:1200px;
+width:100%;
+gap:50px;
+}
+
+/* IMAGE */
+
+.slide-img{
+flex:1;
+display:flex;
+justify-content:center;
+}
+
+.slide-img img{
+width:100%;
+max-width:360px;
+transition:.4s;
+}
+
+.slide-img img:hover{
+transform:scale(1.05);
+}
+
+/* TEXT */
+
+.slide-text{
+flex:1;
+}
+
+/* HEADING */
+
+.slide-text h1{
+font-size:46px;
+font-weight:700;
+line-height:1.2;
+margin-bottom:15px;
+}
+
+.slide-text span{
+color:var(--primary);
+}
+
+/* DESC */
+
+.slide-text p{
+font-size:15px;
+color:var(--primary-soft);
+margin-bottom:25px;
+max-width:420px;
+line-height:1.6;
+}
+
+/* BUTTON */
+
+.btn{
+display:inline-block;
+background:var(--primary);
+padding:12px 28px;
+border-radius:30px;
+color:var(--black);
+font-weight:600;
+text-decoration:none;
+transition:.3s;
+}
+
+.btn:hover{
+background:var(--primary-hover);
+transform:translateY(-2px);
+}
+
+/* ARROWS */
+
+.arrow{
+position:absolute;
+top:50%;
+transform:translateY(-50%);
+width:40px;
+height:40px;
+border:none;
+border-radius:50%;
+background:var(--white);
+cursor:pointer;
+font-size:18px;
+z-index:10;
+transition:.3s;
+}
+
+.arrow:hover{
+background:var(--primary);
+}
+
+.left{left:15px;}
+.right{right:15px;}
+
+/* DOTS */
+
+.dots{
+position:absolute;
+bottom:20px;
+left:50%;
+transform:translateX(-50%);
+display:flex;
+gap:8px;
+}
+
+.dots span{
+width:10px;
+height:10px;
+background:var(--text-light);
+border-radius:50%;
+cursor:pointer;
+}
+
+.dots span.active{
+background:var(--primary);
+}
+
+/* =========================
+TABLET
+========================= */
+
+@media(max-width:1000px){
+
+.slide-text h1{
+font-size:34px;
+}
+
+.slide-img img{
+max-width:280px;
+}
+
+}
+
+/* =========================
+MOBILE (FIXED)
+========================= */
+
+@media(max-width:768px){
+
+.hero{
+min-height:80vh;
+padding-top:20px;
+}
+
+.slide-content{
+flex-direction:column;
+text-align:center;
+gap:20px;
+}
+
+.slide-img img{
+max-width:220px;
+}
+
+.slide-text h1{
+font-size:26px;
+}
+
+.slide-text p{
+font-size:14px;
+margin:auto;
+margin-bottom:15px;
+}
+
+.btn{
+font-size:14px;
+padding:10px 22px;
+}
+
+.arrow{
+width:32px;
+height:32px;
+font-size:14px;
+}
+
+.dots{
+display:none;
+}
+
+}
+
+</style>
+
+<section class="hero">
+
+<div class="slider-track">
+
+<!-- SLIDE 1 -->
+<div class="slide active">
+<div class="slide-content">
+
+<div class="slide-img">
+<img src="./assets/images/slide2.jpeg" alt="Guteta Snack">
+</div>
+
+<div class="slide-text">
+<h1>Authentic <span>Desi Taste</span><br>In Every Bite</h1>
+<p>Ishqana Guteta is a crispy traditional Indian snack made with love and premium ingredients.</p>
+<a href="#" class="btn">Explore Products</a>
+</div>
+
+</div>
+</div>
+
+<!-- SLIDE 2 -->
+<div class="slide">
+<div class="slide-content">
+
+<div class="slide-img">
+<img src="./aa.png" alt="Fresh Snack">
+</div>
+
+<div class="slide-text">
+<h1>Crispy <span>Fresh</span> & Delicious</h1>
+<p>Enjoy the perfect blend of crunch and flavor crafted using traditional recipes.</p>
+<a href="#" class="btn">View Collection</a>
+</div>
+
+</div>
+</div>
+
+<!-- SLIDE 3 -->
+<div class="slide">
+<div class="slide-content">
+
+<div class="slide-img">
+<img src="./aa.png" alt="Indian Snack">
+</div>
+
+<div class="slide-text">
+<h1>Pure <span>Indian Snack</span></h1>
+<p>Made with selected ingredients to give you authentic desi taste in every bite.</p>
+<a href="#" class="btn">Order Now</a>
+</div>
+
+</div>
+</div>
+
+</div>
+
+<!-- ARROWS -->
+<button class="arrow left" onclick="prevSlide()">❮</button>
+<button class="arrow right" onclick="nextSlide()">❯</button>
+
+<!-- DOTS -->
+<div class="dots">
+<span onclick="goSlide(0)" class="active"></span>
+<span onclick="goSlide(1)"></span>
+<span onclick="goSlide(2)"></span>
+</div>
+
+</section>
+
+
+<script>
+
+let slides = document.querySelectorAll(".slide")
+let dots = document.querySelectorAll(".dots span")
+let index = 0
+
+function showSlide(i){
+
+slides.forEach(s=>s.classList.remove("active","prev"))
+dots.forEach(d=>d.classList.remove("active"))
+
+slides[index].classList.add("prev")
+
+index = i
+
+if(index < 0) index = slides.length-1
+if(index >= slides.length) index = 0
+
+slides[index].classList.add("active")
+dots[index].classList.add("active")
+
+}
+
+function nextSlide(){
+showSlide(index+1)
+}
+
+function prevSlide(){
+showSlide(index-1)
+}
+
+function goSlide(i){
+showSlide(i)
+}
+
+setInterval(nextSlide,5000)
+
+</script>

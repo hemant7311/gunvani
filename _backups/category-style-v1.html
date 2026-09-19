@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="">
+
+<head>
+    <meta charset="utf-8">
+    <title>Retnews &#8211; Best news, blog & magazine template</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="manifest" href="site.webmanifest">
+    <!-- favicon.ico in the root directory -->
+    <link rel="apple-touch-icon" href="icon.png">
+
+    <meta name="theme-color" content="#030303">
+    <!-- google fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,500;0,700;1,300;1,500&family=Poppins:ital,wght@0,300;0,500;0,700;1,300;1,400&display=swap"
+        rel="stylesheet">
+    <link href="./css/styles.css?537a1bbd0e5129401d28" rel="stylesheet">
+</head>
+
+<body>
+    <!-- loading -->
+    <div class="loading-container">
+        <div class="h-100 d-flex align-items-center justify-content-center">
+            <ul class="list-unstyled">
+                <li>
+                    <img src="images/placeholder/loading.png" alt="Alternate Text" height="100" />
+
+                </li>
+                <li>
+
+                    <div class="spinner">
+                        <div class="rect1"></div>
+                        <div class="rect2"></div>
+                        <div class="rect3"></div>
+                        <div class="rect4"></div>
+                        <div class="rect5"></div>
+
+                    </div>
+
+                </li>
+                <li>
+                    <p>Loading</p>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!-- End loading -->
+
+    <!-- Header news -->
+    <header>
+    <div class="topbar">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12 col-md-5">
+                    <div class="topbar-left">
+                        <div class="topbar-text" id="date"></div>
+                    </div>
+                </div>
+                <div class="col-sm-12 col-md-7">
+                    <div class="topbar-right">
+                        <ul class="topbar-link">
+                            <li><a href="verification.php" title="">Verification</a></li>
+                            <li><a href="admin/login.php" title="">Admin</a></li>
+                        </ul>
+                        <ul class="topbar-sosmed">
+                            <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+                            <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+                            <li><a href="#"><i class="fa fa-instagram"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <script>
+                const today = new Date();
+                const options = { weekday: "long", month: "long", day: "numeric", year: "numeric" };
+                document.getElementById("date").innerText = today.toLocaleDateString("en-US", options);
+            </script>
+        </div>
+    </div>
+    <div class="navigation-wrap navigation-shadow bg-white">
+        <nav class="navbar navbar-expand-lg navbar-light bg-white">
+            <div class="container">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#main_nav99" aria-controls="main_nav99" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <a class="navbar-brand" href="index.php">
+                    <img src="images/placeholder/logos.png" alt="Gunvani News" class="img-fluid">
+                </a>
+                <div class="collapse navbar-collapse justify-content-between" id="main_nav99">
+                    <ul class="navbar-nav ml-auto" id="category-menu">
+                        <li class="nav-item"><a class="nav-link" href="index.php"> Home </a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+    <script>
+    async function loadMenuCategories() {
+        const menu = document.getElementById("category-menu");
+        if (!menu) return;
+        try {
+            const response = await fetch("categories-json.php");
+            if (!response.ok) return;
+            const categories = await response.json();
+            categories.forEach(category => {
+                const li = document.createElement("li");
+                li.className = "nav-item";
+                const a = document.createElement("a");
+                a.className = "nav-link";
+                a.href = "category.php?slug=" + encodeURIComponent(category.slug);
+                a.textContent = category.name;
+                li.appendChild(a);
+                menu.appendChild(li);
+            });
+        } catch (error) {
+            console.warn("Failed to load categories:", error);
+        }
+    }
+    loadMenuCategories();
+    </script>
+</header>
+    <section>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <!-- Breadcrumb -->
+                    <ul class="breadcrumbs bg-light mb-4">
+                        <li class="breadcrumbs__item">
+                            <a href="index.php" class="breadcrumbs__url">
+                                <i class="fa fa-home"></i> Home</a>
+                        </li>
+
+                        <li class="breadcrumbs__item breadcrumbs__item--current">
+                            World
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8">
+                    <aside class="wrapper__list__article ">
+                        <h4 class="border_section">Category title</h4>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <!-- Post Article -->
+                                <div class="article__entry">
+                                    <div class="article__image">
+                                        <a href="#">
+                                            <img src="images/placeholder/500x400.jpg" alt="" class="img-fluid">
+                                        </a>
+                                    </div>
+                                    <div class="article__content">
+
+                                        <ul class="list-inline">
+
+                                            <li class="list-inline-item">
+                                                <span class="text-dark text-capitalize" style="color: #c00 !important">
+                                                    December 09, 2026
+                                                </span>
+                                            </li>
+
+                                        </ul>
+                                        <h5>
+                                            <a href="#">
+                                                Proin eu nisl et arcu iaculis placerat sollicitudin ut est, reflecting a
+                                                well-structured and balanced approach.
+                                            </a>
+                                        </h5>
+                                        <p>
+                                            Maecenas accumsan tortor ut velit pharetra mollis, presenting a refined
+                                            development pattern. Proin eu nisl et arcu
+                                        </p>
+                                        <a href="#" class="btn btn-outline-primary mb-4 text-capitalize"> read more</a>
+                                    </div>
+                                </div>
+                                <!-- Post Article -->
+                                <div class="article__entry">
+                                    <div class="article__image">
+                                        <a href="#">
+                                            <img src="images/placeholder/500x400.jpg" alt="" class="img-fluid">
+                                        </a>
+                                    </div>
+                                    <div class="article__content">
+
+                                        <ul class="list-inline">
+
+                                            <li class="list-inline-item">
+                                                <span class="text-dark text-capitalize" style="color: #c00 !important">
+                                                    December 12, 2026
+                                                </span>
+                                            </li>
+
+                                        </ul>
+                                        <h5>
+                                            <a href="#">
+                                                Curabitur faucibus urna vel lectus placerat, enhancing clarity and
+                                                strategic focus across key areas.
+                                            </a>
+                                        </h5>
+                                        <p>
+                                            Suspendisse potenti; Integer tincidunt sapien at arcu ultricies, while Proin
+                                            facilisis magna sit amet orci vulputate feugiat�creating a seamless,
+                                            well-balanced structure overall.
+                                        </p>
+                                        <a href="#" class="btn btn-outline-primary mb-4 text-capitalize"> read more</a>
+                                    </div>
+                                </div>
+                                <!-- Post Article -->
+                                <div class="article__entry">
+                                    <div class="article__image">
+                                        <a href="#">
+                                            <img src="images/placeholder/500x400.jpg" alt="" class="img-fluid">
+                                        </a>
+                                    </div>
+                                    <div class="article__content">
+
+                                        <ul class="list-inline">
+
+                                            <li class="list-inline-item">
+                                                <span class="text-dark text-capitalize" style="color: #c00 !important">
+                                                    December 18, 2026
+                                                </span>
+                                            </li>
+
+                                        </ul>
+                                        <h5>
+                                            <a href="#">
+                                                Vestibulum aliquet metus at nibh porttitor, delivering a clean and
+                                                structured presentation throughout.
+                                            </a>
+                                        </h5>
+                                        <p>
+                                            Aenean dignissim lorem nec arcu tincidunt varius; Morbi euismod justo sed
+                                            purus feugiat, ensuring a smooth and cohesive overall flow.
+                                        </p>
+                                        <a href="#" class="btn btn-outline-primary mb-4 text-capitalize"> read more</a>
+                                    </div>
+                                </div>
+                                <!-- Post Article -->
+                                <div class="article__entry">
+                                    <div class="article__image">
+                                        <a href="#">
+                                            <img src="images/placeholder/500x400.jpg" alt="" class="img-fluid">
+                                        </a>
+                                    </div>
+                                    <div class="article__content">
+
+                                        <ul class="list-inline">
+
+                                            <li class="list-inline-item">
+                                                <span class="text-dark text-capitalize" style="color: #c00 !important">
+                                                    December 22, 2026
+                                                </span>
+                                            </li>
+
+                                        </ul>
+                                        <h5>
+                                            <a href="#">
+                                                Nullam consectetur nisl id libero convallis, offering refined structure
+                                                and enhanced readability.
+                                            </a>
+                                        </h5>
+                                        <p>
+                                            Pellentesque habitant morbi tristique senectus et netus; Quisque efficitur
+                                            magna vel urna dictum, creating a polished and balanced overall narrative.
+                                        </p>
+                                        <a href="#" class="btn btn-outline-primary mb-4 text-capitalize"> read more</a>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            <div class="col-md-6">
+                                <!-- Post Article -->
+                                <div class="article__entry">
+                                    <div class="article__image">
+                                        <a href="#">
+                                            <img src="images/placeholder/500x400.jpg" alt="" class="img-fluid">
+                                        </a>
+                                    </div>
+                                    <div class="article__content">
+
+                                        <ul class="list-inline">
+
+                                            <li class="list-inline-item">
+                                                <span class="text-dark text-capitalize" style="color: #c00 !important">
+                                                    December 27, 2026
+                                                </span>
+                                            </li>
+
+                                        </ul>
+                                        <h5>
+                                            <a href="#">
+                                                Fusce interdum sapien sit amet elit posuere, delivering clarity and
+                                                strong structural consistency.
+                                            </a>
+                                        </h5>
+                                        <p>
+                                            Morbi sollicitudin lacus non justo accumsan, while Integer tempor velit
+                                            vitae arcu porttitor�creating a smooth, well-balanced presentation.
+                                        </p>
+                                        <a href="#" class="btn btn-outline-primary mb-4 text-capitalize"> read more</a>
+                                    </div>
+                                </div>
+                                <!-- Post Article -->
+                                <div class="article__entry">
+                                    <div class="article__image">
+                                        <a href="#">
+                                            <img src="images/placeholder/500x400.jpg" alt="" class="img-fluid">
+                                        </a>
+                                    </div>
+                                    <div class="article__content">
+
+                                        <ul class="list-inline">
+
+                                            <li class="list-inline-item">
+                                                <span class="text-dark text-capitalize" style="color: #c00 !important">
+                                                    January 03, 2026
+                                                </span>
+                                            </li>
+
+                                        </ul>
+                                        <h5>
+                                            <a href="#">
+                                                Aliquam porta risus at justo vulputate, offering precise structure and
+                                                an elegant presentation.
+                                            </a>
+                                        </h5>
+                                        <p>
+                                            Sed vestibulum mauris nec sapien aliquet, while Curabitur gravida erat non
+                                            enim efficitur�resulting in a cohesive and polished overall layout.
+                                        </p>
+                                        <a href="#" class="btn btn-outline-primary mb-4 text-capitalize"> read more</a>
+                                    </div>
+                                </div>
+                                <!-- Post Article -->
+                                <div class="article__entry">
+                                    <div class="article__image">
+                                        <a href="#">
+                                            <img src="images/placeholder/500x400.jpg" alt="" class="img-fluid">
+                                        </a>
+                                    </div>
+                                    <div class="article__content">
+
+                                        <ul class="list-inline">
+
+                                            <li class="list-inline-item">
+                                                <span class="text-dark text-capitalize" style="color: #c00 !important">
+                                                    descember 09, 2016
+                                                </span>
+                                            </li>
+
+                                        </ul>
+                                        <h5>
+                                            <a href="#">
+                                                Proin eu nisl et arcu iaculis placerat sollicitudin ut est
+                                            </a>
+                                        </h5>
+                                        <p>
+                                            Maecenas accumsan tortor ut velit pharetra mollis. Proin eu nisl et arcu
+                                            iaculis placerat sollicitudin ut
+                                            est. In fringilla dui dui.
+                                        </p>
+                                        <a href="#" class="btn btn-outline-primary mb-4 text-capitalize"> read more</a>
+                                    </div>
+                                </div>
+                                <!-- Post Article -->
+                                <div class="article__entry">
+                                    <div class="article__image">
+                                        <a href="#">
+                                            <img src="images/placeholder/500x400.jpg" alt="" class="img-fluid">
+                                        </a>
+                                    </div>
+                                    <div class="article__content">
+
+                                        <ul class="list-inline">
+
+                                            <li class="list-inline-item">
+                                                <span class="text-dark text-capitalize" style="color: #c00 !important">
+                                                    descember 09, 2016
+                                                </span>
+                                            </li>
+
+                                        </ul>
+                                        <h5>
+                                            <a href="#">
+                                                Proin eu nisl et arcu iaculis placerat sollicitudin ut est
+                                            </a>
+                                        </h5>
+                                        <p>
+                                            Maecenas accumsan tortor ut velit pharetra mollis. Proin eu nisl et arcu
+                                            iaculis placerat sollicitudin ut
+                                            est. In fringilla dui dui.
+                                        </p>
+                                        <a href="#" class="btn btn-outline-primary mb-4 text-capitalize"> read more</a>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </aside>
+
+                </div>
+                <div class="col-md-4">
+                    <div class="sidebar-sticky">
+                        <aside class="wrapper__list__article ">
+                            <h4 class="border_section">Sidebar</h4>
+                            <div class="wrapper__list__article-small">
+                                <div class="mb-3">
+                                    <!-- Post Article -->
+                                    <div class="card__post card__post-list">
+                                        <div class="image-sm">
+                                            <a href="./card-#">
+                                                <img src="images/placeholder/500x400.jpg" class="img-fluid" alt="">
+                                            </a>
+                                        </div>
+
+
+                                        <div class="card__post__body ">
+                                            <div class="card__post__content">
+
+                                                <div class="card__post__author-info mb-2">
+                                                    <ul class="list-inline">
+
+                                                        <li class="list-inline-item">
+                                                            <span class="text-dark text-capitalize"
+                                                                style="color: #c00 !important">
+                                                                descember 09, 2016
+                                                            </span>
+                                                        </li>
+
+                                                    </ul>
+                                                </div>
+                                                <div class="card__post__title">
+                                                    <h6>
+                                                        <a href="#">
+                                                            6 Best Tips for Building a Good Shipping Boat
+                                                        </a>
+                                                    </h6>
+                                                    <!-- <p class="d-none d-lg-block d-xl-block">
+                    Maecenas accumsan tortor ut velit pharetra mollis. Proin eu nisl et arcu iaculis placerat
+                    sollicitudin ut est. In fringilla dui dui.
+                </p> -->
+
+                                                </div>
+
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <!-- Post Article -->
+                                    <div class="card__post card__post-list">
+                                        <div class="image-sm">
+                                            <a href="./card-#">
+                                                <img src="images/placeholder/500x400.jpg" class="img-fluid" alt="">
+                                            </a>
+                                        </div>
+
+
+                                        <div class="card__post__body ">
+                                            <div class="card__post__content">
+
+                                                <div class="card__post__author-info mb-2">
+                                                    <ul class="list-inline">
+
+                                                        </li>
+                                                        <li class="list-inline-item">
+                                                            <span class="text-dark text-capitalize"
+                                                                style="color: #c00 !important">
+                                                                descember 09, 2016
+                                                            </span>
+                                                        </li>
+
+                                                    </ul>
+                                                </div>
+                                                <div class="card__post__title">
+                                                    <h6>
+                                                        <a href="#">
+                                                            6 Best Tips for Building a Good Shipping Boat
+                                                        </a>
+                                                    </h6>
+                                                    <!-- <p class="d-none d-lg-block d-xl-block">
+                    Maecenas accumsan tortor ut velit pharetra mollis. Proin eu nisl et arcu iaculis placerat
+                    sollicitudin ut est. In fringilla dui dui.
+                </p> -->
+
+                                                </div>
+
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <!-- Post Article -->
+                                    <div class="card__post card__post-list">
+                                        <div class="image-sm">
+                                            <a href="./card-#">
+                                                <img src="images/placeholder/500x400.jpg" class="img-fluid" alt="">
+                                            </a>
+                                        </div>
+
+
+                                        <div class="card__post__body ">
+                                            <div class="card__post__content">
+
+                                                <div class="card__post__author-info mb-2">
+                                                    <ul class="list-inline">
+
+                                                        <li class="list-inline-item">
+                                                            <span class="text-dark text-capitalize"
+                                                                style="color: #c00 !important">
+                                                                descember 09, 2016
+                                                            </span>
+                                                        </li>
+
+                                                    </ul>
+                                                </div>
+                                                <div class="card__post__title">
+                                                    <h6>
+                                                        <a href="#">
+                                                            6 Best Tips for Building a Good Shipping Boat
+                                                        </a>
+                                                    </h6>
+                                                    <!-- <p class="d-none d-lg-block d-xl-block">
+                    Maecenas accumsan tortor ut velit pharetra mollis. Proin eu nisl et arcu iaculis placerat
+                    sollicitudin ut est. In fringilla dui dui.
+                </p> -->
+
+                                                </div>
+
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Post Article -->
+                                <div class="article__entry">
+                                    <div class="article__image">
+                                        <a href="category-style-v1.html">
+                                            <img src="images/placeholder/500x400.jpg" alt="" class="img-fluid">
+                                        </a>
+                                    </div>
+                                    <div class="article__content">
+
+                                        <ul class="list-inline">
+
+                                            <li class="list-inline-item">
+                                                <span class="text-dark text-capitalize" style="color: #c00 !important">
+                                                    descember 09, 2016
+                                                </span>
+                                            </li>
+
+                                        </ul>
+                                        <h5>
+                                            <a href="category-style-v1.html">
+                                                Proin eu nisl et arcu iaculis placerat sollicitudin ut est
+                                            </a>
+                                        </h5>
+                                        <p>
+                                            Maecenas accumsan tortor ut velit pharetra mollis. Proin eu nisl et arcu
+                                            iaculis placerat sollicitudin ut
+                                            est. In fringilla dui dui.
+                                        </p>
+                                        <a href="#" class="btn btn-outline-primary mb-4 text-capitalize"> read more</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </aside>
+
+
+                        <aside class="wrapper__list__article">
+                            <h4 class="border_section">newsletter</h4>
+                            <!-- Form Subscribe -->
+                            <div class="widget__form-subscribe bg__card-shadow">
+                                <h6>
+                                    The most important world news and events of the day.
+                                </h6>
+                                <p><small>Get magzrenvi daily newsletter on your inbox.</small></p>
+                                <div class="input-group ">
+                                    <input type="text" class="form-control" placeholder="Your email address">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-primary" type="button">sign up</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </aside>
+
+                        <aside class="wrapper__list__article">
+                            <h4 class="border_section">Advertise</h4>
+                            <a href="category-style-v1.html">
+                                <figure>
+                                    <img src="images/placeholder/500x400.jpg" alt="" class="img-fluid">
+                                </figure>
+                            </a>
+                        </aside>
+                    </div>
+                </div>
+
+                <div class="clearfix"></div>
+            </div>
+            <!-- Pagination -->
+            <div class="pagination-area">
+                <div class="pagination wow fadeIn animated" data-wow-duration="2s" data-wow-delay="0.5s"
+                    style="visibility: visible; animation-duration: 2s; animation-delay: 0.5s; animation-name: fadeIn;">
+                    <a href="category-style-v1.html">
+                        �
+                    </a>
+                    <a href="category-style-v1.html">
+                        1
+                    </a>
+                    <a class="active" href="#">
+                        2
+                    </a>
+                    <a href="category-style-v1.html">
+                        3
+                    </a>
+                    <a href="category-style-v1.html">
+                        4
+                    </a>
+                    <a href="category-style-v1.html">
+                        5
+                    </a>
+
+                    <a href="category-style-v1.html">
+                        �
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+
+
+    <!-- ? Fully Responsive Footer -->
+    <footer
+        style="background:#0b0b0b; padding:50px 0 25px; color:#e0e0e0; font-family:Poppins, sans-serif; width:100%;">
+        <div class="footer-main" style="
+        max-width:1350px; 
+        margin:0 auto; 
+        display:flex; 
+        justify-content:space-between;
+        align-items:flex-start; 
+        padding:0 100px;
+        gap:40px;
+        flex-wrap:wrap;
+    ">
+
+            <!-- LEFT SECTION -->
+            <div class="footer-logo" style="flex:1; min-width:260px;">
+                <img src="images/placeholder/logos.png" alt="logo"
+                    style="width:100px; margin-bottom:15px; opacity:1; border-radius:10px;">
+                <p style="font-size:14px; color:#bebebe; line-height:1.7; max-width:260px;">
+                    Gunvani News ek ????????? ?? ???????? ?????? ??? ?? ?? ???? ???-?????? ?? ?? ?????????? ???? ?????
+                    ?? ?????? ?? ??? ???????? ?? ??? ??????? ???
+                    ????? ???????? ?? ???? ?? ?????, ??????? ?? ???? ?????? ??????? ???????? � ???? ???? ??????? ?? ????
+                    ???
+                </p>
+            </div>
+
+            <!-- CENTER SECTION -->
+            <div class="footer-center" style="flex:1; min-width:200px; text-align:left;">
+                <h4 style="color:#fff; margin-bottom:15px; font-size:18px;">Quick Links</h4>
+                <ul style="list-style:none; padding:0; margin:0;">
+                    <li style="margin-bottom:10px;">
+                        <a href="#" style="color:#d0d0d0; text-decoration:none; font-size:15px;">About Us</a>
+                    </li>
+                    <li style="margin-bottom:10px;">
+                        <a href="#" style="color:#d0d0d0; text-decoration:none; font-size:15px;">Contact</a>
+                    </li>
+                    <li style="margin-bottom:10px;">
+                        <a href="#" style="color:#d0d0d0; text-decoration:none; font-size:15px;">Terms & Conditions</a>
+                    </li>
+                    <li style="margin-bottom:10px;">
+                        <a href="#" style="color:#d0d0d0; text-decoration:none; font-size:15px;">Privacy Policy</a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- RIGHT SECTION -->
+            <div class="footer-right" style="flex:1; min-width:260px; text-align:right;">
+                <h4 style="color:#fff; margin-bottom:15px; font-size:18px;">Follow Us</h4>
+                <div style="margin-bottom:15px;">
+                    <a href="#" style="display:inline-block; width:40px; height:40px; background:#161616;
+                text-align:center; line-height:40px; border-radius:6px; color:#fff;
+                font-size:17px; margin-left:7px; text-decoration:none;">
+                        <i class="fa fa-facebook"></i>
+                    </a>
+                    <a href="#" style="display:inline-block; width:40px; height:40px; background:#161616;
+                text-align:center; line-height:40px; border-radius:6px; color:#fff;
+                font-size:17px; margin-left:7px; text-decoration:none;">
+                        <i class="fa fa-twitter"></i>
+                    </a>
+                    <a href="#" style="display:inline-block; width:40px; height:40px; background:#161616;
+                text-align:center; line-height:40px; border-radius:6px; color:#fff;
+                font-size:17px; margin-left:7px; text-decoration:none;">
+                        <i class="fa fa-whatsapp"></i>
+                    </a>
+                    <a href="#" style="display:inline-block; width:40px; height:40px; background:#161616;
+                text-align:center; line-height:40px; border-radius:6px; color:#fff;
+                font-size:17px; margin-left:7px; text-decoration:none;">
+                        <i class="fa fa-telegram"></i>
+                    </a>
+                </div>
+                <p style="font-size:14px; color:#bcbcbc; margin-top:10px;">
+                    Janta ki awaaz, Gunvani News ke saath
+                </p>
+            </div>
+        </div>
+
+        <div style="text-align:center; margin-top:35px; color:#999; font-size:13px;">
+            � 2025 Gunvani News � All Rights Reserved.
+        </div>
+    </footer>
+
+    <!-- ? Responsive CSS -->
+    <style>
+        @media(max-width:1024px) {
+            .footer-main {
+                padding: 0 60px !important;
+            }
+        }
+
+        @media(max-width:768px) {
+            .footer-main {
+                padding: 0 40px !important;
+                flex-direction: column !important;
+                text-align: left !important;
+            }
+
+            .footer-center,
+            .footer-right {
+                margin-top: 25px !important;
+                text-align: left !important;
+            }
+
+            .footer-right a {
+                margin-left: 0 !important;
+                margin-right: 7px !important;
+            }
+        }
+
+        @media(max-width:480px) {
+            .footer-main {
+                padding: 0 20px !important;
+            }
+
+            .footer-logo img {
+                width: 80px !important;
+            }
+
+            .footer-center h4,
+            .footer-right h4 {
+                font-size: 16px !important;
+            }
+        }
+    </style>
+
+    <a href="javascript:" id="return-to-top"><i class="fa fa-chevron-up"></i></a>
+
+    <script type="text/javascript" src="./js/index.bundle.js?537a1bbd0e5129401d28"></script>
+</body>
+
+</html>
+
+
+

@@ -1,0 +1,1234 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Retnews &#8211; Best news, blog & magazine template</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="manifest" href="site.webmanifest">
+    <!-- favicon.ico in the root directory -->
+    <link rel="apple-touch-icon" href="icon.png">
+
+    <meta name="theme-color" content="#030303">
+    <!-- google fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,500;0,700;1,300;1,500&family=Poppins:ital,wght@0,300;0,500;0,700;1,300;1,400&display=swap"
+        rel="stylesheet">
+    <link href="./css/styles.css?537a1bbd0e5129401d28" rel="stylesheet">
+</head>
+
+<body>
+    <!-- loading -->
+    <!-- loading -->
+    <div class="loading-container">
+        <div class="h-100 d-flex align-items-center justify-content-center">
+            <ul class="list-unstyled">
+                <li>
+                    <img src="images/placeholder/loading.png" alt="Alternate Text" height="100" />
+
+                </li>
+                <li>
+
+                    <div class="spinner">
+                        <div class="rect1"></div>
+                        <div class="rect2"></div>
+                        <div class="rect3"></div>
+                        <div class="rect4"></div>
+                        <div class="rect5"></div>
+
+                    </div>
+
+                </li>
+                <li>
+                    <p>Loading</p>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!-- End loading -->
+    <!-- end loading -->
+
+    <!-- Header news -->
+    <header>
+    <div class="topbar">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12 col-md-5">
+                    <div class="topbar-left">
+                        <div class="topbar-text" id="date"></div>
+                    </div>
+                </div>
+                <div class="col-sm-12 col-md-7">
+                    <div class="topbar-right">
+                        <ul class="topbar-link">
+                            <li><a href="verification.php" title="">Verification</a></li>
+                            <li><a href="admin/login.php" title="">Admin</a></li>
+                        </ul>
+                        <ul class="topbar-sosmed">
+                            <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+                            <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+                            <li><a href="#"><i class="fa fa-instagram"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <script>
+                const today = new Date();
+                const options = { weekday: "long", month: "long", day: "numeric", year: "numeric" };
+                document.getElementById("date").innerText = today.toLocaleDateString("en-US", options);
+            </script>
+        </div>
+    </div>
+    <div class="navigation-wrap navigation-shadow bg-white">
+        <nav class="navbar navbar-expand-lg navbar-light bg-white">
+            <div class="container">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#main_nav99" aria-controls="main_nav99" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <a class="navbar-brand" href="index.php">
+                    <img src="images/placeholder/logos.png" alt="Gunvani News" class="img-fluid">
+                </a>
+                <div class="collapse navbar-collapse justify-content-between" id="main_nav99">
+                    <ul class="navbar-nav ml-auto" id="category-menu">
+                        <li class="nav-item"><a class="nav-link" href="index.php"> Home </a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+    <script>
+    async function loadMenuCategories() {
+        const menu = document.getElementById("category-menu");
+        if (!menu) return;
+        try {
+            const response = await fetch("categories-json.php");
+            if (!response.ok) return;
+            const categories = await response.json();
+            categories.forEach(category => {
+                const li = document.createElement("li");
+                li.className = "nav-item";
+                const a = document.createElement("a");
+                a.className = "nav-link";
+                a.href = "category.php?slug=" + encodeURIComponent(category.slug);
+                a.textContent = category.name;
+                li.appendChild(a);
+                menu.appendChild(li);
+            });
+        } catch (error) {
+            console.warn("Failed to load categories:", error);
+        }
+    }
+    loadMenuCategories();
+    </script>
+</header>
+
+    <!-- Navbar sidebar menu  -->
+    <div id="modal_aside_right" class="modal fixed-left fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-aside" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="widget__form-search-bar  ">
+                        <div class="row no-gutters">
+                            <div class="col">
+                                <input class="form-control border-secondary border-right-0 rounded-0" value=""
+                                    placeholder="Search">
+                            </div>
+                            <div class="col-auto">
+                                <button class="btn btn-outline-secondary border-left-0 rounded-0 rounded-right">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <nav class="list-group list-group-flush">
+                        <ul class="navbar-nav ">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link active dropdown-toggle text-dark" href="#" data-toggle="dropdown">
+                                    Home
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-left">
+                                    <li><a class="dropdown-item text-dark" href="/index.html"> Home version one </a>
+                                    </li>
+                                    <li><a class="dropdown-item text-dark" href="homepage-v2.html"> Home version two
+                                        </a>
+                                    </li>
+                                    <li><a class="dropdown-item text-dark" href="/homepage-v3.html"> Home version three
+                                        </a>
+                                    </li>
+                                    <li><a class="dropdown-item text-dark" href="/homepage-v4.html"> Home version four
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle  text-dark" href="#" data-toggle="dropdown"> Pages
+                                </a>
+                                <ul class="dropdown-menu animate fade-up">
+
+                                    <li><a class="dropdown-item icon-arrow  text-dark" href="#"> Blog </a>
+                                        <ul class="submenu dropdown-menu  animate fade-up">
+                                            <li><a class="dropdown-item" href="/category-style-v1.html">Style 1</a></li>
+                                            <li><a class="dropdown-item" href="/category-style-v2.html">Style 2</a></li>
+                                            <li><a class="dropdown-item" href="/category-style-v3.html">Style 3</a></li>
+
+                                            <li><a class="dropdown-item icon-arrow  text-dark" href="">Submenu item 3
+                                                </a>
+                                                <ul class="submenu dropdown-menu  animate fade-up">
+                                                    <li><a class="dropdown-item" href="">Multi level 1</a></li>
+                                                    <li><a class="dropdown-item" href="">Multi level 2</a></li>
+                                                </ul>
+                                            </li>
+                                            <li><a class="dropdown-item  text-dark" href="">Submenu item 4</a></li>
+                                            <li><a class="dropdown-item" href="">Submenu item 5</a></li>
+                                        </ul>
+                                    </li>
+                                    <li><a class="dropdown-item icon-arrow  text-dark" href="#"> Blog single detail </a>
+                                        <ul class="submenu dropdown-menu  animate fade-up">
+                                            <li><a class="dropdown-item" href="/#">Style 1</a></li>
+                                            <li><a class="dropdown-item" href="/article-detail-v2.html">Style 2</a></li>
+                                            <li><a class="dropdown-item" href="/article-detail-v3.html">Style 3</a></li>
+
+                                        </ul>
+                                    </li>
+
+                                    <li><a class="dropdown-item icon-arrow  text-dark" href="#"> Search Result </a>
+                                        <ul class="submenu dropdown-menu  animate fade-up">
+                                            <li><a class="dropdown-item" href="/search-result.html">Style 1</a></li>
+                                            <li><a class="dropdown-item" href="/search-result-v1.html">Style 2</a></li>
+                                        </ul>
+                                    </li>
+                                    <li><a class="dropdown-item  text-dark" href="/login.html">Login </a>
+                                    <li><a class="dropdown-item  text-dark" href="/register.html"> Register </a>
+                                    <li><a class="dropdown-item  text-dark" href="/contact.html"> Contact </a>
+                                    <li><a class="dropdown-item  text-dark" href="/404.html"> 404 Error </a>
+                                </ul>
+                            </li>
+
+                            <li class="nav-item dropdown">
+                                <a class="nav-link active dropdown-toggle  text-dark" href="#" data-toggle="dropdown">
+                                    About
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-left">
+                                    <li><a class="dropdown-item" href="/about-us.html"> Style 1 </a>
+                                    </li>
+                                    <li><a class="dropdown-item" href="/about-us-v1.html"> Style 2 </a></li>
+
+                                </ul>
+                            </li>
+
+
+                            <li class="nav-item"><a class="nav-link  text-dark" href="#"> Category </a></li>
+                            <li class="nav-item"><a class="nav-link  text-dark" href="/contact.html"> contact </a></li>
+                        </ul>
+
+                    </nav>
+                </div>
+                <div class="modal-footer">
+                    <p>� 2020 <a href="http://retenvi.com"
+                            title="Premium WordPress news &amp; magazine theme">Magzrenvi</a>
+                        -
+                        Premium template news, blog & magazine &amp;
+                        magazine theme by <a href="http://retenvi.com" title="retenvi">RETENVI.COM</a>.</p>
+                </div>
+            </div>
+        </div> <!-- modal-bialog .// -->
+    </div> <!-- modal.// -->
+    <!-- End Navbar sidebar menu  -->
+    <!-- end navbar -->
+    </header>
+    <!-- end header -->
+
+
+    <section class="pb-80">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <!-- breaddcrumb -->
+                    <!-- Breadcrumb -->
+                    <ul class="breadcrumbs bg-light mb-4">
+                        <li class="breadcrumbs__item">
+                            <a href="index.php" class="breadcrumbs__url">
+                                <i class="fa fa-home"></i> Home</a>
+                        </li>
+                        <li class="breadcrumbs__item">
+                            <a href="index.php" class="breadcrumbs__url">News</a>
+                        </li>
+                        <li class="breadcrumbs__item breadcrumbs__item--current">
+                            World
+                        </li>
+                    </ul>
+                    <!-- end breadcrumb -->
+                </div>
+                <div class="col-md-8">
+                    <!-- content article detail -->
+                    <!-- Article Detail -->
+                    <div class="wrap__article-detail">
+                        <div class="wrap__article-detail-title">
+                            <h1>
+                                Top 5 Tech Breakthroughs You Can�t Afford to Miss This Year
+                            </h1>
+                            <h3>
+                                Discover how groundbreaking innovations are shaping the world � from AI to space
+                                technology and beyond.
+                        </div>
+                        <hr>
+                        <div class="wrap__article-detail-info">
+                            <ul class="list-inline">
+                                <!-- <li class="list-inline-item">
+                <figure class="image-profile">
+                    <img src="images/placeholder/logo.jpg" alt="">
+                </figure>
+            </li> -->
+
+                                <li class="list-inline-item">
+                                    <span class="text-dark text-capitalize ml-1">
+                                        descember 09, 2016
+                                    </span>
+                                </li>
+                                <li class="list-inline-item">
+                                    <span class="text-dark text-capitalize">
+                                        in
+                                    </span>
+                                    <a href="#">
+                                        business
+                                    </a>
+
+
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="wrap__article-detail-image mt-4">
+                            <figure>
+                                <img src="images/placeholder/800x500.jpg" alt="" class="img-fluid">
+                            </figure>
+                        </div>
+                        <div class="wrap__article-detail-content">
+                            <div class="total-views">
+                                <div class="total-views-read">
+                                    15.k
+                                    <span>
+                                        views
+                                    </span>
+                                </div>
+
+
+                                <ul class="list-inline">
+                                    <span class="share">share on:</span>
+                                    <li class="list-inline-item">
+                                        <a class="btn btn-social-o facebook" href="#">
+                                            <i class="fa fa-facebook-f"></i>
+                                            <span>facebook</span>
+                                        </a>
+
+                                    </li>
+                                    <li class="list-inline-item">
+                                        <a class="btn btn-social-o twitter" href="#">
+                                            <i class="fa fa-twitter"></i>
+                                            <span>twitter</span>
+                                        </a>
+                                    </li>
+                                    <li class="list-inline-item">
+                                        <a class="btn btn-social-o whatsapp" href="#">
+                                            <i class="fa fa-whatsapp"></i>
+                                            <span>whatsapp</span>
+                                        </a>
+                                    </li>
+                                    <li class="list-inline-item">
+                                        <a class="btn btn-social-o telegram" href="#">
+                                            <i class="fa fa-telegram"></i>
+                                            <span>telegram</span>
+                                        </a>
+                                    </li>
+
+                                    <li class="list-inline-item">
+                                        <a class="btn btn-linkedin-o linkedin" href="#">
+                                            <i class="fa fa-linkedin"></i>
+                                            <span>linkedin</span>
+                                        </a>
+                                    </li>
+
+                                </ul>
+                            </div>
+                            <p class="has-drop-cap-fluid">
+                                In the fast-evolving world of technology, stories are constantly being written � not
+                                just in code, but in the impact
+                                they create. Once upon a time, innovation was a distant dream, but today, it defines how
+                                we live, connect, and
+                                imagine the future.
+                                <br><br>
+                                Far beyond the lines of algorithms and data, creativity flows through every invention.
+                                Behind every breakthrough
+                                lies the silent effort of countless thinkers, dreamers, and creators who push the limits
+                                of what�s possible. From
+                                artificial intelligence shaping our daily lives to quantum computing rewriting the rules
+                                of logic, we�re witnessing
+                                a new era of transformation.
+                                <br><br>
+                                The digital world, however, is not without challenges � misinformation, data privacy,
+                                and ethical boundaries test
+                                the responsibility of progress. Yet, the passion for discovery continues to drive
+                                humanity forward, reminding us
+                                that technology, when guided by purpose, can make the impossible a reality.
+                                <br><br>
+                                Every idea begins as a spark � and with courage, it becomes a revolution. In this
+                                journey of innovation, every step
+                                we take today builds the foundation for a smarter, more connected tomorrow.
+                            </p>
+
+                            <!-- Blockquote  -->
+                            <blockquote class="block-quote">
+                                <p>
+                                    "Innovation is not just about creating new things � it�s about creating better
+                                    possibilities for the world."
+                                </p>
+                                <cite>
+                                    Tom Cruise
+                                </cite>
+                            </blockquote>
+
+                            <!-- Blockquote -->
+
+
+                            <h5>How Tech Startups Survive Without Funding</h5>
+                            <p>
+                                In today�s competitive digital landscape, many startups are proving that innovation can
+                                thrive even without massive
+                                funding. With limited resources, they focus on creativity, community building, and
+                                solving real-world problems that
+                                matter. These lean teams rely on smart strategies � leveraging open-source tools, remote
+                                talent, and organic growth
+                                through authentic storytelling.
+                                <br><br>
+                                While the journey is challenging, it also builds resilience, adaptability, and a true
+                                understanding of sustainable
+                                success � proving that passion and purpose can sometimes outweigh big investments.
+                            </p>
+
+                        </div>
+
+
+                    </div>
+                    <!-- end content article detail -->
+
+                    <!-- tags -->
+                    <!-- News Tags -->
+                    <div class="blog-tags">
+                        <ul class="list-inline">
+                            <li class="list-inline-item">
+                                <i class="fa fa-tags">
+                                </i>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="#">
+                                    #property
+                                </a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="#">
+                                    #sea
+                                </a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="#">
+                                    #programming
+                                </a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="#">
+                                    #sea
+                                </a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="#">
+                                    #property
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- end tags-->
+
+                    <!-- authors-->
+                    <!-- Profile author -->
+                    <div class="wrap__profile">
+                        <div class="wrap__profile-author">
+                            <figure>
+                                <img src="images/placeholder/80x80.jpg" alt="" class="img-fluid rounded-circle">
+                            </figure>
+                            <div class="wrap__profile-author-detail">
+                                <div class="wrap__profile-author-detail-name">Author</div>
+                                <h4>John Doe</h4>
+                                <p>
+                                    John Doe is a passionate tech journalist and content strategist with over a decade
+                                    of experience exploring
+                                    innovation, startups, and digital transformation. His work focuses on uncovering the
+                                    stories behind the technology
+                                    that shapes our future, blending insight with simplicity to connect with readers
+                                    worldwide.
+                                </p>
+
+                                <ul class="list-inline">
+                                    <li class="list-inline-item">
+                                        <a href="#" class="btn btn-social btn-social-o facebook ">
+                                            <i class="fa fa-facebook"></i>
+                                        </a>
+                                    </li>
+                                    <li class="list-inline-item">
+                                        <a href="#" class="btn btn-social btn-social-o twitter ">
+                                            <i class="fa fa-twitter"></i>
+                                        </a>
+                                    </li>
+                                    <li class="list-inline-item">
+                                        <a href="#" class="btn btn-social btn-social-o instagram ">
+                                            <i class="fa fa-instagram"></i>
+                                        </a>
+                                    </li>
+                                    <li class="list-inline-item">
+                                        <a href="#" class="btn btn-social btn-social-o telegram ">
+                                            <i class="fa fa-telegram"></i>
+                                        </a>
+                                    </li>
+                                    <li class="list-inline-item">
+                                        <a href="#" class="btn btn-social btn-social-o linkedin ">
+                                            <i class="fa fa-linkedin"></i>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end author-->
+
+                    <!-- comment -->
+                    <!-- Comment  -->
+                    <div id="comments" class="comments-area">
+                        <h3 class="comments-title">2 Comments:</h3>
+
+                        <ol class="comment-list">
+                            <li class="comment">
+                                <aside class="comment-body">
+                                    <div class="comment-meta">
+                                        <div class="comment-author vcard">
+                                            <img src="images/placeholder/80x80.jpg" class="avatar" alt="image">
+                                            <b class="fn">Sarah Collins</b>
+                                            <span class="says">says:</span>
+                                        </div>
+
+                                        <div class="comment-metadata">
+                                            <a href="#">
+                                                <span>March 14, 2025 at 09:30 am</span>
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                    <div class="comment-content">
+                                        <p>
+                                            I really enjoyed reading this article! The insights about how startups adapt
+                                            without funding were very
+                                            inspiring. It�s amazing how creativity often becomes the strongest currency
+                                            for innovation.
+                                        </p>
+                                    </div>
+
+                                    <div class="reply">
+                                        <a href="#" class="comment-reply-link">Reply</a>
+                                    </div>
+                                </aside>
+
+                                <ol class="children">
+                                    <li class="comment">
+                                        <aside class="comment-body">
+                                            <div class="comment-meta">
+                                                <div class="comment-author vcard">
+                                                    <img src="images/placeholder/80x80.jpg" class="avatar" alt="image">
+                                                    <b class="fn">David Lee</b>
+                                                    <span class="says">replied:</span>
+                                                </div>
+
+                                                <div class="comment-metadata">
+                                                    <a href="#">
+                                                        <span>March 14, 2025 at 10:02 am</span>
+                                                    </a>
+                                                </div>
+                                            </div>
+
+                                            <div class="comment-content">
+                                                <p>
+                                                    Absolutely agree! Many successful founders started with just an idea
+                                                    and determination � this piece
+                                                    captures that perfectly.
+                                                </p>
+                                            </div>
+
+                                            <div class="reply">
+                                                <a href="#" class="comment-reply-link">Reply</a>
+                                            </div>
+                                        </aside>
+                                    </li>
+                                </ol>
+                            </li>
+
+                            <li class="comment">
+                                <aside class="comment-body">
+                                    <div class="comment-meta">
+                                        <div class="comment-author vcard">
+                                            <img src="images/placeholder/80x80.jpg" class="avatar" alt="image">
+                                            <b class="fn">Maria Johnson</b>
+                                            <span class="says">says:</span>
+                                        </div>
+
+                                        <div class="comment-metadata">
+                                            <a href="#">
+                                                <span>March 13, 2025 at 07:45 pm</span>
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                    <div class="comment-content">
+                                        <p>
+                                            Insightful read! It�s refreshing to see stories that highlight the human
+                                            side of tech and the determination
+                                            behind every startup�s success.
+                                        </p>
+                                    </div>
+
+                                    <div class="reply">
+                                        <a href="#" class="comment-reply-link">Reply</a>
+                                    </div>
+                                </aside>
+                            </li>
+                        </ol>
+
+                        <div class="comment-respond">
+                            <h3 class="comment-reply-title">Leave a Reply</h3>
+
+                            <form class="comment-form">
+                                <p class="comment-notes">
+                                    <span id="email-notes">Your email address will not be published.</span>
+                                    Required fields are marked
+                                    <span class="required">*</span>
+                                </p>
+
+                                <p class="comment-form-comment">
+                                    <label for="comment">Comment</label>
+                                    <textarea name="comment" id="comment" cols="45" rows="5" maxlength="65525"
+                                        required="required"></textarea>
+                                </p>
+
+                                <p class="comment-form-author">
+                                    <label>Name <span class="required">*</span></label>
+                                    <input type="text" id="author" name="name" required="required">
+                                </p>
+
+                                <p class="comment-form-email">
+                                    <label for="email">Email <span class="required">*</span></label>
+                                    <input type="email" id="email" name="email" required="required">
+                                </p>
+
+                                <p class="comment-form-url">
+                                    <label for="url">Website</label>
+                                    <input type="url" id="url" name="url">
+                                </p>
+
+                                <p class="comment-form-cookies-consent">
+                                    <input type="checkbox" value="yes" name="wp-comment-cookies-consent"
+                                        id="wp-comment-cookies-consent">
+                                    <label for="wp-comment-cookies-consent">
+                                        Save my name, email, and website in this browser for the next time I comment.
+                                    </label>
+                                </p>
+
+                                <p class="form-submit">
+                                    <input type="submit" name="submit" id="submit" class="submit" value="Post Comment">
+                                </p>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Comment -->
+                    <!-- end comment -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="single_navigation-prev">
+                                <a href="#">
+                                    <span>Previous Post</span>
+                                    How Emerging Startups Are Redefining Innovation in 2025
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="single_navigation-next text-left text-md-right">
+                                <a href="#">
+                                    <span>Next Post</span>
+                                    The Future of Artificial Intelligence: What to Expect in 2025 and Beyond
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+
+                    <div class="related-article">
+                        <h4>
+                            you may also like
+                        </h4>
+
+                        <div class="article__entry-carousel-three">
+                            <div class="item">
+                                <!-- Post Article -->
+                                <div class="article__entry">
+                                    <div class="article__image">
+                                        <a href="#">
+                                            <img src="images/placeholder/500x400.jpg" alt="" class="img-fluid">
+                                        </a>
+                                    </div>
+                                    <div class="article__content">
+                                        <ul class="list-inline">
+                                            <li class="list-inline-item">
+                                                <span>
+                                                    November 07, 2025
+                                                </span>
+                                            </li>
+                                        </ul>
+
+                                        <h5>
+                                            <a href="#">
+                                                10 Cutting-Edge Gadgets Redefining Everyday Life in 2025
+                                            </a>
+                                        </h5>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <!-- Post Article -->
+                                <div class="article__entry">
+                                    <div class="article__image">
+                                        <a href="#">
+                                            <img src="images/placeholder/500x400.jpg" alt="" class="img-fluid">
+                                        </a>
+                                    </div>
+                                    <div class="article__content">
+                                        <ul class="list-inline">
+                                            <li class="list-inline-item">
+                                                <span>
+                                                    November 07, 2025
+                                                </span>
+                                            </li>
+                                        </ul>
+
+                                        <h5>
+                                            <a href="#">
+                                                Exploring the Future of AI: Innovations Transforming the World
+                                            </a>
+                                        </h5>
+
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <!-- Post Article -->
+                                <div class="article__entry">
+                                    <div class="article__image">
+                                        <a href="#">
+                                            <img src="images/placeholder/500x400.jpg" alt="" class="img-fluid">
+                                        </a>
+                                    </div>
+                                    <div class="article__content">
+                                        <ul class="list-inline">
+                                            <li class="list-inline-item">
+                                                <span>
+                                                    November 07, 2025
+                                                </span>
+                                            </li>
+                                        </ul>
+
+                                        <h5>
+                                            <a href="#">
+                                                The Rise of Smart Devices: How Technology Is Shaping Modern Living
+                                            </a>
+                                        </h5>
+
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <!-- Post Article -->
+                                <div class="article__entry">
+                                    <div class="article__image">
+                                        <a href="#">
+                                            <img src="images/placeholder/500x400.jpg" alt="" class="img-fluid">
+                                        </a>
+                                    </div>
+                                    <div class="article__content">
+                                        <ul class="list-inline">
+                                            <li class="list-inline-item">
+                                                <span>
+                                                    October 10, 2025
+                                                </span>
+                                            </li>
+                                        </ul>
+
+                                        <h5>
+                                            <a href="#">
+                                                10 Innovations Changing the Way We Use Technology Every Day
+                                            </a>
+                                        </h5>
+
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <!-- Post Article -->
+                                <div class="article__entry">
+                                    <div class="article__image">
+                                        <a href="#">
+                                            <img src="images/placeholder/500x400.jpg" alt="" class="img-fluid">
+                                        </a>
+                                    </div>
+                                    <div class="article__content">
+                                        <ul class="list-inline">
+                                            <li class="list-inline-item">
+                                                <span>
+                                                    October 18, 2025
+                                                </span>
+                                            </li>
+                                        </ul>
+
+                                        <h5>
+                                            <a href="#">
+                                                How AI-Powered Tools Are Transforming the Future of Digital Marketing
+                                            </a>
+                                        </h5>
+
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-md-4">
+                    <div class="sticky-top">
+                        <aside class="wrapper__list__article ">
+                            <!-- <h4 class="border_section">Sidebar</h4> -->
+                            <div class="mb-4">
+                                <div class="widget__form-search-bar  ">
+                                    <div class="row no-gutters">
+                                        <div class="col">
+                                            <input class="form-control border-secondary border-right-0 rounded-0"
+                                                value="" placeholder="Search">
+                                        </div>
+                                        <div class="col-auto">
+                                            <button
+                                                class="btn btn-outline-secondary border-left-0 rounded-0 rounded-right">
+                                                <i class="fa fa-search"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="wrapper__list__article-small">
+                                <div class="mb-3">
+                                    <!-- Post Article -->
+                                    <div class="card__post card__post-list">
+                                        <div class="image-sm">
+                                            <a href="./card-#">
+                                                <img src="images/placeholder/500x400.jpg" class="img-fluid" alt="">
+                                            </a>
+                                        </div>
+
+
+                                        <div class="card__post__body ">
+                                            <div class="card__post__content">
+
+                                                <div class="card__post__author-info mb-2">
+                                                    <ul class="list-inline">
+                                                        <li class="list-inline-item">
+
+                                                        </li>
+                                                        <li class="list-inline-item">
+                                                            <span class="text-dark text-capitalize"
+                                                                style="color: #c00 !important;">
+                                                                January 15, 2026
+                                                            </span>
+                                                        </li>
+
+                                                    </ul>
+                                                </div>
+                                                <div class="card__post__title">
+                                                    <h6>
+                                                        <a href="./card-#">
+                                                            From Blueprint to Ocean: The Modern Art of Boat Construction
+                                                        </a>
+                                                    </h6>
+                                                    <!-- <p class="d-none d-lg-block d-xl-block">
+                    Maecenas accumsan tortor ut velit pharetra mollis. Proin eu nisl et arcu iaculis placerat
+                    sollicitudin ut est. In fringilla dui dui.
+                </p> -->
+
+                                                </div>
+
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <!-- Post Article -->
+                                    <div class="card__post card__post-list">
+                                        <div class="image-sm">
+                                            <a href="./card-#">
+                                                <img src="images/placeholder/500x400.jpg" class="img-fluid" alt="">
+                                            </a>
+                                        </div>
+
+
+                                        <div class="card__post__body ">
+                                            <div class="card__post__content">
+
+                                                <div class="card__post__author-info mb-2">
+                                                    <ul class="list-inline">
+                                                        <li class="list-inline-item">
+
+                                                        </li>
+                                                        <li class="list-inline-item">
+                                                            <span class="text-dark text-capitalize"
+                                                                style="color: #c00 !important;">
+                                                                April 22, 2026
+                                                            </span>
+                                                        </li>
+
+                                                    </ul>
+                                                </div>
+                                                <div class="card__post__title">
+                                                    <h6>
+                                                        <a href="./card-#">
+                                                            Mastering the Waves: How to Design a Durable Fishing Vessel
+                                                        </a>
+                                                    </h6>
+                                                    <!-- <p class="d-none d-lg-block d-xl-block">
+                    Maecenas accumsan tortor ut velit pharetra mollis. Proin eu nisl et arcu iaculis placerat
+                    sollicitudin ut est. In fringilla dui dui.
+                </p> -->
+
+                                                </div>
+
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <!-- Post Article -->
+                                    <div class="card__post card__post-list">
+                                        <div class="image-sm">
+                                            <a href="./card-#">
+                                                <img src="images/placeholder/500x400.jpg" class="img-fluid" alt="">
+                                            </a>
+                                        </div>
+
+
+                                        <div class="card__post__body ">
+                                            <div class="card__post__content">
+
+                                                <div class="card__post__author-info mb-2">
+                                                    <ul class="list-inline">
+
+                                                        </li>
+                                                        <li class="list-inline-item">
+                                                            <span class="text-dark text-capitalize"
+                                                                style="color: #c00 !important;">
+                                                                September 10, 2026
+                                                            </span>
+                                                        </li>
+
+
+                                                    </ul>
+                                                </div>
+                                                <div class="card__post__title">
+                                                    <h6>
+                                                        <a href="./card-#">
+                                                            6 Best Tips for Building a Good Shipping Boat
+                                                        </a>
+                                                    </h6>
+                                                    <!-- <p class="d-none d-lg-block d-xl-block">
+                    Maecenas accumsan tortor ut velit pharetra mollis. Proin eu nisl et arcu iaculis placerat
+                    sollicitudin ut est. In fringilla dui dui.
+                </p> -->
+
+                                                </div>
+
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Post Article -->
+                                <div class="article__entry">
+                                    <div class="article__image">
+                                        <a href="#">
+                                            <img src="images/placeholder/500x400.jpg" alt="" class="img-fluid">
+                                        </a>
+                                    </div>
+                                    <div class="article__content">
+
+                                        <ul class="list-inline">
+
+                                            <li class="list-inline-item">
+                                                <span class="text-dark text-capitalize" style="color: #c00!important;">
+                                                    descember 09, 2026
+                                                </span>
+                                            </li>
+
+                                        </ul>
+                                        <h5>
+                                            <a href="#">
+                                                7 Proven Strategies to Boost Your Online Presence in 2025
+                                            </a>
+                                        </h5>
+                                        <p>
+                                            Discover the latest digital trends and expert insights that can help your
+                                            brand stand out. Learn how to use smart marketing and design techniques to
+                                            engage a wider audience effectively.
+                                        </p>
+
+                                        <a href="#" class="btn btn-outline-primary mb-4 text-capitalize"> read more</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </aside>
+
+                        <!-- social media -->
+                        <aside class="wrapper__list__article">
+                            <h4 class="border_section">stay conected</h4>
+                            <!-- widget Social media -->
+                            <div class="wrap__social__media">
+                                <a href="#" target="_blank">
+                                    <div class="social__media__widget facebook">
+                                        <span class="social__media__widget-icon">
+                                            <i class="fa fa-facebook"></i>
+                                        </span>
+                                        <span class="social__media__widget-counter">
+                                            19,243 fans
+                                        </span>
+                                        <span class="social__media__widget-name">
+                                            like
+                                        </span>
+                                    </div>
+                                </a>
+                                <a href="#" target="_blank">
+                                    <div class="social__media__widget twitter">
+                                        <span class="social__media__widget-icon">
+                                            <i class="fa fa-twitter"></i>
+                                        </span>
+                                        <span class="social__media__widget-counter">
+                                            2.076 followers
+                                        </span>
+                                        <span class="social__media__widget-name">
+                                            follow
+                                        </span>
+                                    </div>
+                                </a>
+                                <a href="#" target="_blank">
+                                    <div class="social__media__widget youtube">
+                                        <span class="social__media__widget-icon">
+                                            <i class="fa fa-youtube"></i>
+                                        </span>
+                                        <span class="social__media__widget-counter">
+                                            15,200 followers
+                                        </span>
+                                        <span class="social__media__widget-name">
+                                            subscribe
+                                        </span>
+                                    </div>
+                                </a>
+
+                            </div>
+                        </aside>
+                        <!-- End social media -->
+
+
+
+                        <aside class="wrapper__list__article">
+                            <h4 class="border_section">newsletter</h4>
+                            <!-- Form Subscribe -->
+                            <div class="widget__form-subscribe bg__card-shadow">
+                                <h6>
+                                    The most important world news and events of the day.
+                                </h6>
+                                <p><small>Get magzrenvi daily newsletter on your inbox.</small></p>
+                                <div class="input-group ">
+                                    <input type="text" class="form-control" placeholder="Your email address">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-primary" type="button">sign up</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </aside>
+
+                        <aside class="wrapper__list__article">
+                            <h4 class="border_section">Advertise</h4>
+                            <a href="#">
+                                <figure>
+                                    <img src="images/placeholder/500x400.jpg" alt="" class="img-fluid">
+                                </figure>
+                            </a>
+                        </aside>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+
+    <!-- ? Fully Responsive Footer -->
+    <footer
+        style="background:#0b0b0b; padding:50px 0 25px; color:#e0e0e0; font-family:Poppins, sans-serif; width:100%;">
+        <div class="footer-main" style="
+        max-width:1350px; 
+        margin:0 auto; 
+        display:flex; 
+        justify-content:space-between;
+        align-items:flex-start; 
+        padding:0 100px;
+        gap:40px;
+        flex-wrap:wrap;
+    ">
+
+            <!-- LEFT SECTION -->
+            <div class="footer-logo" style="flex:1; min-width:260px;">
+                <img src="images/placeholder/logos.png" alt="logo"
+                    style="width:100px; margin-bottom:15px; opacity:1; border-radius:10px;">
+                <p style="font-size:14px; color:#bebebe; line-height:1.7; max-width:260px;">
+                    Gunvani News ek ????????? ?? ???????? ?????? ??? ?? ?? ???? ???-?????? ?? ?? ?????????? ???? ?????
+                    ?? ?????? ?? ??? ???????? ?? ??? ??????? ???
+                    ????? ???????? ?? ???? ?? ?????, ??????? ?? ???? ?????? ??????? ???????? � ???? ???? ??????? ?? ????
+                    ???
+                </p>
+            </div>
+
+            <!-- CENTER SECTION -->
+            <div class="footer-center" style="flex:1; min-width:200px; text-align:left;">
+                <h4 style="color:#fff; margin-bottom:15px; font-size:18px;">Quick Links</h4>
+                <ul style="list-style:none; padding:0; margin:0;">
+                    <li style="margin-bottom:10px;">
+                        <a href="#" style="color:#d0d0d0; text-decoration:none; font-size:15px;">About Us</a>
+                    </li>
+                    <li style="margin-bottom:10px;">
+                        <a href="#" style="color:#d0d0d0; text-decoration:none; font-size:15px;">Contact</a>
+                    </li>
+                    <li style="margin-bottom:10px;">
+                        <a href="#" style="color:#d0d0d0; text-decoration:none; font-size:15px;">Terms & Conditions</a>
+                    </li>
+                    <li style="margin-bottom:10px;">
+                        <a href="#" style="color:#d0d0d0; text-decoration:none; font-size:15px;">Privacy Policy</a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- RIGHT SECTION -->
+            <div class="footer-right" style="flex:1; min-width:260px; text-align:right;">
+                <h4 style="color:#fff; margin-bottom:15px; font-size:18px;">Follow Us</h4>
+                <div style="margin-bottom:15px;">
+                    <a href="#" style="display:inline-block; width:40px; height:40px; background:#161616;
+                text-align:center; line-height:40px; border-radius:6px; color:#fff;
+                font-size:17px; margin-left:7px; text-decoration:none;">
+                        <i class="fa fa-facebook"></i>
+                    </a>
+                    <a href="#" style="display:inline-block; width:40px; height:40px; background:#161616;
+                text-align:center; line-height:40px; border-radius:6px; color:#fff;
+                font-size:17px; margin-left:7px; text-decoration:none;">
+                        <i class="fa fa-twitter"></i>
+                    </a>
+                    <a href="#" style="display:inline-block; width:40px; height:40px; background:#161616;
+                text-align:center; line-height:40px; border-radius:6px; color:#fff;
+                font-size:17px; margin-left:7px; text-decoration:none;">
+                        <i class="fa fa-whatsapp"></i>
+                    </a>
+                    <a href="#" style="display:inline-block; width:40px; height:40px; background:#161616;
+                text-align:center; line-height:40px; border-radius:6px; color:#fff;
+                font-size:17px; margin-left:7px; text-decoration:none;">
+                        <i class="fa fa-telegram"></i>
+                    </a>
+                </div>
+                <p style="font-size:14px; color:#bcbcbc; margin-top:10px;">
+                    Janta ki awaaz, Gunvani News ke saath
+                </p>
+            </div>
+        </div>
+
+        <div style="text-align:center; margin-top:35px; color:#999; font-size:13px;">
+            � 2025 Gunvani News � All Rights Reserved.
+        </div>
+    </footer>
+
+    <!-- ? Responsive CSS -->
+    <style>
+        @media(max-width:1024px) {
+            .footer-main {
+                padding: 0 60px !important;
+            }
+        }
+
+        @media(max-width:768px) {
+            .footer-main {
+                padding: 0 40px !important;
+                flex-direction: column !important;
+                text-align: left !important;
+            }
+
+            .footer-center,
+            .footer-right {
+                margin-top: 25px !important;
+                text-align: left !important;
+            }
+
+            .footer-right a {
+                margin-left: 0 !important;
+                margin-right: 7px !important;
+            }
+        }
+
+        @media(max-width:480px) {
+            .footer-main {
+                padding: 0 20px !important;
+            }
+
+            .footer-logo img {
+                width: 80px !important;
+            }
+
+            .footer-center h4,
+            .footer-right h4 {
+                font-size: 16px !important;
+            }
+        }
+    </style>
+
+    <a href="javascript:" id="return-to-top"><i class="fa fa-chevron-up"></i></a>
+
+    <script type="text/javascript" src="./js/index.bundle.js?537a1bbd0e5129401d28"></script>
+</body>
+
+</html>
+
+
+
