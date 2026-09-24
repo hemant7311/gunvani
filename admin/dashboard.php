@@ -10,13 +10,13 @@ $totalArticles = (int) $pdo->query("SELECT COUNT(*) FROM articles")->fetchColumn
 $publishedArticles = (int) $pdo->query("SELECT COUNT(*) FROM articles WHERE status = 'published'")->fetchColumn();
 $draftArticles = (int) $pdo->query("SELECT COUNT(*) FROM articles WHERE status = 'draft'")->fetchColumn();
 $totalMembers = (int) $pdo->query("SELECT COUNT(*) FROM members")->fetchColumn();
-$totalCategories = (int) $pdo->query("SELECT COUNT(*) FROM categories")->fetchColumn();
+$totalCategories = (int) $pdo->query("SELECT COUNT(*) FROM menus WHERE status='active'")->fetchColumn();
 
 // Fetch Recent Articles
 $recentArticles = $pdo->query(
     "SELECT a.*, c.name AS category_name
      FROM articles a
-     LEFT JOIN categories c ON a.category_id = c.id
+     LEFT JOIN menus c ON a.category_id = c.id
      ORDER BY a.id DESC
      LIMIT 6"
 )->fetchAll(PDO::FETCH_ASSOC);
@@ -24,7 +24,7 @@ $recentArticles = $pdo->query(
 // Fetch Categories Overview
 $categoriesOverview = $pdo->query(
     "SELECT c.*, COUNT(a.id) AS article_count
-     FROM categories c
+     FROM menus c
      LEFT JOIN articles a ON c.id = a.category_id
      GROUP BY c.id
      ORDER BY article_count DESC"
@@ -139,7 +139,7 @@ function articleThumb($image) {
                                             <img src="<?= htmlspecialchars(articleThumb($art['image'])) ?>" alt="Thumb" class="table-thumb" onerror="this.src='../images/placeholder/first8.jpg'">
                                         <?php endif; ?>
                                     </td>
-                                    <td class="fw-semibold text-wrap" style="max-width:240px;">
+                                    <td class="fw-semibold" style="min-width: 280px; max-width: 400px; white-space: normal;">
                                         <?= htmlspecialchars($art['title']) ?>
                                     </td>
                                     <td>
@@ -193,7 +193,7 @@ function articleThumb($image) {
                         <span><i class="fa-solid fa-user-plus me-2"></i>Add New Member</span>
                         <i class="fa-solid fa-chevron-right small"></i>
                     </a>
-                    <a href="categories.php" class="btn btn-outline-secondary d-flex align-items-center justify-content-between p-2.5">
+                    <a href="menus.php" class="btn btn-outline-secondary d-flex align-items-center justify-content-between p-2.5">
                         <span><i class="fa-solid fa-layer-group me-2"></i>Manage Categories</span>
                         <i class="fa-solid fa-chevron-right small"></i>
                     </a>
@@ -209,7 +209,7 @@ function articleThumb($image) {
         <div class="admin-card">
             <div class="admin-card-header">
                 <h5><i class="fa-solid fa-layer-group me-2 text-info"></i>Categories Overview</h5>
-                <a href="categories.php" class="small text-success text-decoration-none">Manage</a>
+                <a href="menus.php" class="small text-success text-decoration-none">Manage</a>
             </div>
             <div class="admin-card-body p-0">
                 <ul class="list-group list-group-flush">
@@ -228,3 +228,4 @@ function articleThumb($image) {
 </div>
 
 <?php require_once 'admin_footer.php'; ?>
+

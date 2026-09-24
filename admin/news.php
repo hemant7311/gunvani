@@ -23,8 +23,8 @@ $statusFilter = trim($_GET['status'] ?? '');
 // Build Query
 $query = "SELECT a.*, c.name AS category_name, ct.name AS city_name
           FROM articles a
-          LEFT JOIN categories c ON a.category_id = c.id
-          LEFT JOIN cities ct ON a.city_id = ct.id
+          LEFT JOIN menus c ON a.category_id = c.id
+          LEFT JOIN menus ct ON a.city_id = ct.id
           WHERE is_trending = 0";
 $params = [];
 
@@ -48,7 +48,7 @@ $stmt->execute($params);
 $articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Fetch categories for dropdown filter
-$categories = $pdo->query("SELECT * FROM categories ORDER BY name ASC")->fetchAll(PDO::FETCH_ASSOC);
+$categories = $pdo->query("SELECT id, name FROM menus WHERE status = 'active' ORDER BY display_order ASC, name ASC")->fetchAll(PDO::FETCH_ASSOC);
 
 function articleThumb($image) {
     if (!$image) return '../images/placeholder/first8.jpg';

@@ -1,16 +1,55 @@
-RewriteEngine On
-RewriteBase /
+# Gunvani News - Production Apache Configuration
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
 
-# Serve existing files and directories directly
-RewriteCond %{REQUEST_FILENAME} -f [OR]
-RewriteCond %{REQUEST_FILENAME} -d
-RewriteRule ^ - [L]
+    # Prevent directory browsing
+    Options -Indexes
 
-# Professional Clean Routes
-RewriteRule ^article/([a-zA-Z0-9_-]+)/?$ article.php?slug=$1 [L,QSA]
-RewriteRule ^category/([a-zA-Z0-9_-]+)/?$ category.php?slug=$1 [L,QSA]
-RewriteRule ^categories/?$ categories.php [L,QSA]
-RewriteRule ^search/?$ search.php [L,QSA]
-RewriteRule ^contact/?$ contact.php [L,QSA]
-RewriteRule ^verification/?$ verification.php [L,QSA]
-RewriteRule ^about-us/?$ about-us.html [L,QSA]
+    # Serve existing files and directories directly
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+
+    # Clean Production Routes (Supports UTF-8 / All Slugs)
+    RewriteRule ^article/([^/]+)/?$ article.php?slug=$1 [L,QSA]
+    RewriteRule ^category/([^/]+)/?$ category.php?slug=$1 [L,QSA]
+    RewriteRule ^categories/?$ categories.php [L,QSA]
+    RewriteRule ^search/?$ search.php [L,QSA]
+    RewriteRule ^contact/?$ contact.php [L,QSA]
+    RewriteRule ^verification/?$ verification.php [L,QSA]
+    RewriteRule ^about-us/?$ about-us.html [L,QSA]
+</IfModule>
+
+# Security: Block sensitive files from direct web access
+<FilesMatch "^(\.env|\.git|\.htaccess|.*\.sql|.*\.log|.*\.ini|composer\.(json|lock))$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Production Security Headers
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-XSS-Protection "1; mode=block"
+    Header set X-Frame-Options "SAMEORIGIN"
+    Header set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+
+# Performance: Enable Gzip Compression
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/json application/xml
+</IfModule>
+
+# Performance: Browser Caching for Static Assets
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType image/jpg "access plus 1 month"
+    ExpiresByType image/jpeg "access plus 1 month"
+    ExpiresByType image/gif "access plus 1 month"
+    ExpiresByType image/png "access plus 1 month"
+    ExpiresByType image/webp "access plus 1 month"
+    ExpiresByType image/svg+xml "access plus 1 month"
+    ExpiresByType text/css "access plus 1 week"
+    ExpiresByType application/javascript "access plus 1 week"
+    ExpiresByType text/javascript "access plus 1 week"
+</IfModule>

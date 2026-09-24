@@ -7,25 +7,26 @@ $adminUser = $_SESSION['admin'] ?? 'Admin';
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Gunvani Official Favicon & Icons -->
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/icon.png">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= htmlspecialchars($pageTitle) ?></title>
-    <!-- FontAwesome 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Bootstrap 5.3 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Custom Admin Design System -->
     <link rel="stylesheet" href="admin_style.css?v=1789755542">
 </head>
 <body class="admin-body">
 
-    <!-- Mobile Sidebar Backdrop Overlay -->
     <div class="sidebar-overlay" onclick="toggleMobileSidebar()"></div>
 
-    <!-- Left Sidebar -->
     <aside class="admin-sidebar" id="adminSidebar">
         <div class="sidebar-header">
-            <img src="../images/placeholder/logos.png" alt="Gunvani News Logo" class="sidebar-brand-logo" onerror="this.src='../icon.png'">
+            <img src="../images/placeholder/logos.png" alt="Gunvani News Logo" class="sidebar-brand-logo" onerror="this.onerror=null; this.src='../icon.png'">
             <div class="sidebar-brand-text">
                 Gunvani News
                 <small>Admin Panel</small>
@@ -66,15 +67,9 @@ $adminUser = $_SESSION['admin'] ?? 'Admin';
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="categories.php" class="nav-link <?= $activePage === 'categories' ? 'active' : '' ?>" title="Categories">
-                        <i class="fa-solid fa-layer-group"></i>
-                        <span>Categories</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="cities.php" class="nav-link <?= $activePage === 'cities' ? 'active' : '' ?>" title="Cities">
-                        <i class="fa-solid fa-city"></i>
-                        <span>Cities</span>
+                    <a href="menus.php" class="nav-link <?= $activePage === 'menus' ? 'active' : '' ?>" title="Menu Management">
+                        <i class="fa-solid fa-bars"></i>
+                        <span>Menu Management</span>
                     </a>
                 </li>
             </ul>
@@ -85,12 +80,6 @@ $adminUser = $_SESSION['admin'] ?? 'Admin';
                     <a href="media.php" class="nav-link <?= $activePage === 'media' ? 'active' : '' ?>" title="Media Library">
                         <i class="fa-solid fa-photo-film"></i>
                         <span>Media Library</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="pages.php" class="nav-link <?= $activePage === 'pages' ? 'active' : '' ?>" title="Pages">
-                        <i class="fa-solid fa-file-lines"></i>
-                        <span>Pages</span>
                     </a>
                 </li>
                 <li class="nav-item">
@@ -114,18 +103,6 @@ $adminUser = $_SESSION['admin'] ?? 'Admin';
                 </li>
                 <?php endif; ?>
                 <li class="nav-item">
-                    <a href="newsletter.php" class="nav-link <?= $activePage === 'newsletter' ? 'active' : '' ?>" title="Newsletter Subscribers">
-                        <i class="fa-solid fa-paper-plane"></i>
-                        <span>Newsletter</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="comments.php" class="nav-link <?= $activePage === 'comments' ? 'active' : '' ?>" title="Comments">
-                        <i class="fa-solid fa-comments"></i>
-                        <span>Comments</span>
-                    </a>
-                </li>
-                <li class="nav-item">
                     <a href="contact_messages.php" class="nav-link <?= $activePage === 'contact_messages' ? 'active' : '' ?>" title="Contact Messages">
                         <i class="fa-solid fa-envelope"></i>
                         <span>Contact Messages</span>
@@ -136,39 +113,15 @@ $adminUser = $_SESSION['admin'] ?? 'Admin';
             <div class="menu-category">System</div>
             <ul class="nav-sidebar">
                 <li class="nav-item">
-                    <a href="reports.php" class="nav-link <?= $activePage === 'reports' ? 'active' : '' ?>" title="Reports & Analytics">
-                        <i class="fa-solid fa-chart-pie"></i>
-                        <span>Reports</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="ads.php" class="nav-link <?= $activePage === 'ads' ? 'active' : '' ?>" title="Advertisements">
-                        <i class="fa-solid fa-bullhorn"></i>
-                        <span>Advertisements</span>
-                    </a>
-                </li>
-                <li class="nav-item">
                     <a href="settings.php" class="nav-link <?= $activePage === 'settings' ? 'active' : '' ?>" title="Site Settings">
                         <i class="fa-solid fa-gear"></i>
                         <span>Site Settings</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="appearance.php" class="nav-link <?= $activePage === 'appearance' ? 'active' : '' ?>" title="Appearance Settings">
-                        <i class="fa-solid fa-palette"></i>
-                        <span>Appearance</span>
-                    </a>
-                </li>
-                <li class="nav-item">
                     <a href="change_password.php" class="nav-link <?= $activePage === 'change_password' ? 'active' : '' ?>" title="Change Password">
                         <i class="fa-solid fa-key"></i>
                         <span>Change Password</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="backup.php" class="nav-link <?= $activePage === 'backup' ? 'active' : '' ?>" title="Backup & Restore">
-                        <i class="fa-solid fa-database"></i>
-                        <span>Backup & Restore</span>
                     </a>
                 </li>
                 <li class="nav-item mt-3">
@@ -179,15 +132,21 @@ $adminUser = $_SESSION['admin'] ?? 'Admin';
                 </li>
             </ul>
         </div>
+        <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var activeLink = document.querySelector('.sidebar-menu-wrapper .nav-link.active');
+            if (activeLink) {
+                activeLink.scrollIntoView({ block: 'center', behavior: 'instant' });
+            }
+        });
+        </script>
     </aside>
 
-    <!-- Main Content Wrapper -->
     <div class="admin-main-wrapper">
 
-        <!-- Top Header Bar -->
         <header class="admin-topbar">
             <div class="topbar-left">
-                <button class="btn-sidebar-toggle" onclick="toggleSidebar()"  >
+                <button class="btn-sidebar-toggle" onclick="toggleSidebar()">
                     <i class="fa-solid fa-bars"></i>
                 </button>
                 <div class="topbar-search">
@@ -235,5 +194,4 @@ $adminUser = $_SESSION['admin'] ?? 'Admin';
             </div>
         </header>
 
-        <!-- Main Page Content Area -->
         <main class="admin-content">

@@ -1,6 +1,6 @@
 <?php
 $activePage = 'categories';
-$pageTitle = 'Edit Category - Gunvani News Admin';
+$pageTitle = 'Edit Menu Item - Gunvani News Admin';
 
 require_once 'auth_check.php';
 require_once 'db.php';
@@ -27,18 +27,23 @@ if (isset($_POST['save'])) {
     $description = trim($_POST['description']);
     $slug = trim($_POST['slug']) ?: slugify($name);
 
-    $stmt = $pdo->prepare('UPDATE categories SET name = ?, slug = ?, description = ? WHERE id = ?');
-    $stmt->execute([$name, $slug, $description, $id]);
+    $parent_id = !empty($_POST['parent_id']) ? (int)$_POST['parent_id'] : null;
+        $display_order = isset($_POST['display_order']) ? (int)$_POST['display_order'] : 0;
+    $show_in_menu = isset($_POST['show_in_menu']) ? 1 : 0;
+    $stmt = $pdo->prepare('UPDATE categories SET name = ?, slug = ?, description = ?, parent_id = ?, display_order = ?, show_in_menu = ? WHERE id = ?');
+    $stmt->execute([$name, $slug, $description, $parent_id, $display_order, $show_in_menu, $id]);
     header('Location: categories.php');
     exit;
 }
+
+$allCategories = $pdo->query('SELECT id, name FROM categories WHERE id != '.(int)$id.' AND parent_id IS NULL ORDER BY name ASC')->fetchAll(PDO::FETCH_ASSOC);
 
 require_once 'admin_header.php';
 ?>
 
 <div class="page-header">
     <div class="page-title-box">
-        <h1>Edit Category</h1>
+        <h1>Edit Menu Item</h1>
         <p>Update category name, URL slug or description.</p>
     </div>
     <div>
@@ -52,12 +57,12 @@ require_once 'admin_header.php';
     <div class="col-lg-8">
         <div class="admin-card">
             <div class="admin-card-header">
-                <h5><i class="fa-solid fa-pencil me-2 text-warning"></i>Edit Category Information</h5>
+                <h5><i class="fa-solid fa-pencil me-2 text-warning"></i>Edit Menu Item Information</h5>
             </div>
             <div class="admin-card-body">
                 <form method="post">
                     <div class="mb-3">
-                        <label class="form-label font-weight-bold">Category Name <span class="text-danger">*</span></label>
+                        <label class="form-label font-weight-bold">Menu Name <span class="text-danger">*</span></label>
                         <input type="text" name="name" class="form-control form-control-admin" value="<?= htmlspecialchars($category['name']) ?>" required>
                     </div>
 

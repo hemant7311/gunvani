@@ -24,8 +24,8 @@ function slugify($text) {
     return mb_strtolower($text, 'UTF-8');
 }
 
-$categories = $pdo->query('SELECT * FROM categories ORDER BY name ASC')->fetchAll(PDO::FETCH_ASSOC);
-$cities = $pdo->query('SELECT * FROM cities ORDER BY name ASC')->fetchAll(PDO::FETCH_ASSOC);
+$categories = $pdo->query("SELECT id, name FROM menus WHERE status = 'active' ORDER BY display_order ASC, name ASC")->fetchAll(PDO::FETCH_ASSOC);
+$cities = $pdo->query("SELECT id, name FROM menus WHERE status = 'active' ORDER BY name ASC")->fetchAll(PDO::FETCH_ASSOC);
 $loggedUser = get_logged_user();
 
 $errorMessage = '';

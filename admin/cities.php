@@ -49,7 +49,7 @@ $cities = $pdo->query("SELECT * FROM cities ORDER BY id DESC")->fetchAll(PDO::FE
                                 <code class="bg-light px-2 py-1 rounded text-success"><?= htmlspecialchars($city['slug']) ?></code>
                             </td>
                             <td class="text-muted small">
-                                <?= htmlspecialchars($city['description'] ?: 'City headlines and local announcements.') ?>
+                                <?= htmlspecialchars($city['description'] ?? 'City headlines and local announcements.') ?>
                             </td>
                             <td>
                                 <span class="badge-status active">Active</span>

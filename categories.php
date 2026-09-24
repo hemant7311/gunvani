@@ -13,7 +13,7 @@ function escape($value) {
 try {
     $dbCategories = $pdo->query(
         "SELECT c.*, COUNT(a.id) AS article_count 
-         FROM categories c 
+         FROM menus c 
          LEFT JOIN articles a ON c.id = a.category_id AND a.status = 'published'
          GROUP BY c.id 
          ORDER BY c.name ASC"
@@ -28,7 +28,7 @@ foreach ($dbCategories as $cat) {
         'id' => $cat['id'],
         'name' => $cat['name'],
         'slug' => $cat['slug'] ?: strtolower(str_replace(' ', '-', $cat['name'])),
-        'desc' => $cat['description'] ?: 'Latest news, breaking headlines and updates from ' . $cat['name'] . '.',
+        'desc' => ('') ?: 'Latest news, breaking headlines and updates from ' . $cat['name'] . '.',
         'article_count' => $cat['article_count'],
         'icon' => 'fa-folder-open',
         'image' => 'images/placeholder/first8.jpg'
@@ -104,36 +104,7 @@ $defaultNavCategories = ['Agra', 'Lucknow', 'Mathura', 'Noida', 'Uttar Pradesh',
             }
         }
 
-        /* Top Utility Bar */
-        .gn-utility-bar {
-            background-color: var(--gn-green);
-            color: #ffffff;
-            font-size: 0.82rem;
-            padding: 6px 0;
-            width: 100%;
-            overflow: hidden;
-        }
-        .gn-utility-bar a {
-            color: #ffffff;
-            text-decoration: none;
-        }
-        @media (max-width: 575px) {
-            .gn-utility-bar {
-                font-size: 0.75rem;
-                padding: 5px 0;
-            }
-        }
 
-        .lang-pill-box {
-            background: rgba(0,0,0,0.25);
-            border-radius: 4px;
-            padding: 2px;
-            display: inline-flex;
-            align-items: center;
-            gap: 2px;
-            margin-top: -2px;
-            margin-bottom: -2px;
-        }
         .lang-pill-btn {
             font-size: 0.75rem;
             font-weight: 700;
@@ -492,73 +463,9 @@ $defaultNavCategories = ['Agra', 'Lucknow', 'Mathura', 'Noida', 'Uttar Pradesh',
 </head>
 <body>
 
-    <!-- 1. Top Utility Bar -->
-    <div class="gn-utility-bar">
-        <div class="gn-container">
-            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
-                <div class="d-flex align-items-center gap-2">
-                    <i class="fa-regular fa-calendar-days"></i>
-                    <span id="top-date-display" class="fw-semibold">Monday, September 14, 2026</span>
-                </div>
 
-                <div class="d-flex align-items-center flex-wrap gap-2 gap-sm-3 ms-auto ms-sm-0">
-                    <a href="/verification"><i class="fa-regular fa-circle-check me-1"></i>Verification</a>
-                    <span class="opacity-25 d-none d-sm-inline">|</span>
-                    <a href="admin/login.php"><i class="fa-solid fa-lock me-1"></i>Admin</a>
-                    <span class="opacity-25 d-none d-sm-inline">|</span>
-                    
-                    <div class="lang-pill-box">
-                        <button type="button" class="lang-pill-btn active" id="btn-lang-hi" onclick="changeLanguage('hi')">हिंदी</button>
-                        <button type="button" class="lang-pill-btn" id="btn-lang-en" onclick="changeLanguage('en')">English</button>
-                    </div>
-                    <div id="google_translate_element" style="display:none;"></div>
-
-                    <span class="opacity-25 d-none d-sm-inline">|</span>
-                    <div class="d-flex gap-2">
-                        <a href="#" class="text-white" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
-                        <a href="#" class="text-white" aria-label="Twitter"><i class="fa-brands fa-twitter"></i></a>
-                        <a href="#" class="text-white" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
-                        <a href="#" class="text-white" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- 2. Navigation Header -->
-                <header class="gn-main-header">
-        <div class="gn-container">
-            <nav class="navbar navbar-light py-2 d-flex flex-row flex-nowrap align-items-center" style="gap: 12px;">
-                <!-- Logo -->
-                <a class="navbar-brand m-0 p-0 flex-shrink-0" href="/">
-                    <img src="images/placeholder/logos.png" alt="Gunvani News Logo" class="gn-logo" onerror="this.src='icon.png'">
-                </a>
-
-                <!-- Nav Links (Wraps next to logo) -->
-                                <?php $currentUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH); ?>
-                <div class="d-flex flex-wrap align-items-center flex-grow-1 gn-desktop-nav-container" style="gap: 6px 10px; font-weight: 600;">
-                    <a href="/" class="gn-nav-link <?= ($currentUri === '/' || $currentUri === '/index.php' || $currentUri === '') ? 'active' : '' ?> text-nowrap p-0" >Home</a>
-                    <?php foreach ($defaultNavCategories as $catName): ?>
-                        <?php 
-                        $catSlug = strtolower(str_replace(' ', '-', $catName));
-                        $isActiveCat = (strpos($currentUri, '/category/' . $catSlug) !== false) ? 'active' : '';
-                        ?>
-                        <a href="/category/<?= $catSlug ?>" class="gn-nav-link <?= $isActiveCat ?> text-nowrap p-0" >
-                            <?= $catName ?>
-                        </a>
-                    <?php endforeach; ?>
-                    <a href="/contact" class="gn-nav-link <?= (strpos($currentUri, '/contact') !== false) ? 'active' : '' ?> text-nowrap p-0" >Contact Us</a>
-                </div>
-                            <!-- Search Bar (Laptop Only) -->
-                <form action="/search" method="GET" class="d-none d-md-flex align-items-center m-0 p-0 position-relative flex-shrink-0">
-                    <input type="text" name="q" class="form-control rounded-pill pe-4" placeholder="Search..." style="width: 180px; height: 32px; font-size: 0.85rem; border-color: #dee2e6;" required>
-                    <button type="submit" class="btn btn-link text-secondary position-absolute end-0 top-0 bottom-0 text-decoration-none d-flex align-items-center justify-content-center" style="padding: 0 12px; height: 32px;" title="Search">
-                        <i class="fa-solid fa-magnifying-glass" style="font-size: 0.85rem;"></i>
-                    </button>
-                </form>
-            </nav>
-        </div>
-    </header>
+                <!-- Dynamic Header Menu -->
+    <?php include 'nav.php'; ?>
 
     <!-- 3. Category Page Hero -->
     <section class="cat-hero">
@@ -736,3 +643,5 @@ $defaultNavCategories = ['Agra', 'Lucknow', 'Mathura', 'Noida', 'Uttar Pradesh',
     </script>
 </body>
 </html>
+
+

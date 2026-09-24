@@ -1,14 +1,24 @@
 <?php
-$DB_HOST = 'localhost';
-$DB_NAME = 'gunvani';
-$DB_USER = 'root';
-$DB_PASS = ''; // change if you set MySQL password
+$DB_HOST = getenv('DB_HOST') ?: 'localhost';
+$DB_NAME = getenv('DB_NAME') ?: 'u831226226_gunvaniupdate';
+$DB_USER = getenv('DB_USER') ?: 'u831226226_newgunvani';
+$DB_PASS = getenv('DB_PASS') !== false ? getenv('DB_PASS') : 'Gunvani@123';
 
 try {
     $pdo = new PDO("mysql:host=$DB_HOST;dbname=$DB_NAME;charset=utf8mb4", $DB_USER, $DB_PASS);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
-    die("Database connection failed: " . $e->getMessage());
+    // Fallback for local XAMPP environment if live credentials are not present locally
+    if ($DB_HOST === 'localhost' || $DB_HOST === '127.0.0.1') {
+        try {
+            $pdo = new PDO("mysql:host=localhost;dbname=gunvani;charset=utf8mb4", "root", "");
+            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        } catch (PDOException $e2) {
+            die("Database connection failed: " . $e->getMessage());
+        }
+    } else {
+        die("Database connection failed: " . $e->getMessage());
+    }
 }
 
 // 1. Users Table (Unified Auth for Admin & Agent)
@@ -175,10 +185,71 @@ if ($adminCount === 0) {
     $pdo->prepare('INSERT INTO admins (username, password) VALUES (?, ?)')->execute(['gunvani', $adminHash]);
 }
 
+// Ensure menus table exists
+$pdo->exec("CREATE TABLE IF NOT EXISTS menus (
+    id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    slug VARCHAR(255) NOT NULL,
+    parent_id INT(11) DEFAULT NULL,
+    menu_type ENUM('category','city','state','custom') NOT NULL DEFAULT 'category',
+    target_url VARCHAR(500) DEFAULT NULL,
+    category_id INT(11) DEFAULT NULL,
+    city_id INT(11) DEFAULT NULL,
+    state_id INT(11) DEFAULT NULL,
+    display_order INT(11) NOT NULL DEFAULT 0,
+    status ENUM('active','inactive') NOT NULL DEFAULT 'active',
+    open_new_tab TINYINT(1) NOT NULL DEFAULT 0,
+    created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_parent (parent_id),
+    INDEX idx_status (status)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci");
+
+// Safe migrations for menus table to sync live DB with local schema
+$menuCols = [
+    "ADD COLUMN open_new_tab TINYINT(1) NOT NULL DEFAULT 0",
+    "ADD COLUMN target_url VARCHAR(500) DEFAULT NULL",
+    "ADD COLUMN category_id INT(11) DEFAULT NULL",
+    "ADD COLUMN city_id INT(11) DEFAULT NULL",
+    "ADD COLUMN state_id INT(11) DEFAULT NULL",
+    "ADD COLUMN updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP",
+    "MODIFY COLUMN menu_type ENUM('category','city','state','custom') NOT NULL DEFAULT 'category'"
+];
+foreach ($menuCols as $colSql) {
+    try {
+        $pdo->exec("ALTER TABLE menus " . $colSql);
+    } catch (Exception $e) {}
+}
 
 
+// Ensure article_menu junction table exists
+$pdo->exec("CREATE TABLE IF NOT EXISTS article_menu (
+    id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    article_id INT(11) NOT NULL,
+    menu_id INT(11) NOT NULL,
+    created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY unique_art_menu (article_id, menu_id),
+    INDEX idx_menu (menu_id),
+    INDEX idx_article (article_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci");
 
-
+// Seed default menus if menus table is empty
+$menuCount = (int) $pdo->query('SELECT COUNT(*) FROM menus')->fetchColumn();
+if ($menuCount === 0) {
+    $defaultMenus = [
+        ['India', 'india', null, 'category', 1],
+        ['Foreign', 'foreign', null, 'category', 2],
+        ['Uttar Pradesh', 'uttar-pradesh', null, 'category', 3],
+        ['mainpuri', 'mainpuri', null, 'city', 4],
+        ['Bihar', 'bihar', null, 'category', 5],
+        ['Madhya Pradesh', 'madhya-pradesh', null, 'category', 6],
+        ['Business', 'business', null, 'category', 7],
+        ['Sports', 'sports', null, 'category', 8]
+    ];
+    $menuStmt = $pdo->prepare('INSERT INTO menus (name, slug, parent_id, menu_type, display_order, status) VALUES (?, ?, ?, ?, ?, "active")');
+    foreach ($defaultMenus as $dm) {
+        $menuStmt->execute($dm);
+    }
+}
 // Ensure members table exists
 $pdo->exec("CREATE TABLE IF NOT EXISTS members (
     id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -207,6 +278,9 @@ if ($mCheck === 0) {
     $mStmt->execute(['GN-1002', 'Rahul Sharma', '1994-08-20', '2025-01-01', '2026-12-31', '9876543210', 'Lucknow, UP', 'Hazratganj, Lucknow', 'B+', 'Senior Press Correspondent', 'images/placeholder/second6.webp', 'approved']);
     $mStmt->execute(['GN-1003', 'Amit Verma', '1992-11-10', '2025-01-01', '2026-12-31', '9123456789', 'Noida, UP', 'Sector 62, Noida', 'A+', 'Photojournalist', 'images/placeholder/first7.jpg', 'approved']);
 }
+
+
+
 
 
 

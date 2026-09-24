@@ -18,11 +18,16 @@ if (isset($_POST['save'])) {
     $description = trim($_POST['description']);
     $slug = trim($_POST['slug']) ?: slugify($name);
 
-    $stmt = $pdo->prepare('INSERT INTO categories (name, slug, description) VALUES (?, ?, ?)');
-    $stmt->execute([$name, $slug, $description]);
+    $parent_id = !empty($_POST['parent_id']) ? (int)$_POST['parent_id'] : null;
+        $display_order = isset($_POST['display_order']) ? (int)$_POST['display_order'] : 0;
+    $show_in_menu = isset($_POST['show_in_menu']) ? 1 : 0;
+    $stmt = $pdo->prepare('INSERT INTO categories (name, slug, description, parent_id, display_order, show_in_menu) VALUES (?, ?, ?, ?, ?, ?)');
+    $stmt->execute([$name, $slug, $description, $parent_id, $display_order, $show_in_menu]);
     header('Location: categories.php');
     exit;
 }
+
+$allCategories = $pdo->query('SELECT id, name FROM categories WHERE parent_id IS NULL ORDER BY name ASC')->fetchAll(PDO::FETCH_ASSOC);
 
 require_once 'admin_header.php';
 ?>
@@ -43,12 +48,12 @@ require_once 'admin_header.php';
     <div class="col-lg-8">
         <div class="admin-card">
             <div class="admin-card-header">
-                <h5><i class="fa-solid fa-layer-group me-2 text-success"></i>Category Information</h5>
+                <h5><i class="fa-solid fa-layer-group me-2 text-success"></i>Menu Information</h5>
             </div>
             <div class="admin-card-body">
                 <form method="post">
                     <div class="mb-3">
-                        <label class="form-label font-weight-bold">Category Name <span class="text-danger">*</span></label>
+                        <label class="form-label font-weight-bold">Menu Name (e.g., उत्तर प्रदेश, आगरा) <span class="text-danger">*</span></label>
                         <input type="text" name="name" class="form-control form-control-admin" required placeholder="e.g. Agra, Lucknow, Business, Sports">
                     </div>
 
@@ -64,7 +69,7 @@ require_once 'admin_header.php';
                     </div>
 
                     <button type="submit" name="save" class="btn btn-success px-4 py-2 font-weight-bold">
-                        <i class="fa-solid fa-floppy-disk me-2"></i>Save Category
+                        <i class="fa-solid fa-floppy-disk me-2"></i>Save Menu Item
                     </button>
                 </form>
             </div>

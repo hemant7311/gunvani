@@ -23,8 +23,8 @@ $statusFilter = trim($_GET['status'] ?? '');
 // Build Query
 $query = "SELECT a.*, c.name AS category_name, ct.name AS city_name
           FROM articles a
-          LEFT JOIN categories c ON a.category_id = c.id
-          LEFT JOIN cities ct ON a.city_id = ct.id
+          LEFT JOIN menus c ON a.category_id = c.id
+          LEFT JOIN menus ct ON a.city_id = ct.id
           WHERE a.is_trending = 1";
 $params = [];
 
@@ -48,7 +48,7 @@ $stmt->execute($params);
 $articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Fetch categories for dropdown filter
-$categories = $pdo->query("SELECT * FROM categories ORDER BY name ASC")->fetchAll(PDO::FETCH_ASSOC);
+$categories = $pdo->query("SELECT id, name FROM menus WHERE status = 'active' ORDER BY display_order ASC, name ASC")->fetchAll(PDO::FETCH_ASSOC);
 
 function articleThumb($image) {
     if (!$image) return '../images/placeholder/first8.jpg';
@@ -78,14 +78,17 @@ require_once 'admin_header.php';
             <input type="text" name="search" value="<?= htmlspecialchars($search) ?>" placeholder="Search articles by title..." aria-label="Search articles">
         </div>
 
-        <select name="category_id" class="form-select-admin">
-            <option value="">All Categories</option>
-            <?php foreach ($categories as $cat): ?>
-                <option value="<?= $cat['id'] ?>" <?= $catFilter == $cat['id'] ? 'selected' : '' ?>>
-                    <?= htmlspecialchars($cat['name']) ?>
-                </option>
-            <?php endforeach; ?>
-        </select>
+                                <select name="category_id" class="form-select form-select-admin" required>
+                            <option value="">Select Menu / Category...</option>
+                            <?php foreach ($parentCats as $pCat): ?>
+                                <option value="<?= $pCat['id'] ?>" class="fw-bold"><?= htmlspecialchars($pCat['name']) ?></option>
+                                <?php if (isset($childCats[$pCat['id']])): ?>
+                                    <?php foreach ($childCats[$pCat['id']] as $cCat): ?>
+                                        <option value="<?= $cCat['id'] ?>">&nbsp;&nbsp;&nbsp;-- <?= htmlspecialchars($cCat['name']) ?></option>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                            <?php endforeach; ?>
+                        </select>
 
         <select name="status" class="form-select-admin">
             <option value="">All Status</option>

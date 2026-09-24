@@ -32,8 +32,8 @@ if (!$article) {
     exit;
 }
 
-$categories = $pdo->query('SELECT * FROM categories ORDER BY name ASC')->fetchAll(PDO::FETCH_ASSOC);
-$cities = $pdo->query('SELECT * FROM cities ORDER BY name ASC')->fetchAll(PDO::FETCH_ASSOC);
+$categories = $pdo->query("SELECT id, name FROM menus WHERE status = 'active' ORDER BY display_order ASC, name ASC")->fetchAll(PDO::FETCH_ASSOC);
+$cities = $pdo->query("SELECT id, name FROM menus WHERE status = 'active' ORDER BY name ASC")->fetchAll(PDO::FETCH_ASSOC);
 
 // Fetch existing gallery media for this article
 $galleryMedia = $pdo->prepare("SELECT m.* FROM media m JOIN article_media am ON m.id = am.media_id WHERE am.article_id = ?");

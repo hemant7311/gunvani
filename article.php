@@ -33,10 +33,10 @@ $article = false;
 if ($id) {
     try {
         $stmt = $pdo->prepare(
-            'SELECT a.*, c.name AS category_name, c.slug AS category_slug
-             FROM articles a
-             LEFT JOIN categories c ON a.category_id = c.id
-             WHERE a.id = ? AND a.status = "published"'
+            "SELECT a.*, 
+       (SELECT m.name FROM menus m JOIN article_menu am ON am.menu_id = m.id WHERE am.article_id = a.id LIMIT 1) as category_name,
+       (SELECT m.slug FROM menus m JOIN article_menu am ON am.menu_id = m.id WHERE am.article_id = a.id LIMIT 1) as category_slug
+       FROM articles a WHERE a.id = ? AND a.status = 'published'"
         );
         $stmt->execute([$id]);
         $article = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -48,10 +48,10 @@ if ($id) {
 if (!$article && $slug) {
     try {
         $stmt = $pdo->prepare(
-            'SELECT a.*, c.name AS category_name, c.slug AS category_slug
-             FROM articles a
-             LEFT JOIN categories c ON a.category_id = c.id
-             WHERE (a.slug = ? OR a.id = ?) AND a.status = "published"'
+            "SELECT a.*, 
+       (SELECT m.name FROM menus m JOIN article_menu am ON am.menu_id = m.id WHERE am.article_id = a.id LIMIT 1) as category_name,
+       (SELECT m.slug FROM menus m JOIN article_menu am ON am.menu_id = m.id WHERE am.article_id = a.id LIMIT 1) as category_slug
+       FROM articles a WHERE (a.slug = ? OR a.id = ?) AND a.status = 'published'"
         );
         $stmt->execute([$slug, $slug]);
         $article = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -68,6 +68,12 @@ if (!$article) {
     <!DOCTYPE html>
     <html lang="en">
     <head>
+    <!-- Gunvani Official Favicon & Icons -->
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/icon.png">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
         <base href="/">
         <meta charset="utf-8">
         <title>404 Page Not Found | Gunvani News</title>
@@ -265,7 +271,7 @@ if (!$article) {
 </head>
     <body>
         <div class="container text-center py-5 my-5">
-            <a href="/"><img src="images/placeholder/logos.png" alt="Gunvani News" class="gn-logo mb-4" onerror="this.src='icon.png'"></a>
+            <a href="/"><img src="/images/placeholder/logos.png" alt="Gunvani News" class="gn-logo mb-4" onerror="this.onerror=null; this.src='/icon.png'"></a>
             <div class="display-1 fw-bold text-danger">404</div>
             <h2 class="fw-bold text-dark mb-3">Article Not Found</h2>
             <p class="text-muted max-w-500 mx-auto mb-4" style="max-width:500px;">The news article or story you are looking for does not exist, has been removed, or the link is invalid.</p>
@@ -329,10 +335,10 @@ try {
 $relatedArticles = [];
 try {
     $rStmt = $pdo->prepare(
-        "SELECT a.*, c.name AS category_name, c.slug AS category_slug
-         FROM articles a
-         LEFT JOIN categories c ON a.category_id = c.id
-         WHERE a.status = 'published' AND a.id != ? AND (a.category_id = ? OR 1=1)
+        "SELECT a.*, 
+       (SELECT m.name FROM menus m JOIN article_menu am ON am.menu_id = m.id WHERE am.article_id = a.id LIMIT 1) as category_name,
+       (SELECT m.slug FROM menus m JOIN article_menu am ON am.menu_id = m.id WHERE am.article_id = a.id LIMIT 1) as category_slug
+       FROM articles a  WHERE a.status = 'published' AND a.id != ? 
          ORDER BY a.published_at DESC
          LIMIT 3"
     );
@@ -346,10 +352,10 @@ try {
 $sidebarHeadlines = [];
 try {
     $sidebarHeadlines = $pdo->query(
-        "SELECT a.*, c.name AS category_name, c.slug AS category_slug
-         FROM articles a
-         LEFT JOIN categories c ON a.category_id = c.id
-         WHERE a.status = 'published'
+        "SELECT a.*, 
+       (SELECT m.name FROM menus m JOIN article_menu am ON am.menu_id = m.id WHERE am.article_id = a.id LIMIT 1) as category_name,
+       (SELECT m.slug FROM menus m JOIN article_menu am ON am.menu_id = m.id WHERE am.article_id = a.id LIMIT 1) as category_slug
+       FROM articles a  WHERE a.status = 'published'
          ORDER BY a.published_at DESC
          LIMIT 5"
     )->fetchAll(PDO::FETCH_ASSOC);
@@ -362,6 +368,12 @@ $defaultNavCategories = ['Agra', 'Lucknow', 'Mathura', 'Noida', 'Uttar Pradesh',
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Gunvani Official Favicon & Icons -->
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/icon.png">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
     <base href="/">
     <meta charset="utf-8">
     <title><?= escape($article['title']) ?> | Gunvani News</title>
@@ -425,25 +437,7 @@ $defaultNavCategories = ['Agra', 'Lucknow', 'Mathura', 'Noida', 'Uttar Pradesh',
             }
         }
 
-        /* Top Utility Bar */
-        .gn-utility-bar {
-            background-color: var(--gn-green);
-            color: #ffffff;
-            font-size: 0.82rem;
-            padding: 6px 0;
-            width: 100%;
-            overflow: hidden;
-        }
-        .gn-utility-bar a {
-            color: #ffffff;
-            text-decoration: none;
-        }
-        @media (max-width: 575px) {
-            .gn-utility-bar {
-                font-size: 0.75rem;
-                padding: 5px 0;
-            }
-        }
+        
 
         .lang-pill-box {
             background: rgba(0,0,0,0.25);
@@ -869,73 +863,12 @@ $defaultNavCategories = ['Agra', 'Lucknow', 'Mathura', 'Noida', 'Uttar Pradesh',
 </head>
 <body>
 
-    <!-- 1. Top Utility Bar -->
-    <div class="gn-utility-bar">
-        <div class="gn-container">
-            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
-                <div class="d-flex align-items-center gap-2">
-                    <i class="fa-regular fa-calendar-days"></i>
-                    <span id="top-date-display" class="fw-semibold">Monday, September 14, 2026</span>
-                </div>
-
-                <div class="d-flex align-items-center flex-wrap gap-2 gap-sm-3 ms-auto ms-sm-0">
-                    <a href="/verification"><i class="fa-regular fa-circle-check me-1"></i>Verification</a>
-                    <span class="opacity-25 d-none d-sm-inline">|</span>
-                    <a href="admin/login.php"><i class="fa-solid fa-lock me-1"></i>Admin</a>
-                    <span class="opacity-25 d-none d-sm-inline">|</span>
-                    
-                    <div class="lang-pill-box">
-                        <button type="button" class="lang-pill-btn active" id="btn-lang-hi" onclick="changeLanguage('hi')">हिंदी</button>
-                        <button type="button" class="lang-pill-btn" id="btn-lang-en" onclick="changeLanguage('en')">English</button>
-                    </div>
-                    <div id="google_translate_element" style="display:none;"></div>
-
-                    <span class="opacity-25 d-none d-sm-inline">|</span>
-                    <div class="d-none d-sm-flex gap-2">
-                        <a href="#" class="text-white" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
-                        <a href="#" class="text-white" aria-label="Twitter"><i class="fa-brands fa-twitter"></i></a>
-                        <a href="#" class="text-white" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
-                        <a href="#" class="text-white" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
-                    </div>
-                </div>
-            </div>
-        </div>
+    
     </div>
 
     <!-- 2. Navigation Header -->
-                <header class="gn-main-header">
-        <div class="gn-container">
-            <nav class="navbar navbar-light py-2 d-flex flex-row flex-nowrap align-items-center" style="gap: 12px;">
-                <!-- Logo -->
-                <a class="navbar-brand m-0 p-0 flex-shrink-0" href="/">
-                    <img src="images/placeholder/logos.png" alt="Gunvani News Logo" class="gn-logo" onerror="this.src='icon.png'">
-                </a>
-
-                <!-- Nav Links (Wraps next to logo) -->
-                                <?php $currentUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH); ?>
-                <div class="d-flex flex-wrap align-items-center flex-grow-1 gn-desktop-nav-container" style="gap: 6px 10px; font-weight: 600;">
-                    <a href="/" class="gn-nav-link <?= ($currentUri === '/' || $currentUri === '/index.php' || $currentUri === '') ? 'active' : '' ?> text-nowrap p-0" >Home</a>
-                    <?php foreach ($defaultNavCategories as $catName): ?>
-                        <?php 
-                        $catSlug = strtolower(str_replace(' ', '-', $catName));
-                        $isActiveCat = (strpos($currentUri, '/category/' . $catSlug) !== false) ? 'active' : '';
-                        ?>
-                        <a href="/category/<?= $catSlug ?>" class="gn-nav-link <?= $isActiveCat ?> text-nowrap p-0" >
-                            <?= $catName ?>
-                        </a>
-                    <?php endforeach; ?>
-                    <a href="/contact" class="gn-nav-link <?= (strpos($currentUri, '/contact') !== false) ? 'active' : '' ?> text-nowrap p-0" >Contact Us</a>
-                </div>
-                            <!-- Search Bar (Laptop Only) -->
-                <form action="/search" method="GET" class="d-none d-md-flex align-items-center m-0 p-0 position-relative flex-shrink-0">
-                    <input type="text" name="q" class="form-control rounded-pill pe-4" placeholder="Search..." style="width: 180px; height: 32px; font-size: 0.85rem; border-color: #dee2e6;" required>
-                    <button type="submit" class="btn btn-link text-secondary position-absolute end-0 top-0 bottom-0 text-decoration-none d-flex align-items-center justify-content-center" style="padding: 0 12px; height: 32px;" title="Search">
-                        <i class="fa-solid fa-magnifying-glass" style="font-size: 0.85rem;"></i>
-                    </button>
-                </form>
-            </nav>
-        </div>
-    </header>
+                <!-- Dynamic Header Menu -->
+    <?php include __DIR__ . '/nav.php'; ?>
 
     <!-- Main Content Container -->
     <main class="gn-container mb-5">
@@ -981,12 +914,12 @@ $defaultNavCategories = ['Agra', 'Lucknow', 'Mathura', 'Noida', 'Uttar Pradesh',
                     <?php elseif (!empty($article['video_file'])): ?>
                         <div class="mb-4 rounded overflow-hidden shadow-sm">
                             <video controls class="w-100" style="max-height:450px;">
-                                <source src="uploads/videos/<?= escape($article['video_file']) ?>" type="video/mp4">
+                                <source src="/uploads/videos/<?= escape($article['video_file']) ?>" type="video/mp4">
                                 Your browser does not support HTML video.
                             </video>
                         </div>
                     <?php elseif (!empty($article['image'])): ?>
-                        <img src="<?= escape(articleImage($article['image'])) ?>" alt="<?= escape($article['title']) ?>" class="article-featured-img" onerror="this.src='images/placeholder/second6.webp'">
+                        <img src="<?= escape(articleImage($article['image'])) ?>" alt="<?= escape($article['title']) ?>" class="article-featured-img" onerror="this.onerror=null; this.src='/images/placeholder/second6.webp'">
                     <?php endif; ?>
 
                     <div class="article-body-text">
@@ -1005,7 +938,7 @@ $defaultNavCategories = ['Agra', 'Lucknow', 'Mathura', 'Noida', 'Uttar Pradesh',
                                 <?php foreach ($galleryMedia as $gm): ?>
                                     <div class="col-6 col-sm-4 col-md-3">
                                         <a href="uploads/news/<?= escape($gm['filename'] ?? '') ?>" target="_blank" class="d-block border rounded overflow-hidden">
-                                            <img src="uploads/news/<?= escape($gm['filename'] ?? '') ?>" alt="Gallery Photo" class="w-100" style="height:120px; object-fit:cover;">
+                                            <img src="/uploads/news/<?= escape($gm['filename'] ?? '') ?>" alt="Gallery Photo" class="w-100" style="height:120px; object-fit:cover;">
                                         </a>
                                     </div>
                                 <?php endforeach; ?>
@@ -1088,7 +1021,7 @@ $defaultNavCategories = ['Agra', 'Lucknow', 'Mathura', 'Noida', 'Uttar Pradesh',
                             <div class="col-md-4">
                                 <article class="related-card">
                                     <a href="/article/<?= escape($rel['slug']) ?>">
-                                        <img src="<?= escape(articleImage($rel['image'])) ?>" alt="<?= escape($rel['title']) ?>" onerror="this.src='images/placeholder/first8.jpg'">
+                                        <img src="<?= escape(articleImage($rel['image'])) ?>" alt="<?= escape($rel['title']) ?>" onerror="this.onerror=null; this.src='/images/placeholder/first8.jpg'">
                                     </a>
                                     <div class="related-card-body">
                                         <h4><a href="/article/<?= escape($rel['slug']) ?>"><?= escape($rel['title']) ?></a></h4>
@@ -1112,7 +1045,7 @@ $defaultNavCategories = ['Agra', 'Lucknow', 'Mathura', 'Noida', 'Uttar Pradesh',
                     <?php foreach ($sidebarHeadlines as $sbh): ?>
                         <div class="d-flex gap-2 py-2 border-bottom align-items-center">
                             <a href="/article/<?= escape($sbh['slug']) ?>" class="flex-shrink-0">
-                                <img src="<?= escape(articleImage($sbh['image'])) ?>" alt="<?= escape($sbh['title']) ?>" class="rounded" style="width:65px; height:48px; object-fit:cover;" onerror="this.src='images/placeholder/first8.jpg'">
+                                <img src="<?= escape(articleImage($sbh['image'])) ?>" alt="<?= escape($sbh['title']) ?>" class="rounded" style="width:65px; height:48px; object-fit:cover;" onerror="this.onerror=null; this.src='/images/placeholder/first8.jpg'">
                             </a>
                             <div class="overflow-hidden">
                                 <h5 class="small fw-bold mb-1" style="font-size:0.8rem; line-height:1.25;">
@@ -1135,147 +1068,6 @@ $defaultNavCategories = ['Agra', 'Lucknow', 'Mathura', 'Noida', 'Uttar Pradesh',
     </main>
 
     <!-- Footer -->
-    <footer class="gn-footer">
-        <div class="gn-container">
-            <div class="row g-4">
-                <div class="col-lg-4">
-                    <a href="/"><img src="images/placeholder/logos.png" alt="Gunvani News" style="height:46px; margin-bottom:14px;" onerror="this.src='icon.png'"></a>
-                    <p class="small text-muted pe-lg-4">Gunvani News ek vishwasniya aur nishpaksh samachar manch hai jo desh-duniya ki mahatvapurn khabrein tezi aur satyata ke saath pahunchata hai.</p>
-                </div>
-                <div class="col-6 col-lg-2">
-                    <h5>Quick Links</h5>
-                    <ul class="list-unstyled">
-                        <li class="mb-2"><a href="/">Home</a></li>
-                        <li class="mb-2"><a href="/categories">Categories</a></li>
-                        <li class="mb-2"><a href="/verification">Verification</a></li>
-                        <li class="mb-2"><a href="/contact">Contact Us</a></li>
-                    </ul>
-                </div>
-                <div class="col-6 col-lg-3">
-                    <h5>News Categories</h5>
-                    <ul class="list-unstyled">
-                        <li class="mb-2"><a href="/category/agra">Agra</a></li>
-                        <li class="mb-2"><a href="/category/lucknow">Lucknow</a></li>
-                        <li class="mb-2"><a href="/category/mathura">Mathura</a></li>
-                        <li class="mb-2"><a href="/category/noida">Noida</a></li>
-                        <li class="mb-2"><a href="/category/uttar-pradesh">Uttar Pradesh</a></li>
-                        <li class="mb-2"><a href="/category/india">India</a></li>
-                    </ul>
-                </div>
-                <div class="col-lg-3">
-                    <h5>Follow Us</h5>
-                    <p class="small text-muted mb-3">Janta ki awaaz, Gunvani News ke saath</p>
-                    <div class="d-flex gap-2">
-                        <a href="#" class="btn btn-sm btn-outline-light rounded-circle d-inline-flex align-items-center justify-content-center" style="width:36px; height:36px;" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
-                        <a href="#" class="btn btn-sm btn-outline-light rounded-circle d-inline-flex align-items-center justify-content-center" style="width:36px; height:36px;" aria-label="Twitter"><i class="fa-brands fa-twitter"></i></a>
-                        <a href="#" class="btn btn-sm btn-outline-light rounded-circle d-inline-flex align-items-center justify-content-center" style="width:36px; height:36px;" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
-                        <a href="#" class="btn btn-sm btn-outline-light rounded-circle d-inline-flex align-items-center justify-content-center" style="width:36px; height:36px;" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
-                        <a href="#" class="btn btn-sm btn-outline-light rounded-circle d-inline-flex align-items-center justify-content-center" style="width:36px; height:36px;" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="border-top border-secondary opacity-25 my-4"></div>
-
-            <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 small">
-                <div>© <?= date('Y') ?> Gunvani News — All Rights Reserved.</div>
-                <div class="d-flex gap-3">
-                    <a href="#" class="text-muted text-decoration-none">Privacy Policy</a>
-                    <a href="#" class="text-muted text-decoration-none">Terms of Use</a>
-                    <a href="#" class="text-muted text-decoration-none">Sitemap</a>
-                </div>
-            </div>
-        </div>
-    </footer>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script type="text/javascript">
-    function googleTranslateElementInit() {
-        new google.translate.TranslateElement({
-            pageLanguage: 'en',
-            includedLanguages: 'en,hi',
-            autoDisplay: false
-        }, 'google_translate_element');
-    }
-    </script>
-    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-
-    <script>
-    function changeLanguage(lang) {
-        localStorage.setItem('gunvani_lang', lang);
-        updateLangBtnUI(lang);
-        setCookieLanguage(lang);
-        
-        var select = document.querySelector('.goog-te-combo');
-        if (select) {
-            select.value = lang;
-            select.dispatchEvent(new Event('change'));
-        }
-        
-        setTimeout(function() {
-            location.reload();
-        }, 150);
-    }
-
-    function setCookieLanguage(lang) {
-        var cookieVal = (lang === 'hi') ? '/en/hi' : '/en/en';
-        
-        document.cookie = "googtrans=" + cookieVal + "; path=/;";
-        if (location.hostname && location.hostname !== 'localhost') {
-            var domain = location.hostname.replace(/^www\./, '');
-            document.cookie = "googtrans=" + cookieVal + "; domain=." + domain + "; path=/;";
-            document.cookie = "googtrans=" + cookieVal + "; domain=" + domain + "; path=/;";
-        }
-    }
-
-    function updateLangBtnUI(lang) {
-        var btnHi = document.getElementById('btn-lang-hi');
-        var btnEn = document.getElementById('btn-lang-en');
-        if (!btnHi || !btnEn) return;
-        if (lang === 'hi') {
-            btnHi.classList.add('active');
-            btnEn.classList.remove('active');
-        } else {
-            btnEn.classList.add('active');
-            btnHi.classList.remove('active');
-        }
-    }
-
-    function hideGoogleTranslateFrames() {
-        document.documentElement.style.top = '0px';
-        document.body.style.top = '0px';
-        document.body.style.marginTop = '0px';
-        
-        var bannerFrames = document.querySelectorAll('iframe.goog-te-banner-frame, .goog-te-banner-frame, #goog-gt-tt, .goog-te-balloon-frame');
-        bannerFrames.forEach(function(f) {
-            f.style.setProperty('display', 'none', 'important');
-        });
-    }
-
-    document.addEventListener('DOMContentLoaded', function() {
-        if (!localStorage.getItem('gunvani_visited')) {
-            localStorage.setItem('gunvani_visited', '1');
-            localStorage.setItem('gunvani_lang', 'hi');
-        } else if (!localStorage.getItem('gunvani_lang')) {
-            localStorage.setItem('gunvani_lang', 'hi');
-        }
-
-        var savedLang = localStorage.getItem('gunvani_lang');
-        
-        updateLangBtnUI(savedLang);
-        setCookieLanguage(savedLang);
-        
-        setTimeout(function() {
-            var select = document.querySelector('.goog-te-combo');
-            if (select && select.value !== savedLang) {
-                select.value = savedLang;
-                select.dispatchEvent(new Event('change'));
-            }
-            hideGoogleTranslateFrames();
-        }, 400);
-        
-        setInterval(hideGoogleTranslateFrames, 300);
-    });
-    </script>
+        <?php include __DIR__ . '/footer.php'; ?>
 </body>
 </html>

@@ -1,6 +1,6 @@
 <?php
 $activePage = 'categories';
-$pageTitle = 'Manage Categories - Gunvani News Admin';
+$pageTitle = 'Manage Header Menus - Gunvani News Admin';
 
 require_once __DIR__ . '/../includes/auth.php';
 require_login();
@@ -20,12 +20,12 @@ require_once 'admin_header.php';
 
 <div class="page-header">
     <div class="page-title-box">
-        <h1>Manage Categories</h1>
+        <h1>Manage Header Menus</h1>
         <p>Add, edit, or delete city news categories and topic channels.</p>
     </div>
     <div>
         <a href="add_category.php" class="btn btn-success px-4 py-2 font-weight-bold shadow-sm">
-            <i class="fa-solid fa-plus me-2"></i>Add Category
+            <i class="fa-solid fa-plus me-2"></i>Add Menu Item
         </a>
     </div>
 </div>
@@ -57,7 +57,7 @@ require_once 'admin_header.php';
                                 <code class="bg-light px-2 py-1 rounded text-success"><?= htmlspecialchars($cat['slug']) ?></code>
                             </td>
                             <td class="text-muted small">
-                                <?= htmlspecialchars($cat['description'] ?: 'No description provided.') ?>
+                                <?= htmlspecialchars($cat['description'] ?? 'No description provided.') ?>
                             </td>
                             <td>
                                 <div class="action-btn-group justify-content-center">
