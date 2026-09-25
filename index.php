@@ -232,6 +232,7 @@ try {
             </article>
 
             <!-- Middle Column: 4 Stacked Supporting Stories -->
+            <?php if (!empty($supportingArticles)): ?>
             <div class="d-flex flex-column justify-content-start bg-white p-2 border rounded-3 h-100">
                 <?php foreach ($supportingArticles as $story): ?>
                     <article class="supporting-card-item">
@@ -252,7 +253,12 @@ try {
                     </article>
                 <?php endforeach; ?>
             </div>
-
+            <?php else: ?>
+            <div class="d-flex flex-column justify-content-center align-items-center bg-white p-2 border rounded-3 h-100 text-muted">
+                <i class="fa-regular fa-newspaper fs-1 mb-2"></i>
+                <p>More updates coming soon</p>
+            </div>
+            <?php endif; ?>
             <!-- Right Column: Most Read Box & Ad -->
             <div class="d-flex flex-column gap-3">
                 <aside class="most-read-container">
@@ -468,6 +474,7 @@ try {
     <?php include __DIR__ . '/footer.php'; ?>
     </body>
 </html>
+
 
 
 
