@@ -109,7 +109,16 @@ $pdo->exec("CREATE TABLE IF NOT EXISTS comments (
 
 // Safely alter articles table for new CMS features
 $articleColumns = [
+    "DROP FOREIGN KEY fk_articles_category",
     "ADD COLUMN city_id INT(11) DEFAULT NULL",
+    "ADD COLUMN category_id INT(11) DEFAULT NULL",
+    "ADD COLUMN title VARCHAR(500) DEFAULT NULL",
+    "ADD COLUMN slug VARCHAR(500) DEFAULT NULL",
+    "ADD COLUMN summary TEXT DEFAULT NULL",
+    "ADD COLUMN content LONGTEXT DEFAULT NULL",
+    "ADD COLUMN image VARCHAR(255) DEFAULT NULL",
+    "ADD COLUMN status ENUM('draft','published') DEFAULT 'draft'",
+    "ADD COLUMN published_at DATETIME DEFAULT CURRENT_TIMESTAMP",
     "ADD COLUMN author VARCHAR(255) DEFAULT 'Gunvani Editor'",
     "ADD COLUMN created_by INT(11) DEFAULT NULL",
     "ADD COLUMN video_url VARCHAR(500) DEFAULT NULL",
@@ -209,7 +218,16 @@ $menuCols = [
     "ADD COLUMN open_new_tab TINYINT(1) NOT NULL DEFAULT 0",
     "ADD COLUMN target_url VARCHAR(500) DEFAULT NULL",
     "ADD COLUMN category_id INT(11) DEFAULT NULL",
+    "DROP FOREIGN KEY fk_articles_category",
     "ADD COLUMN city_id INT(11) DEFAULT NULL",
+    "ADD COLUMN category_id INT(11) DEFAULT NULL",
+    "ADD COLUMN title VARCHAR(500) DEFAULT NULL",
+    "ADD COLUMN slug VARCHAR(500) DEFAULT NULL",
+    "ADD COLUMN summary TEXT DEFAULT NULL",
+    "ADD COLUMN content LONGTEXT DEFAULT NULL",
+    "ADD COLUMN image VARCHAR(255) DEFAULT NULL",
+    "ADD COLUMN status ENUM('draft','published') DEFAULT 'draft'",
+    "ADD COLUMN published_at DATETIME DEFAULT CURRENT_TIMESTAMP",
     "ADD COLUMN state_id INT(11) DEFAULT NULL",
     "ADD COLUMN updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP",
     "MODIFY COLUMN menu_type ENUM('category','city','state','custom') NOT NULL DEFAULT 'category'"
@@ -278,6 +296,10 @@ if ($mCheck === 0) {
     $mStmt->execute(['GN-1002', 'Rahul Sharma', '1994-08-20', '2025-01-01', '2026-12-31', '9876543210', 'Lucknow, UP', 'Hazratganj, Lucknow', 'B+', 'Senior Press Correspondent', 'images/placeholder/second6.webp', 'approved']);
     $mStmt->execute(['GN-1003', 'Amit Verma', '1992-11-10', '2025-01-01', '2026-12-31', '9123456789', 'Noida, UP', 'Sector 62, Noida', 'A+', 'Photojournalist', 'images/placeholder/first7.jpg', 'approved']);
 }
+
+
+
+
 
 
 
