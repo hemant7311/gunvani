@@ -43,9 +43,7 @@ $defaultNavCategories = ['Agra', 'Lucknow', 'Mathura', 'Noida', 'Uttar Pradesh',
 // 1. Fetch Featured Article for Hero (is_featured = 1 or latest published article)
 try {
     $featuredArticles = $pdo->query("SELECT a.*, 
-       (SELECT m.name FROM menus m JOIN article_menu am ON am.menu_id = m.id WHERE am.article_id = a.id LIMIT 1) as category_name,
-       (SELECT m.slug FROM menus m JOIN article_menu am ON am.menu_id = m.id WHERE am.article_id = a.id LIMIT 1) as category_slug
-       FROM articles a  WHERE a.status = 'published' AND a.is_trending = 0 AND (a.video_url IS NULL OR a.video_url = '') AND (a.video_file IS NULL OR a.video_file = '') ORDER BY a.is_featured DESC, a.published_at DESC LIMIT 5")->fetchAll(PDO::FETCH_ASSOC);
+       m.name as category_name, m.slug as category_slug FROM articles a LEFT JOIN menus m ON m.id = a.category_id WHERE a.status = 'published' AND a.is_trending = 0 AND (a.video_url IS NULL OR a.video_url = '') AND (a.video_file IS NULL OR a.video_file = '') ORDER BY a.is_featured DESC, a.published_at DESC LIMIT 5")->fetchAll(PDO::FETCH_ASSOC);
 } catch (Exception $e) { $featuredArticles = []; }
 
 if (empty($featuredArticles)) { $featuredArticles = [[ "title" => "Gunvani News CMS Activated", "summary" => "Welcome to Gunvani News. Publish news articles from admin panel to populate homepage.", "category_name" => "NEWS", "image" => "images/placeholder/second6.webp", "published_at" => date("Y-m-d H:i:s"), "slug" => "welcome-to-gunvani-news" ]]; }
@@ -62,9 +60,7 @@ try {
 // 3. Fetch 4 Supporting Articles for Hero Middle Column
 try {
     $featIds = array_column($featuredArticles ?? [], 'id'); $excludeSql = !empty($featIds) ? "AND a.id NOT IN (" . implode(',', $featIds) . ")" : ""; $supportingArticles = $pdo->query("SELECT a.*, 
-       (SELECT m.name FROM menus m JOIN article_menu am ON am.menu_id = m.id WHERE am.article_id = a.id LIMIT 1) as category_name,
-       (SELECT m.slug FROM menus m JOIN article_menu am ON am.menu_id = m.id WHERE am.article_id = a.id LIMIT 1) as category_slug
-       FROM articles a  WHERE a.status = 'published' AND a.is_trending = 0 AND (a.video_url IS NULL OR a.video_url = '') AND (a.video_file IS NULL OR a.video_file = '') $excludeSql ORDER BY a.id DESC LIMIT 4")->fetchAll(PDO::FETCH_ASSOC);
+       m.name as category_name, m.slug as category_slug FROM articles a LEFT JOIN menus m ON m.id = a.category_id WHERE a.status = 'published' AND a.is_trending = 0 AND (a.video_url IS NULL OR a.video_url = '') AND (a.video_file IS NULL OR a.video_file = '') $excludeSql ORDER BY a.id DESC LIMIT 4")->fetchAll(PDO::FETCH_ASSOC);
 } catch (Exception $e) {
     $supportingArticles = [];
 }
@@ -73,9 +69,7 @@ try {
 try {
     $mostReadArticles = $pdo->query(
         "SELECT a.*, 
-       (SELECT m.name FROM menus m JOIN article_menu am ON am.menu_id = m.id WHERE am.article_id = a.id LIMIT 1) as category_name,
-       (SELECT m.slug FROM menus m JOIN article_menu am ON am.menu_id = m.id WHERE am.article_id = a.id LIMIT 1) as category_slug
-       FROM articles a  WHERE a.status = 'published'
+       m.name as category_name, m.slug as category_slug FROM articles a LEFT JOIN menus m ON m.id = a.category_id WHERE a.status = 'published'
          ORDER BY a.views_count DESC, a.published_at DESC
          LIMIT 5"
     )->fetchAll(PDO::FETCH_ASSOC);
@@ -87,9 +81,7 @@ try {
 try {
     $trendingStories = $pdo->query(
         "SELECT a.*, 
-       (SELECT m.name FROM menus m JOIN article_menu am ON am.menu_id = m.id WHERE am.article_id = a.id LIMIT 1) as category_name,
-       (SELECT m.slug FROM menus m JOIN article_menu am ON am.menu_id = m.id WHERE am.article_id = a.id LIMIT 1) as category_slug
-       FROM articles a  WHERE a.status = 'published' AND a.is_trending = 1
+       m.name as category_name, m.slug as category_slug FROM articles a LEFT JOIN menus m ON m.id = a.category_id WHERE a.status = 'published' AND a.is_trending = 1
          ORDER BY a.id DESC
          LIMIT 8"
     )->fetchAll(PDO::FETCH_ASSOC);
@@ -101,9 +93,7 @@ try {
 try {
     $latestHeadlines = $pdo->query(
         "SELECT a.*, 
-       (SELECT m.name FROM menus m JOIN article_menu am ON am.menu_id = m.id WHERE am.article_id = a.id LIMIT 1) as category_name,
-       (SELECT m.slug FROM menus m JOIN article_menu am ON am.menu_id = m.id WHERE am.article_id = a.id LIMIT 1) as category_slug
-       FROM articles a  WHERE a.status = 'published'
+       m.name as category_name, m.slug as category_slug FROM articles a LEFT JOIN menus m ON m.id = a.category_id WHERE a.status = 'published'
          ORDER BY a.id DESC
          LIMIT 5"
     )->fetchAll(PDO::FETCH_ASSOC);
@@ -118,13 +108,9 @@ try {
       
       foreach ($submenus as $menu) {
           $stmt = $pdo->prepare("
-              SELECT a.* 
-              FROM articles a
-              JOIN article_menu am ON a.id = am.article_id
-              WHERE am.menu_id = ? AND a.status = 'published'
-              ORDER BY a.id DESC LIMIT 4
+              SELECT a.* FROM articles a WHERE (a.category_id = ? OR a.city_id = ?) AND a.status = 'published' ORDER BY a.published_at DESC LIMIT 4
           ");
-          $stmt->execute([$menu['id']]);
+          $stmt->execute([$menu['id'], $menu['id']]);
           $cArticles = $stmt->fetchAll(PDO::FETCH_ASSOC);
           
           if (!empty($cArticles)) {
@@ -484,6 +470,9 @@ try {
     <?php include __DIR__ . '/footer.php'; ?>
     </body>
 </html>
+
+
+
 
 
 

@@ -34,9 +34,7 @@ if ($id) {
     try {
         $stmt = $pdo->prepare(
             "SELECT a.*, 
-       (SELECT m.name FROM menus m JOIN article_menu am ON am.menu_id = m.id WHERE am.article_id = a.id LIMIT 1) as category_name,
-       (SELECT m.slug FROM menus m JOIN article_menu am ON am.menu_id = m.id WHERE am.article_id = a.id LIMIT 1) as category_slug
-       FROM articles a WHERE a.id = ? AND a.status = 'published'"
+       m.name as category_name, m.slug as category_slug FROM articles a LEFT JOIN menus m ON m.id = a.category_id WHERE a.id = ? AND a.status = 'published'"
         );
         $stmt->execute([$id]);
         $article = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -49,9 +47,7 @@ if (!$article && $slug) {
     try {
         $stmt = $pdo->prepare(
             "SELECT a.*, 
-       (SELECT m.name FROM menus m JOIN article_menu am ON am.menu_id = m.id WHERE am.article_id = a.id LIMIT 1) as category_name,
-       (SELECT m.slug FROM menus m JOIN article_menu am ON am.menu_id = m.id WHERE am.article_id = a.id LIMIT 1) as category_slug
-       FROM articles a WHERE (a.slug = ? OR a.id = ?) AND a.status = 'published'"
+       m.name as category_name, m.slug as category_slug FROM articles a LEFT JOIN menus m ON m.id = a.category_id WHERE (a.slug = ? OR a.id = ?) AND a.status = 'published'"
         );
         $stmt->execute([$slug, $slug]);
         $article = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -336,9 +332,7 @@ $relatedArticles = [];
 try {
     $rStmt = $pdo->prepare(
         "SELECT a.*, 
-       (SELECT m.name FROM menus m JOIN article_menu am ON am.menu_id = m.id WHERE am.article_id = a.id LIMIT 1) as category_name,
-       (SELECT m.slug FROM menus m JOIN article_menu am ON am.menu_id = m.id WHERE am.article_id = a.id LIMIT 1) as category_slug
-       FROM articles a  WHERE a.status = 'published' AND a.id != ? 
+       m.name as category_name, m.slug as category_slug FROM articles a LEFT JOIN menus m ON m.id = a.category_id WHERE a.status = 'published' AND a.id != ? 
          ORDER BY a.published_at DESC
          LIMIT 3"
     );
@@ -353,9 +347,7 @@ $sidebarHeadlines = [];
 try {
     $sidebarHeadlines = $pdo->query(
         "SELECT a.*, 
-       (SELECT m.name FROM menus m JOIN article_menu am ON am.menu_id = m.id WHERE am.article_id = a.id LIMIT 1) as category_name,
-       (SELECT m.slug FROM menus m JOIN article_menu am ON am.menu_id = m.id WHERE am.article_id = a.id LIMIT 1) as category_slug
-       FROM articles a  WHERE a.status = 'published'
+       m.name as category_name, m.slug as category_slug FROM articles a LEFT JOIN menus m ON m.id = a.category_id WHERE a.status = 'published'
          ORDER BY a.published_at DESC
          LIMIT 5"
     )->fetchAll(PDO::FETCH_ASSOC);
@@ -1071,3 +1063,4 @@ $defaultNavCategories = ['Agra', 'Lucknow', 'Mathura', 'Noida', 'Uttar Pradesh',
         <?php include __DIR__ . '/footer.php'; ?>
 </body>
 </html>
+

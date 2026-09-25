@@ -52,11 +52,10 @@ try {
     $stmt = $pdo->prepare("
         SELECT a.* 
         FROM articles a
-        JOIN article_menu am ON a.id = am.article_id
-        WHERE am.menu_id = ? AND a.status = 'published'
-        ORDER BY a.id DESC
+        WHERE (a.category_id = ? OR a.city_id = ?) AND a.status = 'published'
+        ORDER BY a.published_at DESC
     ");
-    $stmt->execute([$menu['id']]);
+    $stmt->execute([$menu['id'], $menu['id']]);
     $articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (Exception $e) {}
 
