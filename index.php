@@ -44,7 +44,7 @@ $defaultNavCategories = ['Agra', 'Lucknow', 'Mathura', 'Noida', 'Uttar Pradesh',
 try {
     $featuredArticles = $pdo->query("SELECT a.*, 
        m.name as category_name, m.slug as category_slug FROM articles a LEFT JOIN menus m ON m.id = a.category_id WHERE a.status = 'published' AND a.is_trending = 0 AND (a.video_url IS NULL OR a.video_url = '') AND (a.video_file IS NULL OR a.video_file = '') ORDER BY a.is_featured DESC, a.published_at DESC LIMIT 5")->fetchAll(PDO::FETCH_ASSOC);
-} catch (Exception $e) { $featuredArticles = []; }
+} catch (Exception $e) { $featuredArticles = []; echo '<div class="alert alert-danger">FEATURED ERROR: ' . htmlspecialchars($e->getMessage()) . '</div>'; }
 
 if (empty($featuredArticles)) { $featuredArticles = [[ "title" => "Gunvani News CMS Activated", "summary" => "Welcome to Gunvani News. Publish news articles from admin panel to populate homepage.", "category_name" => "NEWS", "image" => "images/placeholder/second6.webp", "published_at" => date("Y-m-d H:i:s"), "slug" => "welcome-to-gunvani-news" ]]; }
 
@@ -61,9 +61,7 @@ try {
 try {
     $featIds = array_column($featuredArticles ?? [], 'id'); $excludeSql = !empty($featIds) ? "AND a.id NOT IN (" . implode(',', $featIds) . ")" : ""; $supportingArticles = $pdo->query("SELECT a.*, 
        m.name as category_name, m.slug as category_slug FROM articles a LEFT JOIN menus m ON m.id = a.category_id WHERE a.status = 'published' AND a.is_trending = 0 AND (a.video_url IS NULL OR a.video_url = '') AND (a.video_file IS NULL OR a.video_file = '') $excludeSql ORDER BY a.id DESC LIMIT 4")->fetchAll(PDO::FETCH_ASSOC);
-} catch (Exception $e) {
-    $supportingArticles = [];
-}
+} catch (Exception $e) { $supportingArticles = []; echo '<div class="alert alert-danger">SUPPORTING ERROR: ' . htmlspecialchars($e->getMessage()) . '</div>'; }
 
 // 4. Fetch 5 Most Read Articles
 try {
@@ -104,7 +102,7 @@ try {
 // 7. Dynamic City News per major city (using active submenus)
   $cityNews = [];
   try {
-      $submenus = $pdo->query("SELECT id, name, slug FROM menus WHERE parent_id IS NOT NULL AND status = 'active' ORDER BY display_order ASC LIMIT 4")->fetchAll(PDO::FETCH_ASSOC);
+      $submenus = $pdo->query("SELECT id, name, slug FROM menus WHERE menu_type = 'city' AND status = 'active' ORDER BY display_order ASC LIMIT 4")->fetchAll(PDO::FETCH_ASSOC);
       
       foreach ($submenus as $menu) {
           $stmt = $pdo->prepare("
@@ -470,6 +468,7 @@ try {
     <?php include __DIR__ . '/footer.php'; ?>
     </body>
 </html>
+
 
 
 
