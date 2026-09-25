@@ -200,7 +200,7 @@ try {
                         <?php if (!empty($featuredArticles)): ?>
                             <?php foreach ($featuredArticles as $idx => $fa): ?>
                                 <div class="carousel-item h-100 <?= $idx === 0 ? 'active' : '' ?>">
-                                    <a href="/article/<?= escape($fa['slug']) ?>" class="hero-main-img-wrap d-block">
+                                    <a href="/article/<?= escape($fa['slug']) ?>" class="hero-main-img-wrap d-block bg-dark">
                                         <img src="<?= escape(articleImage($fa['image'])) ?>" alt="<?= escape($fa['title']) ?>" onerror="this.onerror=null; this.src='/images/placeholder/second6.webp'">
                                         <div class="hero-main-overlay">
                                             <span class="cat-badge-red"><?= escape($fa['category_name'] ?: 'LUCKNOW') ?></span>
@@ -468,6 +468,7 @@ try {
     <?php include __DIR__ . '/footer.php'; ?>
     </body>
 </html>
+
 
 
 
