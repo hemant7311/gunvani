@@ -2,7 +2,7 @@
 require_once __DIR__ . '/../db.php';
 require_once __DIR__ . '/../includes/auth.php';
 
-require_admin();
+require_login();
 
 echo "<h2>Syncing Legacy Files to Media Database...</h2>";
 
