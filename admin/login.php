@@ -15,74 +15,64 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = trim($_POST['password'] ?? '');
 
     if ($username === '' || $password === '') {
-        $error = "❌ Username and password are required.";
+        $error = "Username and password are required.";
     } else {
         // Query unified users table
-        $stmt = $pdo->prepare("SELECT * FROM users WHERE (username = ? OR email = ?) AND status = 'active' LIMIT 1");
-        $stmt->execute([$username, $username]);
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        try {
+            $stmt = $pdo->prepare("SELECT * FROM users WHERE (username = ? OR email = ?) AND status = 'active' LIMIT 1");
+            $stmt->execute([$username, $username]);
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        $passwordValid = false;
+            $passwordValid = false;
 
-        if ($user) {
-            $userHash = !empty($user['password_hash']) ? $user['password_hash'] : (!empty($user['password']) ? $user['password'] : '');
-            if (!empty($userHash) && password_verify($password, $userHash)) {
-                $passwordValid = true;
-            } elseif ($password === $userHash) { // Legacy plaintext fallback
-                $passwordValid = true;
-            } elseif ($username === 'gunvani' && ($password === 'gunvani@2025##' || $password === 'gunvani')) {
-                $passwordValid = true;
-            }
-
-            if ($passwordValid) {
-                // Ensure password hashes are saved in both password & password_hash columns
-                $newHash = password_hash($password, PASSWORD_DEFAULT);
-                try {
-                    $upHash = $pdo->prepare("UPDATE users SET password_hash = ?, password = ? WHERE id = ?");
-                    $upHash->execute([$newHash, $newHash, $user['id']]);
-                } catch (Exception $e) {}
-            }
-        } else {
-            // Legacy fallback to admins table if not yet in users table
-            $aStmt = $pdo->prepare("SELECT * FROM admins WHERE username = ? LIMIT 1");
-            $aStmt->execute([$username]);
-            $adminRow = $aStmt->fetch(PDO::FETCH_ASSOC);
-            if ($adminRow) {
-                if (!empty($adminRow['password']) && password_verify($password, $adminRow['password'])) {
-                    $passwordValid = true;
-                } elseif ($password === $adminRow['password'] || ($username === 'gunvani' && ($password === 'gunvani@2025##' || $password === 'gunvani'))) {
+            if ($user) {
+                $userHash = !empty($user['password_hash']) ? $user['password_hash'] : (!empty($user['password']) ? $user['password'] : '');
+                if (!empty($userHash) && password_verify($password, $userHash)) {
                     $passwordValid = true;
                 }
-                if ($passwordValid) {
-                    $user = [
-                        'id' => 1,
-                        'name' => 'Administrator',
-                        'username' => $adminRow['username'],
-                        'email' => 'admin@gunvani.com',
-                        'role' => 'admin',
-                        'status' => 'active'
-                    ];
+            } else {
+                // Legacy fallback to admins table if not yet in users table
+                $aStmt = $pdo->prepare("SELECT * FROM admins WHERE username = ? LIMIT 1");
+                $aStmt->execute([$username]);
+                $adminRow = $aStmt->fetch(PDO::FETCH_ASSOC);
+                if ($adminRow) {
+                    if (!empty($adminRow['password']) && password_verify($password, $adminRow['password'])) {
+                        $passwordValid = true;
+                    }
+                    if ($passwordValid) {
+                        $user = [
+                            'id' => 1,
+                            'name' => 'Administrator',
+                            'username' => $adminRow['username'],
+                            'email' => 'admin@gunvani.com',
+                            'role' => 'admin',
+                            'status' => 'active'
+                        ];
+                    }
                 }
             }
-        }
 
-        if ($passwordValid && $user) {
-            session_regenerate_id(true);
-            $_SESSION['user_id'] = $user['id'];
-            $_SESSION['user_role'] = $user['role'];
-            $_SESSION['user_name'] = $user['name'];
-            $_SESSION['admin'] = $user['username'];
+            if ($passwordValid && $user) {
+                session_regenerate_id(true);
+                $_SESSION['user_id'] = $user['id'];
+                $_SESSION['user_role'] = $user['role'];
+                $_SESSION['user_name'] = $user['name'];
+                $_SESSION['admin'] = $user['username'];
 
-            // Update last_login timestamp if user id exists in users
-            try {
-                $uStmt = $pdo->prepare("UPDATE users SET last_login = NOW() WHERE id = ?");
-                $uStmt->execute([$user['id']]);
-            } catch (Exception $e) {}
+                // Update last_login timestamp if user id exists in users
+                if (isset($user['id'])) {
+                    $uStmt = $pdo->prepare("UPDATE users SET last_login = NOW() WHERE id = ?");
+                    $uStmt->execute([$user['id']]);
+                }
 
-            header("Location: dashboard.php");
-            exit();
-        } else {
-            $error = "❌ Invalid username or password. Access denied.";
+                header("Location: dashboard.php");
+                exit();
+            } else {
+                $error = "Invalid username or password. Access denied.";
+            }
+        } catch (PDOException $e) {
+            error_log("[Login Error] " . $e->getMessage());
+            $error = "A database error occurred. Please try again later.";
         }
     }
 }
@@ -140,13 +130,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
         </div>
 
-        <button type="submit" class="btn btn-success w-100 py-2.5 font-weight-bold shadow-sm" style="background:#116530; border:none; border-radius:8px;">
+        <button type="submit" class="btn btn-success w-100 py-2 font-weight-bold shadow-sm" style="background:#116530; border:none; border-radius:8px;">
             <i class="fa-solid fa-right-to-bracket me-2"></i>Login to Portal
         </button>
     </form>
 
     <div class="text-center mt-4 text-muted small">
-        © <?= date('Y') ?> Gunvani News Admin Panel
+        &copy; <?= date('Y') ?> Gunvani News Admin Panel
     </div>
 </div>
 

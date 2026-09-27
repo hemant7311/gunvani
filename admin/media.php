@@ -19,7 +19,6 @@ if (empty($_SESSION['csrf_token'])) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'delete') {
     header('Content-Type: application/json');
     
-    // 1. Authorization: Only allow admins OR agents to delete
     $currentUser = get_logged_user();
     if (!is_admin() && !is_agent()) {
         http_response_code(403);
@@ -27,14 +26,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         exit;
     }
     
-    // 2. CSRF Verification
     if (empty($_POST['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'])) {
         http_response_code(403);
         echo json_encode(['success' => false, 'error' => 'Security verification failed. Please refresh the page and try again.']);
         exit;
     }
     
-    // 3. Media ID Validation
     $delId = (int)($_POST['media_id'] ?? 0);
     if ($delId <= 0) {
         http_response_code(400);
@@ -43,7 +40,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     }
     
     try {
-        // 4. Fetch Media Record
         $stmt = $pdo->prepare("SELECT * FROM media WHERE id = ?");
         $stmt->execute([$delId]);
         $mFile = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -54,9 +50,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             exit;
         }
         
-        // Ensure Agents can only delete their own uploaded media, while Admins can delete any
         if (is_agent() && !is_admin()) {
-            if ($mFile['uploaded_by'] != $currentUser['id']) {
+            if (empty($mFile['uploaded_by']) || $mFile['uploaded_by'] != $currentUser['id']) {
                 http_response_code(403);
                 echo json_encode(['success' => false, 'error' => 'You do not have permission to delete media uploaded by others.']);
                 exit;
@@ -66,31 +61,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         $filename = $mFile['filename'];
         $filePath = $mFile['file_path'];
         
-        // 5. Shared File Safety Checks
         $isReferenced = false;
         
-        // Check articles
         $stmtRef = $pdo->prepare("SELECT COUNT(*) FROM articles WHERE image = ? OR video_url = ?");
         $stmtRef->execute([$filename, $filename]);
         if ($stmtRef->fetchColumn() > 0) $isReferenced = true;
         
-        // Check members
         $stmtRef = $pdo->prepare("SELECT COUNT(*) FROM members WHERE photo = ? OR photo = ?");
         $stmtRef->execute([$filename, $filePath]);
         if ($stmtRef->fetchColumn() > 0) $isReferenced = true;
         
-        // Check menus
         $stmtRef = $pdo->prepare("SELECT COUNT(*) FROM menus WHERE image = ? OR image = ?");
         $stmtRef->execute([$filename, $filePath]);
         if ($stmtRef->fetchColumn() > 0) $isReferenced = true;
         
-        // 6. article_media Relation Cleanup
         try {
             $stmtAm = $pdo->prepare("DELETE FROM article_media WHERE media_id = ?");
             $stmtAm->execute([$delId]);
         } catch (PDOException $e) { }
         
-        // 7. Physical File Deletion (Path Traversal Safe)
         if (!$isReferenced) {
             $uploadDir = realpath(__DIR__ . '/../uploads');
             if ($uploadDir) {
@@ -101,7 +90,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             }
         }
         
-        // 8. Delete Database Record
         $pdo->prepare("DELETE FROM media WHERE id = ?")->execute([$delId]);
         
         echo json_encode(['success' => true, 'message' => 'Media deleted successfully.']);
@@ -113,15 +101,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         exit;
     }
 }
-// End AJAX Handler
-// ---------------------------------------------------------
 
 require_once 'admin_header.php';
 
 $message = '';
 $errorMessage = '';
 
-// Handle Media Upload if posted
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_FILES['media_file']['name']) && !isset($_POST['action'])) {
     $uploadRes = secure_upload_file($_FILES['media_file'], __DIR__ . '/../uploads/news/', ['image', 'video']);
     if ($uploadRes['success']) {
@@ -144,9 +129,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_FILES['media_file']['name'
     }
 }
 
-// Fetch images from media table
 $dbMedia = $pdo->query("SELECT * FROM media ORDER BY id DESC")->fetchAll(PDO::FETCH_ASSOC);
-
 $mediaFiles = [];
 if (!empty($dbMedia)) {
     foreach ($dbMedia as $m) {
@@ -159,7 +142,6 @@ if (!empty($dbMedia)) {
         ];
     }
 } else {
-    // Fallback: fetch images from uploads/ directory
     $uploadDir = __DIR__ . '/../uploads/news/';
     if (is_dir($uploadDir)) {
         $files = array_diff(scandir($uploadDir), ['.', '..']);
@@ -180,7 +162,6 @@ if (!empty($dbMedia)) {
 ?>
 
 <style>
-/* 1. FIX HOVER CSS */
 .media-card-img-wrap {
     position: relative;
     overflow: hidden;
@@ -192,7 +173,7 @@ if (!empty($dbMedia)) {
     position: absolute;
     top: 8px;
     right: 8px;
-    z-index: 100;
+    z-index: 1000;
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
@@ -207,7 +188,6 @@ if (!empty($dbMedia)) {
     transform: scale(1);
 }
 
-/* 16. MOBILE ACCESSIBILITY */
 @media (hover: none), (pointer: coarse) {
     .media-card-img-wrap .btn-delete-media {
         opacity: 1;
@@ -230,7 +210,6 @@ if (!empty($dbMedia)) {
     </div>
 </div>
 
-<!-- Upload Collapse Container -->
 <div class="collapse mb-4" id="uploadCollapse">
     <div class="admin-card">
         <div class="admin-card-body text-center p-4">
@@ -265,7 +244,6 @@ if (!empty($dbMedia)) {
     <?php endif; ?>
 </div>
 
-<!-- Tabs & Search Toolbar -->
 <div class="toolbar-card">
     <ul class="nav nav-pills">
         <li class="nav-item">
@@ -279,8 +257,7 @@ if (!empty($dbMedia)) {
     </div>
 </div>
 
-<!-- Media Grid Layout -->
-<div class="row g-3">
+<div class="row g-3" id="media-grid">
     <?php if (count($mediaFiles) === 0): ?>
         <div class="col-12 text-center text-muted py-5">
             <i class="fa-regular fa-folder-open display-3 mb-3 text-muted"></i>
@@ -304,7 +281,7 @@ if (!empty($dbMedia)) {
                             <?= htmlspecialchars($media['name']) ?>
                         </div>
                         <div class="small text-muted" style="font-size:0.75rem;">
-                            <?= $media['size'] ?> ? <?= $media['time'] ?>
+                            <?= $media['size'] ?> &bull; <?= $media['time'] ?>
                         </div>
                     </div>
                 </div>
@@ -315,13 +292,18 @@ if (!empty($dbMedia)) {
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    document.querySelectorAll('.btn-delete-media').forEach(function(btn) {
-        btn.addEventListener('click', function(e) {
+    // Event delegation on the grid container
+    const mediaGrid = document.getElementById('media-grid');
+    if (mediaGrid) {
+        mediaGrid.addEventListener('click', function(e) {
+            const btn = e.target.closest('.btn-delete-media');
+            if (!btn) return;
+            
             e.preventDefault();
             
-            const mediaId = this.dataset.id;
-            const csrfToken = this.dataset.csrf;
-            const gridItem = this.closest('.media-grid-item');
+            const mediaId = btn.dataset.id;
+            const csrfToken = btn.dataset.csrf;
+            const gridItem = btn.closest('.media-grid-item');
             
             if (confirm('Are you sure you want to delete this media file?')) {
                 const formData = new FormData();
@@ -353,13 +335,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     return data;
                 })
                 .then(data => {
-                    // Remove from DOM without refreshing
-                    gridItem.remove();
+                    if (gridItem) gridItem.remove();
                     
-                    // Show success alert
                     const alertHtml = `<div class="alert alert-success alert-dismissible fade show" role="alert"><i class="fa-solid fa-circle-check me-2"></i>Media deleted successfully.<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>`;
                     const container = document.getElementById('media-alerts-container');
-                    container.innerHTML = alertHtml;
+                    if (container) container.innerHTML = alertHtml;
                 })
                 .catch(error => {
                     console.error('Delete error:', error);
@@ -367,7 +347,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             }
         });
-    });
+    }
 });
 </script>
 
