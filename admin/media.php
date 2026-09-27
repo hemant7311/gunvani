@@ -7,6 +7,8 @@ require_once __DIR__ . '/../includes/auth.php';
 require_once 'db.php';
 
 require_login();
+
+// CSRF token generation
 if (empty($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
@@ -17,40 +19,54 @@ if (empty($_SESSION['csrf_token'])) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'delete') {
     header('Content-Type: application/json');
     
-    // 1. Verify admin role
-    if (!is_admin()) {
-        echo json_encode(['success' => false, 'error' => 'Unauthorized. Only admins can delete media.']);
+    // 1. Authorization: Only allow admins OR agents to delete
+    $currentUser = get_logged_user();
+    if (!is_admin() && !is_agent()) {
+        http_response_code(403);
+        echo json_encode(['success' => false, 'error' => 'You do not have permission to delete media.']);
         exit;
     }
     
-    // 2. CSRF Token Verification
-    if (!isset($_POST['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'])) {
-        echo json_encode(['success' => false, 'error' => 'Invalid CSRF token.']);
+    // 2. CSRF Verification
+    if (empty($_POST['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'])) {
+        http_response_code(403);
+        echo json_encode(['success' => false, 'error' => 'Security verification failed. Please refresh the page and try again.']);
         exit;
     }
     
-    // 3. Validate Media ID
+    // 3. Media ID Validation
     $delId = (int)($_POST['media_id'] ?? 0);
     if ($delId <= 0) {
+        http_response_code(400);
         echo json_encode(['success' => false, 'error' => 'Invalid media ID.']);
         exit;
     }
     
     try {
-        // 4. Fetch media record
+        // 4. Fetch Media Record
         $stmt = $pdo->prepare("SELECT * FROM media WHERE id = ?");
         $stmt->execute([$delId]);
         $mFile = $stmt->fetch(PDO::FETCH_ASSOC);
         
         if (!$mFile) {
+            http_response_code(404);
             echo json_encode(['success' => false, 'error' => 'Media not found in database.']);
             exit;
+        }
+        
+        // Ensure Agents can only delete their own uploaded media, while Admins can delete any
+        if (is_agent() && !is_admin()) {
+            if ($mFile['uploaded_by'] != $currentUser['id']) {
+                http_response_code(403);
+                echo json_encode(['success' => false, 'error' => 'You do not have permission to delete media uploaded by others.']);
+                exit;
+            }
         }
         
         $filename = $mFile['filename'];
         $filePath = $mFile['file_path'];
         
-        // 5. Check dependencies in other tables to prevent breaking site content
+        // 5. Shared File Safety Checks
         $isReferenced = false;
         
         // Check articles
@@ -68,13 +84,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         $stmtRef->execute([$filename, $filePath]);
         if ($stmtRef->fetchColumn() > 0) $isReferenced = true;
         
-        // 6. Handle article_media relation
+        // 6. article_media Relation Cleanup
         try {
             $stmtAm = $pdo->prepare("DELETE FROM article_media WHERE media_id = ?");
             $stmtAm->execute([$delId]);
-        } catch (PDOException $e) { } // Ignore if table doesn't exist
+        } catch (PDOException $e) { }
         
-        // 7. Secure physical file deletion using path traversal prevention
+        // 7. Physical File Deletion (Path Traversal Safe)
         if (!$isReferenced) {
             $uploadDir = realpath(__DIR__ . '/../uploads');
             if ($uploadDir) {
@@ -85,13 +101,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             }
         }
         
-        // 8. Delete from media library
+        // 8. Delete Database Record
         $pdo->prepare("DELETE FROM media WHERE id = ?")->execute([$delId]);
         
         echo json_encode(['success' => true, 'message' => 'Media deleted successfully.']);
         exit;
     } catch (Exception $e) {
         error_log("[Media Delete Error] " . $e->getMessage());
+        http_response_code(500);
         echo json_encode(['success' => false, 'error' => 'An internal server error occurred. Please try again.']);
         exit;
     }
@@ -163,32 +180,40 @@ if (!empty($dbMedia)) {
 ?>
 
 <style>
-/* Hover Delete Feature for Media Library */
+/* 1. FIX HOVER CSS */
 .media-card-img-wrap {
     position: relative;
     overflow: hidden;
     height: 140px;
     background: #f1f5f9;
 }
+
 .media-card-img-wrap .btn-delete-media {
     position: absolute;
-    top: 5px;
-    right: 5px;
+    top: 8px;
+    right: 8px;
+    z-index: 100;
     opacity: 0;
     visibility: hidden;
-    transition: opacity 0.2s ease, visibility 0.2s ease;
-    z-index: 10;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+    pointer-events: none;
+    transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.2s ease;
+    transform: scale(0.9);
 }
-.admin-card:hover .media-card-img-wrap .btn-delete-media {
+
+.media-card-img-wrap:hover .btn-delete-media {
     opacity: 1;
     visibility: visible;
+    pointer-events: auto;
+    transform: scale(1);
 }
-/* Mobile/Touch fallback: Ensure button is visible when hover is not supported */
-@media (hover: none) {
+
+/* 16. MOBILE ACCESSIBILITY */
+@media (hover: none), (pointer: coarse) {
     .media-card-img-wrap .btn-delete-media {
         opacity: 1;
         visibility: visible;
+        pointer-events: auto;
+        transform: scale(1);
     }
 }
 </style>
@@ -270,7 +295,7 @@ if (!empty($dbMedia)) {
                         <img src="<?= htmlspecialchars($media['path']) ?>" alt="<?= htmlspecialchars($media['name']) ?>" class="w-100 h-100" style="object-fit:cover;" onerror="this.src='../images/placeholder/first8.jpg'">
                         <?php if (!empty($media['id'])): ?>
                             <button type="button" class="btn btn-sm btn-danger btn-delete-media" aria-label="Delete Media" title="Delete Media" data-id="<?= $media['id'] ?>" data-csrf="<?= htmlspecialchars($_SESSION['csrf_token']) ?>">
-                                <i class="fa-solid fa-trash-can small"></i>
+                                <i class="fa-solid fa-trash-can"></i>
                             </button>
                         <?php endif; ?>
                     </div>
@@ -311,23 +336,34 @@ document.addEventListener('DOMContentLoaded', function() {
                         'X-Requested-With': 'XMLHttpRequest'
                     }
                 })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        // Remove from DOM without refreshing
-                        gridItem.remove();
-                        
-                        // Show success alert
-                        const alertHtml = `<div class="alert alert-success alert-dismissible fade show" role="alert"><i class="fa-solid fa-circle-check me-2"></i>Media deleted successfully.<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>`;
-                        const container = document.getElementById('media-alerts-container');
-                        container.innerHTML = alertHtml;
-                    } else {
-                        alert(data.error || 'Unable to delete media. Please try again.');
+                .then(async response => {
+                    const text = await response.text();
+                    let data;
+                    
+                    try {
+                        data = JSON.parse(text);
+                    } catch (e) {
+                        throw new Error('Server returned an invalid response. HTTP ' + response.status);
                     }
+                    
+                    if (!response.ok || !data.success) {
+                        throw new Error(data.error || 'Delete request failed.');
+                    }
+                    
+                    return data;
+                })
+                .then(data => {
+                    // Remove from DOM without refreshing
+                    gridItem.remove();
+                    
+                    // Show success alert
+                    const alertHtml = `<div class="alert alert-success alert-dismissible fade show" role="alert"><i class="fa-solid fa-circle-check me-2"></i>Media deleted successfully.<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>`;
+                    const container = document.getElementById('media-alerts-container');
+                    container.innerHTML = alertHtml;
                 })
                 .catch(error => {
                     console.error('Delete error:', error);
-                    alert('Unable to delete media. Please try again.');
+                    alert(error.message || 'Unable to delete media. Please try again.');
                 });
             }
         });
