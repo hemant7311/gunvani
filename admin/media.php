@@ -163,37 +163,63 @@ if (!empty($dbMedia)) {
 
 <style>
 .media-card-img-wrap {
-    position: relative;
+    position: relative !important;
     overflow: hidden;
     height: 140px;
     background: #f1f5f9;
 }
 
 .media-card-img-wrap .btn-delete-media {
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    z-index: 1000;
+    position: absolute !important;
+    top: 8px !important;
+    right: 8px !important;
+    z-index: 9999 !important;
+
+    width: 38px !important;
+    height: 38px !important;
+
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    background: #dc2626 !important;
+    color: #ffffff !important;
+
+    border: 2px solid #ffffff !important;
+    border-radius: 50% !important;
+
+    cursor: pointer !important;
+
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
-    transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.2s ease;
-    transform: scale(0.9);
+
+    transform: scale(.9);
+
+    transition: all .2s ease;
 }
 
-.media-card-img-wrap:hover .btn-delete-media {
-    opacity: 1;
-    visibility: visible;
-    pointer-events: auto;
-    transform: scale(1);
+.media-card-img-wrap:hover .btn-delete-media,
+.media-grid-item:hover .btn-delete-media {
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    transform: scale(1) !important;
+}
+
+.media-card-img-wrap .btn-delete-media:hover {
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    transform: scale(1.05) !important;
 }
 
 @media (hover: none), (pointer: coarse) {
     .media-card-img-wrap .btn-delete-media {
-        opacity: 1;
-        visibility: visible;
-        pointer-events: auto;
-        transform: scale(1);
+        opacity: 1 !important;
+        visibility: visible !important;
+        pointer-events: auto !important;
+        transform: scale(1) !important;
     }
 }
 </style>
