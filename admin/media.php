@@ -3,30 +3,109 @@ $activePage = 'media';
 $pageTitle = 'Media Library - Gunvani News Admin';
 
 require_once __DIR__ . '/../includes/upload.php';
-require_once 'admin_header.php';
+require_once __DIR__ . '/../includes/auth.php';
 require_once 'db.php';
+
+require_login();
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+
+// ---------------------------------------------------------
+// AJAX SECURE DELETE HANDLER
+// ---------------------------------------------------------
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'delete') {
+    header('Content-Type: application/json');
+    
+    // 1. Verify admin role
+    if (!is_admin()) {
+        echo json_encode(['success' => false, 'error' => 'Unauthorized. Only admins can delete media.']);
+        exit;
+    }
+    
+    // 2. CSRF Token Verification
+    if (!isset($_POST['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'])) {
+        echo json_encode(['success' => false, 'error' => 'Invalid CSRF token.']);
+        exit;
+    }
+    
+    // 3. Validate Media ID
+    $delId = (int)($_POST['media_id'] ?? 0);
+    if ($delId <= 0) {
+        echo json_encode(['success' => false, 'error' => 'Invalid media ID.']);
+        exit;
+    }
+    
+    try {
+        // 4. Fetch media record
+        $stmt = $pdo->prepare("SELECT * FROM media WHERE id = ?");
+        $stmt->execute([$delId]);
+        $mFile = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if (!$mFile) {
+            echo json_encode(['success' => false, 'error' => 'Media not found in database.']);
+            exit;
+        }
+        
+        $filename = $mFile['filename'];
+        $filePath = $mFile['file_path'];
+        
+        // 5. Check dependencies in other tables to prevent breaking site content
+        $isReferenced = false;
+        
+        // Check articles
+        $stmtRef = $pdo->prepare("SELECT COUNT(*) FROM articles WHERE image = ? OR video_url = ?");
+        $stmtRef->execute([$filename, $filename]);
+        if ($stmtRef->fetchColumn() > 0) $isReferenced = true;
+        
+        // Check members
+        $stmtRef = $pdo->prepare("SELECT COUNT(*) FROM members WHERE photo = ? OR photo = ?");
+        $stmtRef->execute([$filename, $filePath]);
+        if ($stmtRef->fetchColumn() > 0) $isReferenced = true;
+        
+        // Check menus
+        $stmtRef = $pdo->prepare("SELECT COUNT(*) FROM menus WHERE image = ? OR image = ?");
+        $stmtRef->execute([$filename, $filePath]);
+        if ($stmtRef->fetchColumn() > 0) $isReferenced = true;
+        
+        // 6. Handle article_media relation
+        try {
+            $stmtAm = $pdo->prepare("DELETE FROM article_media WHERE media_id = ?");
+            $stmtAm->execute([$delId]);
+        } catch (PDOException $e) { } // Ignore if table doesn't exist
+        
+        // 7. Secure physical file deletion using path traversal prevention
+        if (!$isReferenced) {
+            $uploadDir = realpath(__DIR__ . '/../uploads');
+            if ($uploadDir) {
+                $targetFile = realpath(__DIR__ . '/../' . $filePath);
+                if ($targetFile && strpos($targetFile, $uploadDir) === 0 && file_exists($targetFile)) {
+                    @unlink($targetFile);
+                }
+            }
+        }
+        
+        // 8. Delete from media library
+        $pdo->prepare("DELETE FROM media WHERE id = ?")->execute([$delId]);
+        
+        echo json_encode(['success' => true, 'message' => 'Media deleted successfully.']);
+        exit;
+    } catch (Exception $e) {
+        error_log("[Media Delete Error] " . $e->getMessage());
+        echo json_encode(['success' => false, 'error' => 'An internal server error occurred. Please try again.']);
+        exit;
+    }
+}
+// End AJAX Handler
+// ---------------------------------------------------------
+
+require_once 'admin_header.php';
 
 $message = '';
 $errorMessage = '';
 
-// Handle Delete Request
-if (isset($_GET['delete'])) {
-    $delId = (int)$_GET['delete'];
-    $stmt = $pdo->prepare("SELECT * FROM media WHERE id = ?");
-    $stmt->execute([$delId]);
-    $mFile = $stmt->fetch(PDO::FETCH_ASSOC);
-    if ($mFile) {
-        $filePath = __DIR__ . '/../' . $mFile['file_path'];
-        if (file_exists($filePath)) {
-            @unlink($filePath);
-        }
-        $pdo->prepare("DELETE FROM media WHERE id = ?")->execute([$delId]);
-        $message = "Media file deleted successfully.";
-    }
-}
-
 // Handle Media Upload if posted
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_FILES['media_file']['name'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_FILES['media_file']['name']) && !isset($_POST['action'])) {
     $uploadRes = secure_upload_file($_FILES['media_file'], __DIR__ . '/../uploads/news/', ['image', 'video']);
     if ($uploadRes['success']) {
         $loggedUser = get_logged_user();
@@ -83,6 +162,37 @@ if (!empty($dbMedia)) {
 }
 ?>
 
+<style>
+/* Hover Delete Feature for Media Library */
+.media-card-img-wrap {
+    position: relative;
+    overflow: hidden;
+    height: 140px;
+    background: #f1f5f9;
+}
+.media-card-img-wrap .btn-delete-media {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+    z-index: 10;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+}
+.admin-card:hover .media-card-img-wrap .btn-delete-media {
+    opacity: 1;
+    visibility: visible;
+}
+/* Mobile/Touch fallback: Ensure button is visible when hover is not supported */
+@media (hover: none) {
+    .media-card-img-wrap .btn-delete-media {
+        opacity: 1;
+        visibility: visible;
+    }
+}
+</style>
+
 <div class="page-header">
     <div class="page-title-box">
         <h1>Media Library</h1>
@@ -114,19 +224,21 @@ if (!empty($dbMedia)) {
     </div>
 </div>
 
-<?php if ($message): ?>
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        <i class="fa-solid fa-circle-check me-2"></i><?= htmlspecialchars($message) ?>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-<?php endif; ?>
+<div id="media-alerts-container">
+    <?php if ($message): ?>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fa-solid fa-circle-check me-2"></i><?= htmlspecialchars($message) ?>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    <?php endif; ?>
 
-<?php if ($errorMessage): ?>
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        <i class="fa-solid fa-circle-exclamation me-2"></i><?= htmlspecialchars($errorMessage) ?>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-<?php endif; ?>
+    <?php if ($errorMessage): ?>
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fa-solid fa-circle-exclamation me-2"></i><?= htmlspecialchars($errorMessage) ?>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    <?php endif; ?>
+</div>
 
 <!-- Tabs & Search Toolbar -->
 <div class="toolbar-card">
@@ -152,14 +264,14 @@ if (!empty($dbMedia)) {
         </div>
     <?php else: ?>
         <?php foreach ($mediaFiles as $media): ?>
-            <div class="col-6 col-sm-4 col-md-3 col-xl-2">
+            <div class="col-6 col-sm-4 col-md-3 col-xl-2 media-grid-item">
                 <div class="admin-card h-100 mb-0 position-relative">
-                    <div class="position-relative overflow-hidden" style="height:140px; background:#f1f5f9;">
+                    <div class="media-card-img-wrap">
                         <img src="<?= htmlspecialchars($media['path']) ?>" alt="<?= htmlspecialchars($media['name']) ?>" class="w-100 h-100" style="object-fit:cover;" onerror="this.src='../images/placeholder/first8.jpg'">
                         <?php if (!empty($media['id'])): ?>
-                            <a href="media.php?delete=<?= $media['id'] ?>" class="btn btn-sm btn-danger position-absolute top-0 end-0 m-1 px-2 py-0" title="Delete file" onclick="return confirm('Delete this media file?');">
+                            <button type="button" class="btn btn-sm btn-danger btn-delete-media" aria-label="Delete Media" title="Delete Media" data-id="<?= $media['id'] ?>" data-csrf="<?= htmlspecialchars($_SESSION['csrf_token']) ?>">
                                 <i class="fa-solid fa-trash-can small"></i>
-                            </a>
+                            </button>
                         <?php endif; ?>
                     </div>
                     <div class="p-2 text-center">
@@ -167,7 +279,7 @@ if (!empty($dbMedia)) {
                             <?= htmlspecialchars($media['name']) ?>
                         </div>
                         <div class="small text-muted" style="font-size:0.75rem;">
-                            <?= $media['size'] ?> • <?= $media['time'] ?>
+                            <?= $media['size'] ?> ? <?= $media['time'] ?>
                         </div>
                     </div>
                 </div>
@@ -175,5 +287,52 @@ if (!empty($dbMedia)) {
         <?php endforeach; ?>
     <?php endif; ?>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.btn-delete-media').forEach(function(btn) {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            const mediaId = this.dataset.id;
+            const csrfToken = this.dataset.csrf;
+            const gridItem = this.closest('.media-grid-item');
+            
+            if (confirm('Are you sure you want to delete this media file?')) {
+                const formData = new FormData();
+                formData.append('action', 'delete');
+                formData.append('media_id', mediaId);
+                formData.append('csrf_token', csrfToken);
+                
+                fetch('media.php', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Remove from DOM without refreshing
+                        gridItem.remove();
+                        
+                        // Show success alert
+                        const alertHtml = `<div class="alert alert-success alert-dismissible fade show" role="alert"><i class="fa-solid fa-circle-check me-2"></i>Media deleted successfully.<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>`;
+                        const container = document.getElementById('media-alerts-container');
+                        container.innerHTML = alertHtml;
+                    } else {
+                        alert(data.error || 'Unable to delete media. Please try again.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Delete error:', error);
+                    alert('Unable to delete media. Please try again.');
+                });
+            }
+        });
+    });
+});
+</script>
 
 <?php require_once 'admin_footer.php'; ?>
