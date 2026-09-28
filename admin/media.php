@@ -285,11 +285,9 @@ if (!empty($dbMedia)) {
                 <div class="admin-card h-100 mb-0 position-relative">
                     <div class="media-card-img-wrap">
                         <img src="<?= htmlspecialchars($media['path']) ?>" alt="<?= htmlspecialchars($media['name']) ?>" class="w-100 h-100" style="object-fit:cover;" onerror="this.src='../images/placeholder/first8.jpg'">
-                        <?php if (!empty($media['id'])): ?>
-                            <button type="button" class="btn btn-sm btn-danger btn-delete-media" aria-label="Delete Media" title="Delete Media" data-id="<?= $media['id'] ?>" data-csrf="<?= htmlspecialchars($_SESSION['csrf_token']) ?>">
-                                <i class="fa-solid fa-trash-can"></i>
-                            </button>
-                        <?php endif; ?>
+                        <button type="button" class="btn btn-sm btn-danger btn-delete-media" aria-label="Delete Media" title="Delete Media" data-id="<?= (int)$media['id'] ?>" data-csrf="<?= htmlspecialchars($_SESSION['csrf_token']) ?>">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
                     </div>
                 </div>
             </div>
