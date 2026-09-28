@@ -168,6 +168,49 @@ if (!empty($dbMedia)) {
     height: 140px;
     background: #f1f5f9;
 }
+
+.media-card-img-wrap .btn-delete-media {
+    position: absolute !important;
+
+    top: 8px !important;
+    right: 8px !important;
+
+    width: 36px !important;
+    height: 36px !important;
+
+    padding: 0 !important;
+    margin: 0 !important;
+
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    background: #dc2626 !important;
+    border: 2px solid #ffffff !important;
+    border-radius: 50% !important;
+
+    color: #ffffff !important;
+
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+
+    z-index: 9999 !important;
+
+    cursor: pointer !important;
+}
+
+.media-card-img-wrap .btn-delete-media i {
+    color: #ffffff !important;
+    font-size: 14px !important;
+    display: inline-block !important;
+}
+
+.media-card-img-wrap .btn-delete-media:hover {
+    background: #b91c1c !important;
+    color: #ffffff !important;
+    transform: scale(1.05);
+}
 </style>
 
 <div class="page-header">
@@ -242,8 +285,6 @@ if (!empty($dbMedia)) {
                 <div class="admin-card h-100 mb-0 position-relative">
                     <div class="media-card-img-wrap">
                         <img src="<?= htmlspecialchars($media['path']) ?>" alt="<?= htmlspecialchars($media['name']) ?>" class="w-100 h-100" style="object-fit:cover;" onerror="this.src='../images/placeholder/first8.jpg'">
-                    </div>
-                    <div class="p-2 text-center">
                         <?php if (!empty($media['id'])): ?>
                             <button type="button" class="btn btn-sm btn-danger btn-delete-media" aria-label="Delete Media" title="Delete Media" data-id="<?= $media['id'] ?>" data-csrf="<?= htmlspecialchars($_SESSION['csrf_token']) ?>">
                                 <i class="fa-solid fa-trash-can"></i>
