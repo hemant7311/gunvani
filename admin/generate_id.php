@@ -111,9 +111,15 @@ class PDF extends FPDF {
 }
 
 function fixedText($pdf, $x, $y, $w, $text, $align='L', $size=7, $bold='') {
+    $text = (string)$text;
     $pdf->SetFont('Arial', $bold, $size);
+    // Dynamically reduce font size if text is too wide
+    while ($pdf->GetStringWidth($text) > $w && $size > 4) {
+        $size -= 0.5;
+        $pdf->SetFont('Arial', $bold, $size);
+    }
     $pdf->SetXY($x, $y);
-    $pdf->Cell($w, 4, (string)$text, 0, 0, $align);
+    $pdf->Cell($w, 4, $text, 0, 0, $align);
 }
 
 try {
@@ -136,28 +142,29 @@ try {
         $photoPath = __DIR__ . "/uploads/" . basename($m_photo);
         if (is_file($photoPath) && is_readable($photoPath)) {
             // New coordinates based on the template's existing red box
-            $x = 18.9; $y = 15.3; $w = 12.8; $h = 15.3;
+            $x = 18.7; $y = 15.2; $w = 13.1; $h = 15.6;
             $pdf->Image($photoPath, $x, $y, $w, $h);
         }
     }
 
     $leftX = 23;
-    $cellWidth = 44;
+    $cellWidth = 26; // Available space before the right edge (50.8 - 23 - 1.8 margin)
 
     // Adjusted Y-coordinates to align perfectly with the red labels on the new PDF template
-    fixedText($pdf, $leftX, 34,   $cellWidth, $m_member_id, 'L', 7);
-    fixedText($pdf, $leftX, 39,   $cellWidth, $m_name, 'L', 7);
-    fixedText($pdf, $leftX, 44,   $cellWidth, $m_designation, 'L', 7);
-    fixedText($pdf, $leftX, 48.7, $cellWidth, $m_mobile, 'L', 7);
-    fixedText($pdf, $leftX, 53.5, $cellWidth, $m_dob, 'L', 7);
-    fixedText($pdf, $leftX, 58.5, $cellWidth, $m_location, 'L', 7);
-    fixedText($pdf, $leftX, 63.5, $cellWidth, $m_blood_group, 'L', 7);
-    fixedText($pdf, $leftX, 68.5, $cellWidth, $m_doi, 'L', 7);
-    fixedText($pdf, $leftX, 73.5, $cellWidth, $m_doe, 'L', 7);
+    // FPDF Cell Y is the top-left, so it matches the top edge of the red label text
+    fixedText($pdf, $leftX, 31.5, $cellWidth, $m_member_id, 'L', 7);
+    fixedText($pdf, $leftX, 36.5, $cellWidth, $m_name, 'L', 7);
+    fixedText($pdf, $leftX, 41.5, $cellWidth, $m_designation, 'L', 7);
+    fixedText($pdf, $leftX, 46.5, $cellWidth, $m_mobile, 'L', 7);
+    fixedText($pdf, $leftX, 51.5, $cellWidth, $m_dob, 'L', 7);
+    fixedText($pdf, $leftX, 56.5, $cellWidth, $m_location, 'L', 7);
+    fixedText($pdf, $leftX, 61.5, $cellWidth, $m_blood_group, 'L', 7);
+    fixedText($pdf, $leftX, 66.5, $cellWidth, $m_doi, 'L', 7);
+    fixedText($pdf, $leftX, 71.5, $cellWidth, $m_doe, 'L', 7);
 
     // QR Image (Fits perfectly into the red QR box on the bottom right)
     if (is_file($qrTemp) && is_readable($qrTemp)) {
-        $pdf->Image($qrTemp, 35.8, 78.2, 4.6, 4.6);
+        $pdf->Image($qrTemp, 35.8, 78.5, 4.4, 4.4);
     }
 
     /* -------------------------------------------------------
@@ -172,10 +179,10 @@ try {
     }
 
     $backLeftX = 5.5;
-    $backCellWidth = 44;
+    $backCellWidth = 40;
     $lineHeight = 2.5;
 
-    $pdf->SetXY($backLeftX, 20);
+    $pdf->SetXY($backLeftX, 18);
     $pdf->SetFont('Arial', '', 4.5);
     $pdf->MultiCell($backCellWidth, $lineHeight, $m_address, 0, 'L');
 
