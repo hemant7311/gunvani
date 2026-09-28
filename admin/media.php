@@ -33,64 +33,83 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     }
     
     $delId = (int)($_POST['media_id'] ?? 0);
-    if ($delId <= 0) {
+    $filename = $_POST['filename'] ?? '';
+    
+    if ($delId <= 0 && empty($filename)) {
         http_response_code(400);
         echo json_encode(['success' => false, 'error' => 'Invalid media ID.']);
         exit;
     }
     
     try {
-        $stmt = $pdo->prepare("SELECT * FROM media WHERE id = ?");
-        $stmt->execute([$delId]);
-        $mFile = $stmt->fetch(PDO::FETCH_ASSOC);
-        
-        if (!$mFile) {
-            http_response_code(404);
-            echo json_encode(['success' => false, 'error' => 'Media not found in database.']);
-            exit;
-        }
-        
-        if (is_agent() && !is_admin()) {
-            if (empty($mFile['uploaded_by']) || $mFile['uploaded_by'] != $currentUser['id']) {
-                http_response_code(403);
-                echo json_encode(['success' => false, 'error' => 'You do not have permission to delete media uploaded by others.']);
+        if ($delId > 0) {
+            $stmt = $pdo->prepare("SELECT * FROM media WHERE id = ?");
+            $stmt->execute([$delId]);
+            $mFile = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            if (!$mFile) {
+                http_response_code(404);
+                echo json_encode(['success' => false, 'error' => 'Media not found in database.']);
                 exit;
             }
-        }
-        
-        $filename = $mFile['filename'];
-        $filePath = $mFile['file_path'];
-        
-        $isReferenced = false;
-        
-        $stmtRef = $pdo->prepare("SELECT COUNT(*) FROM articles WHERE image = ? OR video_url = ?");
-        $stmtRef->execute([$filename, $filename]);
-        if ($stmtRef->fetchColumn() > 0) $isReferenced = true;
-        
-        $stmtRef = $pdo->prepare("SELECT COUNT(*) FROM members WHERE photo = ? OR photo = ?");
-        $stmtRef->execute([$filename, $filePath]);
-        if ($stmtRef->fetchColumn() > 0) $isReferenced = true;
-        
-        $stmtRef = $pdo->prepare("SELECT COUNT(*) FROM menus WHERE image = ? OR image = ?");
-        $stmtRef->execute([$filename, $filePath]);
-        if ($stmtRef->fetchColumn() > 0) $isReferenced = true;
-        
-        try {
-            $stmtAm = $pdo->prepare("DELETE FROM article_media WHERE media_id = ?");
-            $stmtAm->execute([$delId]);
-        } catch (PDOException $e) { }
-        
-        if (!$isReferenced) {
-            $uploadDir = realpath(__DIR__ . '/../uploads');
-            if ($uploadDir) {
-                $targetFile = realpath(__DIR__ . '/../' . $filePath);
-                if ($targetFile && strpos($targetFile, $uploadDir) === 0 && file_exists($targetFile)) {
-                    @unlink($targetFile);
+            
+            if (is_agent() && !is_admin()) {
+                if (empty($mFile['uploaded_by']) || $mFile['uploaded_by'] != $currentUser['id']) {
+                    http_response_code(403);
+                    echo json_encode(['success' => false, 'error' => 'You do not have permission to delete media uploaded by others.']);
+                    exit;
                 }
             }
+            
+            $dbFilename = $mFile['filename'];
+            $filePath = $mFile['file_path'];
+            
+            $isReferenced = false;
+            
+            $stmtRef = $pdo->prepare("SELECT COUNT(*) FROM articles WHERE image = ? OR video_url = ?");
+            $stmtRef->execute([$dbFilename, $dbFilename]);
+            if ($stmtRef->fetchColumn() > 0) $isReferenced = true;
+            
+            $stmtRef = $pdo->prepare("SELECT COUNT(*) FROM members WHERE photo = ? OR photo = ?");
+            $stmtRef->execute([$dbFilename, $filePath]);
+            if ($stmtRef->fetchColumn() > 0) $isReferenced = true;
+            
+            $stmtRef = $pdo->prepare("SELECT COUNT(*) FROM menus WHERE image = ? OR image = ?");
+            $stmtRef->execute([$dbFilename, $filePath]);
+            if ($stmtRef->fetchColumn() > 0) $isReferenced = true;
+            
+            try {
+                $stmtAm = $pdo->prepare("DELETE FROM article_media WHERE media_id = ?");
+                $stmtAm->execute([$delId]);
+            } catch (PDOException $e) { }
+            
+            if (!$isReferenced) {
+                $uploadDir = realpath(__DIR__ . '/../uploads');
+                if ($uploadDir) {
+                    $targetFile = realpath(__DIR__ . '/../' . $filePath);
+                    if ($targetFile && strpos($targetFile, $uploadDir) === 0 && file_exists($targetFile)) {
+                        @unlink($targetFile);
+                    }
+                }
+            }
+            
+            $pdo->prepare("DELETE FROM media WHERE id = ?")->execute([$delId]);
+        } else {
+            // Fallback filesystem delete
+            if (is_agent() && !is_admin()) {
+                http_response_code(403);
+                echo json_encode(['success' => false, 'error' => 'Only admins can delete legacy filesystem files.']);
+                exit;
+            }
+            
+            $fname = basename($filename);
+            $uploadDir = realpath(__DIR__ . '/../uploads');
+            $targetFile = realpath(__DIR__ . '/../uploads/news/' . $fname);
+            
+            if ($targetFile && $uploadDir && strpos($targetFile, $uploadDir) === 0 && file_exists($targetFile)) {
+                @unlink($targetFile);
+            }
         }
-        
-        $pdo->prepare("DELETE FROM media WHERE id = ?")->execute([$delId]);
         
         echo json_encode(['success' => true, 'message' => 'Media deleted successfully.']);
         exit;
@@ -171,45 +190,33 @@ if (!empty($dbMedia)) {
 
 .media-card-img-wrap .btn-delete-media {
     position: absolute !important;
-
     top: 8px !important;
     right: 8px !important;
-
-    width: 36px !important;
-    height: 36px !important;
-
-    padding: 0 !important;
+    padding: 4px !important;
     margin: 0 !important;
-
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-
-    background: #dc2626 !important;
-    border: 2px solid #ffffff !important;
-    border-radius: 50% !important;
-
-    color: #ffffff !important;
-
+    background: transparent !important;
+    border: none !important;
     opacity: 1 !important;
     visibility: visible !important;
     pointer-events: auto !important;
-
     z-index: 9999 !important;
-
     cursor: pointer !important;
+    box-shadow: none !important;
 }
 
 .media-card-img-wrap .btn-delete-media i {
-    color: #ffffff !important;
-    font-size: 14px !important;
+    color: #dc2626 !important;
+    font-size: 18px !important;
     display: inline-block !important;
+    filter: drop-shadow(0 1px 2px rgba(255,255,255,0.8));
 }
 
-.media-card-img-wrap .btn-delete-media:hover {
-    background: #b91c1c !important;
-    color: #ffffff !important;
-    transform: scale(1.05);
+.media-card-img-wrap .btn-delete-media:hover i {
+    color: #b91c1c !important;
+    transform: scale(1.1);
 }
 </style>
 
@@ -285,7 +292,7 @@ if (!empty($dbMedia)) {
                 <div class="admin-card h-100 mb-0 position-relative">
                     <div class="media-card-img-wrap">
                         <img src="<?= htmlspecialchars($media['path']) ?>" alt="<?= htmlspecialchars($media['name']) ?>" class="w-100 h-100" style="object-fit:cover;" onerror="this.src='../images/placeholder/first8.jpg'">
-                        <button type="button" class="btn btn-sm btn-danger btn-delete-media" aria-label="Delete Media" title="Delete Media" data-id="<?= (int)$media['id'] ?>" data-csrf="<?= htmlspecialchars($_SESSION['csrf_token']) ?>">
+                        <button type="button" class="btn btn-delete-media" aria-label="Delete Media" title="Delete Media" data-id="<?= (int)$media['id'] ?>" data-filename="<?= htmlspecialchars($media['name']) ?>" data-csrf="<?= htmlspecialchars($_SESSION['csrf_token']) ?>">
                             <i class="fa-solid fa-trash-can"></i>
                         </button>
                     </div>
@@ -297,7 +304,6 @@ if (!empty($dbMedia)) {
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Event delegation on the grid container
     const mediaGrid = document.getElementById('media-grid');
     if (mediaGrid) {
         mediaGrid.addEventListener('click', function(e) {
@@ -307,6 +313,7 @@ document.addEventListener('DOMContentLoaded', function() {
             e.preventDefault();
             
             const mediaId = btn.dataset.id;
+            const filename = btn.dataset.filename;
             const csrfToken = btn.dataset.csrf;
             const gridItem = btn.closest('.media-grid-item');
             
@@ -314,6 +321,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const formData = new FormData();
                 formData.append('action', 'delete');
                 formData.append('media_id', mediaId);
+                formData.append('filename', filename);
                 formData.append('csrf_token', csrfToken);
                 
                 fetch('media.php', {
