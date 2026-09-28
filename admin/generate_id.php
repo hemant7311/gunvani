@@ -184,7 +184,7 @@ try {
 
     $pdf->SetXY($backLeftX, 19);
     $pdf->SetFont('Arial', '', 4.5);
-    $pdf->MultiCell($backCellWidth, $lineHeight, "Address: " . $m_address, 0, 'L');
+    $pdf->MultiCell($backCellWidth, $lineHeight, $m_address, 0, 'L');
 
     /* -------------------------------------------------------
        OUTPUT
