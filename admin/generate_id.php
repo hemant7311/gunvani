@@ -141,9 +141,36 @@ try {
     if (!empty($m_photo)) {
         $photoPath = __DIR__ . "/uploads/" . basename($m_photo);
         if (is_file($photoPath) && is_readable($photoPath)) {
-            // New coordinates based on the template's existing red box
-            $x = 18.7; $y = 15.2; $w = 13.1; $h = 15.6;
-            $pdf->Image($photoPath, $x, $y, $w, $h);
+            // Target box coordinates and dimensions
+            $boxX = 18.7; $boxY = 15.2; $boxW = 13.1; $boxH = 15.6;
+            
+            // Get original image dimensions to prevent stretching
+            $imgInfo = @getimagesize($photoPath);
+            if ($imgInfo) {
+                $origW = $imgInfo[0];
+                $origH = $imgInfo[1];
+                $ratio = $origW / $origH;
+                $boxRatio = $boxW / $boxH;
+                
+                if ($ratio > $boxRatio) {
+                    // Image is wider than box -> Fit by width
+                    $finalW = $boxW;
+                    $finalH = $boxW / $ratio;
+                    $finalX = $boxX;
+                    $finalY = $boxY + (($boxH - $finalH) / 2); // Center vertically
+                } else {
+                    // Image is taller than box -> Fit by height
+                    $finalH = $boxH;
+                    $finalW = $boxH * $ratio;
+                    $finalY = $boxY;
+                    $finalX = $boxX + (($boxW - $finalW) / 2); // Center horizontally
+                }
+                
+                $pdf->Image($photoPath, $finalX, $finalY, $finalW, $finalH);
+            } else {
+                // Fallback if getimagesize fails
+                $pdf->Image($photoPath, $boxX, $boxY, $boxW, $boxH);
+            }
         }
     }
 
