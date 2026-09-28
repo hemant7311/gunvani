@@ -168,60 +168,6 @@ if (!empty($dbMedia)) {
     height: 140px;
     background: #f1f5f9;
 }
-
-.media-card-img-wrap .btn-delete-media {
-    position: absolute !important;
-    top: 8px !important;
-    right: 8px !important;
-    z-index: 9999 !important;
-
-    width: 38px !important;
-    height: 38px !important;
-
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-
-    background: #dc2626 !important;
-    color: #ffffff !important;
-
-    border: 2px solid #ffffff !important;
-    border-radius: 50% !important;
-
-    cursor: pointer !important;
-
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-
-    transform: scale(.9);
-
-    transition: all .2s ease;
-}
-
-.media-card-img-wrap:hover .btn-delete-media,
-.media-grid-item:hover .btn-delete-media {
-    opacity: 1 !important;
-    visibility: visible !important;
-    pointer-events: auto !important;
-    transform: scale(1) !important;
-}
-
-.media-card-img-wrap .btn-delete-media:hover {
-    opacity: 1 !important;
-    visibility: visible !important;
-    pointer-events: auto !important;
-    transform: scale(1.05) !important;
-}
-
-@media (hover: none), (pointer: coarse) {
-    .media-card-img-wrap .btn-delete-media {
-        opacity: 1 !important;
-        visibility: visible !important;
-        pointer-events: auto !important;
-        transform: scale(1) !important;
-    }
-}
 </style>
 
 <div class="page-header">
@@ -296,19 +242,13 @@ if (!empty($dbMedia)) {
                 <div class="admin-card h-100 mb-0 position-relative">
                     <div class="media-card-img-wrap">
                         <img src="<?= htmlspecialchars($media['path']) ?>" alt="<?= htmlspecialchars($media['name']) ?>" class="w-100 h-100" style="object-fit:cover;" onerror="this.src='../images/placeholder/first8.jpg'">
+                    </div>
+                    <div class="p-2 text-center">
                         <?php if (!empty($media['id'])): ?>
                             <button type="button" class="btn btn-sm btn-danger btn-delete-media" aria-label="Delete Media" title="Delete Media" data-id="<?= $media['id'] ?>" data-csrf="<?= htmlspecialchars($_SESSION['csrf_token']) ?>">
                                 <i class="fa-solid fa-trash-can"></i>
                             </button>
                         <?php endif; ?>
-                    </div>
-                    <div class="p-2 text-center">
-                        <div class="small fw-semibold text-truncate mb-1" title="<?= htmlspecialchars($media['name']) ?>">
-                            <?= htmlspecialchars($media['name']) ?>
-                        </div>
-                        <div class="small text-muted" style="font-size:0.75rem;">
-                            <?= $media['size'] ?> &bull; <?= $media['time'] ?>
-                        </div>
                     </div>
                 </div>
             </div>
