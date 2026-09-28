@@ -6,7 +6,7 @@ function escape($value) {
     return htmlspecialchars($value ?? '', ENT_QUOTES, 'UTF-8');
 }
 function articleImage($image) {
-    if (!$image) return '/images/placeholder/first8.jpg';
+    if (!$image) return '/icon.png';
     return (strpos($image, 'http') === 0) ? $image : '/uploads/' . ltrim($image, '/');
 }
 function formatDate($dateStr) {
@@ -111,7 +111,7 @@ $pageTitle = htmlspecialchars($menu['name']) . ' News - Gunvani';
                     <div class="col-6 col-md-4 col-lg-3 mb-4">
                         <div class="card h-100 shadow-sm border-0 news-card">
                             <a href="/article/<?= escape($art['slug']) ?>">
-                                <img src="<?= escape(articleImage($art['image'])) ?>" class="card-img-top cat-card-img" alt="<?= escape($art['title']) ?>" onerror="this.onerror=null; this.src='/images/placeholder/first8.jpg'">
+                                <img src="<?= escape(articleImage($art['image'])) ?>" class="card-img-top cat-card-img" alt="<?= escape($art['title']) ?>" onerror="this.onerror=null; this.src='/icon.png'">
                             </a>
                             <div class="card-body cat-card-body d-flex flex-column">
                                 <h5 class="card-title cat-card-title fw-bold">

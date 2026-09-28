@@ -12,7 +12,7 @@ function escape($value) {
 
 function articleImage($image) {
     if (!$image) {
-        return 'images/placeholder/first8.jpg';
+        return 'icon.png';
     }
     if (preg_match('#^(uploads/|images/)#', $image)) {
         return $image;
@@ -46,7 +46,7 @@ try {
        m.name as category_name, m.slug as category_slug FROM articles a LEFT JOIN menus m ON m.id = a.category_id WHERE a.status = 'published' AND a.is_trending = 0 AND (a.video_url IS NULL OR a.video_url = '') AND (a.video_file IS NULL OR a.video_file = '') ORDER BY a.is_featured DESC, a.published_at DESC LIMIT 5")->fetchAll(PDO::FETCH_ASSOC);
 } catch (Exception $e) { $featuredArticles = []; echo '<div class="alert alert-danger">FEATURED ERROR: ' . htmlspecialchars($e->getMessage()) . '</div>'; }
 
-if (empty($featuredArticles)) { $featuredArticles = [[ "title" => "Gunvani News CMS Activated", "summary" => "Welcome to Gunvani News. Publish news articles from admin panel to populate homepage.", "category_name" => "NEWS", "image" => "images/placeholder/second6.webp", "published_at" => date("Y-m-d H:i:s"), "slug" => "welcome-to-gunvani-news" ]]; }
+if (empty($featuredArticles)) { $featuredArticles = [[ "title" => "Gunvani News CMS Activated", "summary" => "Welcome to Gunvani News. Publish news articles from admin panel to populate homepage.", "category_name" => "NEWS", "image" => "icon.png", "published_at" => date("Y-m-d H:i:s"), "slug" => "welcome-to-gunvani-news" ]]; }
 
 // 2. Fetch Breaking News items
 try {
@@ -201,7 +201,7 @@ try {
                             <?php foreach ($featuredArticles as $idx => $fa): ?>
                                 <div class="carousel-item h-100 <?= $idx === 0 ? 'active' : '' ?>">
                                     <a href="/article/<?= escape($fa['slug']) ?>" class="hero-main-img-wrap d-block bg-dark">
-                                        <img src="<?= escape(articleImage($fa['image'])) ?>" alt="<?= escape($fa['title']) ?>" onerror="this.onerror=null; this.src='/images/placeholder/second6.webp'">
+                                        <img src="<?= escape(articleImage($fa['image'])) ?>" alt="<?= escape($fa['title']) ?>" onerror="this.onerror=null; this.src='/icon.png'">
                                         <div class="hero-main-overlay">
                                             <span class="cat-badge-red"><?= escape($fa['category_name'] ?: 'LUCKNOW') ?></span>
                                         </div>
@@ -237,7 +237,7 @@ try {
                 <?php foreach ($supportingArticles as $story): ?>
                     <article class="supporting-card-item">
                         <a href="/article/<?= escape($story['slug']) ?>" class="flex-shrink-0">
-                            <img src="<?= escape(articleImage($story['image'])) ?>" alt="<?= escape($story['title']) ?>" class="supporting-thumb-img" onerror="this.onerror=null; this.src='/images/placeholder/first8.jpg'">
+                            <img src="<?= escape(articleImage($story['image'])) ?>" alt="<?= escape($story['title']) ?>" class="supporting-thumb-img" onerror="this.onerror=null; this.src='/icon.png'">
                         </a>
                         <div class="supporting-text-col">
                             <span class="supporting-tag"><?= escape($story['category_name'] ?: 'CITY') ?></span>
@@ -309,7 +309,7 @@ try {
                             <div class="col-6 col-sm-6 col-md-3">
                                 <div class="city-box-card">
                                     <a href="/category/<?= escape($cData['slug'] ?? strtolower($cName)) ?>">
-                                        <img src="<?= escape($cData['image'] ?? 'images/placeholder/first8.jpg') ?>" alt="<?= escape($cName) ?>" class="city-box-img" onerror="this.onerror=null; this.src='/images/placeholder/first8.jpg'">
+                                        <img src="<?= escape($cData['image'] ?? 'icon.png') ?>" alt="<?= escape($cName) ?>" class="city-box-img" onerror="this.onerror=null; this.src='/icon.png'">
                                     </a>
                                     <h4 class="city-box-title"><a href="/category/<?= escape($cData['slug'] ?? strtolower($cName)) ?>" class="text-dark text-decoration-none"><?= escape($cName) ?></a></h4>
                                     <ul class="city-bullets">
@@ -344,7 +344,7 @@ try {
                         <?php foreach ($latestHeadlines as $lh): ?>
                             <div class="d-flex gap-2 py-2 border-bottom">
                                 <a href="/article/<?= escape($lh['slug'] ?? '') ?>" class="flex-shrink-0">
-                                    <img src="<?= escape(articleImage($lh['image'] ?? '')) ?>" alt="Thumb" class="rounded" style="width:65px; height:45px; object-fit:cover;" onerror="this.onerror=null; this.src='/images/placeholder/first8.jpg'">
+                                    <img src="<?= escape(articleImage($lh['image'] ?? '')) ?>" alt="Thumb" class="rounded" style="width:65px; height:45px; object-fit:cover;" onerror="this.onerror=null; this.src='/icon.png'">
                                 </a>
                                 <div>
                                     <h5 class="small fw-bold mb-1" style="font-size:0.8rem; line-height:1.25;">
@@ -382,7 +382,7 @@ try {
                                         <?php if (!empty($vItem['video_file']) && empty($vItem['image'])): ?>
                                             <video src="/uploads/videos/<?= htmlspecialchars($vItem['video_file']) ?>" class="img-fluid" style="width: 100%; height: 200px; object-fit: cover;" muted playsinline></video>
                                         <?php else: ?>
-                                            <img src="<?= escape(articleImage($vItem['image'] ?? '')) ?>" alt="<?= escape($vItem['title'] ?? '') ?>" onerror="this.onerror=null; this.src='/images/placeholder/first8.jpg'">
+                                            <img src="<?= escape(articleImage($vItem['image'] ?? '')) ?>" alt="<?= escape($vItem['title'] ?? '') ?>" onerror="this.onerror=null; this.src='/icon.png'">
                                         <?php endif; ?>
                                         <div class="video-play-btn"><i class="fa-solid fa-play"></i></div>
                                         <span class="video-time-badge"><?= !empty($vItem['duration']) ? escape($vItem['duration']) : '01:30' ?></span>
@@ -437,7 +437,7 @@ try {
                             <?php foreach ($trendingStories as $tArt): ?>
                             <article class="trend-card">
                                 <a href="/article/<?= escape($tArt['slug'] ?? '') ?>">
-                                    <img src="<?= escape(articleImage($tArt['image'] ?? '')) ?>" alt="<?= escape($tArt['title'] ?? '') ?>" class="trend-card-img" onerror="this.onerror=null; this.src='/images/placeholder/first8.jpg'">
+                                    <img src="<?= escape(articleImage($tArt['image'] ?? '')) ?>" alt="<?= escape($tArt['title'] ?? '') ?>" class="trend-card-img" onerror="this.onerror=null; this.src='/icon.png'">
                                 </a>
                                 <div class="trend-card-body">
                                     <span class="supporting-tag"><?= escape($tArt['category_name'] ?? 'NEWS') ?></span>

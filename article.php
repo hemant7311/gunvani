@@ -12,7 +12,7 @@ function escape($value) {
 
 function articleImage($image) {
     if (!$image) {
-        return 'images/placeholder/first8.jpg';
+        return 'icon.png';
     }
     if (preg_match('#^(uploads/|images/)#', $image)) {
         return $image;
@@ -911,7 +911,7 @@ $defaultNavCategories = ['Agra', 'Lucknow', 'Mathura', 'Noida', 'Uttar Pradesh',
                             </video>
                         </div>
                     <?php elseif (!empty($article['image'])): ?>
-                        <img src="<?= escape(articleImage($article['image'])) ?>" alt="<?= escape($article['title']) ?>" class="article-featured-img" onerror="this.onerror=null; this.src='/images/placeholder/second6.webp'">
+                        <img src="<?= escape(articleImage($article['image'])) ?>" alt="<?= escape($article['title']) ?>" class="article-featured-img" onerror="this.onerror=null; this.src='/icon.png'">
                     <?php endif; ?>
 
                     <div class="article-body-text">
@@ -1013,7 +1013,7 @@ $defaultNavCategories = ['Agra', 'Lucknow', 'Mathura', 'Noida', 'Uttar Pradesh',
                             <div class="col-md-4">
                                 <article class="related-card">
                                     <a href="/article/<?= escape($rel['slug']) ?>">
-                                        <img src="<?= escape(articleImage($rel['image'])) ?>" alt="<?= escape($rel['title']) ?>" onerror="this.onerror=null; this.src='/images/placeholder/first8.jpg'">
+                                        <img src="<?= escape(articleImage($rel['image'])) ?>" alt="<?= escape($rel['title']) ?>" onerror="this.onerror=null; this.src='/icon.png'">
                                     </a>
                                     <div class="related-card-body">
                                         <h4><a href="/article/<?= escape($rel['slug']) ?>"><?= escape($rel['title']) ?></a></h4>
@@ -1037,7 +1037,7 @@ $defaultNavCategories = ['Agra', 'Lucknow', 'Mathura', 'Noida', 'Uttar Pradesh',
                     <?php foreach ($sidebarHeadlines as $sbh): ?>
                         <div class="d-flex gap-2 py-2 border-bottom align-items-center">
                             <a href="/article/<?= escape($sbh['slug']) ?>" class="flex-shrink-0">
-                                <img src="<?= escape(articleImage($sbh['image'])) ?>" alt="<?= escape($sbh['title']) ?>" class="rounded" style="width:65px; height:48px; object-fit:cover;" onerror="this.onerror=null; this.src='/images/placeholder/first8.jpg'">
+                                <img src="<?= escape(articleImage($sbh['image'])) ?>" alt="<?= escape($sbh['title']) ?>" class="rounded" style="width:65px; height:48px; object-fit:cover;" onerror="this.onerror=null; this.src='/icon.png'">
                             </a>
                             <div class="overflow-hidden">
                                 <h5 class="small fw-bold mb-1" style="font-size:0.8rem; line-height:1.25;">

@@ -31,7 +31,7 @@ $categoriesOverview = $pdo->query(
 )->fetchAll(PDO::FETCH_ASSOC);
 
 function articleThumb($image) {
-    if (!$image) return '../images/placeholder/first8.jpg';
+    if (!$image) return '../icon.png';
     if (preg_match('#^(uploads/|images/)#', $image)) return '../' . $image;
     return '../uploads/news/' . $image;
 }
@@ -136,7 +136,7 @@ function articleThumb($image) {
                                         <?php if (!empty($art['video_file']) && empty($art['image'])): ?>
                                             <video src="../uploads/videos/<?= htmlspecialchars($art['video_file']) ?>" class="table-thumb" muted></video>
                                         <?php else: ?>
-                                            <img src="<?= htmlspecialchars(articleThumb($art['image'])) ?>" alt="Thumb" class="table-thumb" onerror="this.src='../images/placeholder/first8.jpg'">
+                                            <img src="<?= htmlspecialchars(articleThumb($art['image'])) ?>" alt="Thumb" class="table-thumb" onerror="this.src='../icon.png'">
                                         <?php endif; ?>
                                     </td>
                                     <td class="fw-semibold" style="min-width: 280px; max-width: 400px; white-space: normal;">

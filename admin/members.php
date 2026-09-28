@@ -18,11 +18,11 @@ if (isset($_GET['delete'])) {
 $members = $pdo->query("SELECT * FROM members ORDER BY id DESC")->fetchAll(PDO::FETCH_ASSOC);
 
 function memberPhoto($photo) {
-    if (!$photo) return '../images/placeholder/first8.jpg';
+    if (!$photo) return '../icon.png';
     if (preg_match('#^(images/|uploads/)#', $photo)) return '../' . $photo;
     if (file_exists(__DIR__ . '/uploads/' . $photo)) return 'uploads/' . $photo;
     if (file_exists(__DIR__ . '/../uploads/' . $photo)) return '../uploads/' . $photo;
-    return '../images/placeholder/first8.jpg';
+    return '../icon.png';
 }
 
 require_once 'admin_header.php';
@@ -80,7 +80,7 @@ require_once 'admin_header.php';
                         <tr>
                             <td class="fw-bold text-muted"><?= $index + 1 ?></td>
                             <td>
-                                <img src="<?= htmlspecialchars(memberPhoto($row['photo'])) ?>" alt="Photo" class="table-thumb rounded-circle" style="width:42px; height:42px; object-fit:cover;" onerror="this.src='../images/placeholder/first8.jpg'">
+                                <img src="<?= htmlspecialchars(memberPhoto($row['photo'])) ?>" alt="Photo" class="table-thumb rounded-circle" style="width:42px; height:42px; object-fit:cover;" onerror="this.src='../icon.png'">
                             </td>
                             <td>
                                 <code class="bg-light px-2 py-1 rounded text-success font-weight-bold"><?= htmlspecialchars($row['member_id']) ?></code>

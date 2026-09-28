@@ -51,7 +51,7 @@ $articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 $categories = $pdo->query("SELECT id, name FROM menus WHERE status = 'active' ORDER BY display_order ASC, name ASC")->fetchAll(PDO::FETCH_ASSOC);
 
 function articleThumb($image) {
-    if (!$image) return '../images/placeholder/first8.jpg';
+    if (!$image) return '../icon.png';
     if (preg_match('#^(uploads/|images/)#', $image)) return '../' . $image;
     return '../uploads/news/' . $image;
 }
@@ -137,7 +137,7 @@ require_once 'admin_header.php';
                                 <?php if (!empty($article['video_file']) && empty($article['image'])): ?>
                                     <video src="../uploads/videos/<?= htmlspecialchars($article['video_file']) ?>" class="table-thumb" muted></video>
                                 <?php else: ?>
-                                    <img src="<?= htmlspecialchars(articleThumb($article['image'])) ?>" alt="Thumb" class="table-thumb" onerror="this.src='../images/placeholder/first8.jpg'">
+                                    <img src="<?= htmlspecialchars(articleThumb($article['image'])) ?>" alt="Thumb" class="table-thumb" onerror="this.src='../icon.png'">
                                 <?php endif; ?>
                             </td>
                             <td>

@@ -31,7 +31,7 @@ foreach ($dbCategories as $cat) {
         'desc' => ('') ?: 'Latest news, breaking headlines and updates from ' . $cat['name'] . '.',
         'article_count' => $cat['article_count'],
         'icon' => 'fa-folder-open',
-        'image' => 'images/placeholder/first8.jpg'
+        'image' => 'icon.png'
     ];
 }
 
@@ -481,7 +481,7 @@ $defaultNavCategories = ['Agra', 'Lucknow', 'Mathura', 'Noida', 'Uttar Pradesh',
             <?php foreach ($defaultCategories as $c): ?>
                 <article class="cat-card">
                     <div class="cat-card-img-wrap">
-                        <img src="<?= escape($c['image']) ?>" alt="<?= escape($c['name']) ?>" onerror="this.src='images/placeholder/first8.jpg'">
+                        <img src="<?= escape($c['image']) ?>" alt="<?= escape($c['name']) ?>" onerror="this.src='icon.png'">
                         <div class="cat-card-badge"><i class="fa-solid <?= $c['icon'] ?>"></i></div>
                     </div>
                     <div class="cat-card-body">

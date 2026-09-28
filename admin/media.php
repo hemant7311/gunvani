@@ -291,7 +291,7 @@ if (!empty($dbMedia)) {
             <div class="col-6 col-sm-4 col-md-3 col-xl-2 media-grid-item">
                 <div class="admin-card h-100 mb-0 position-relative">
                     <div class="media-card-img-wrap">
-                        <img src="<?= htmlspecialchars($media['path']) ?>" alt="<?= htmlspecialchars($media['name']) ?>" class="w-100 h-100" style="object-fit:cover;" onerror="this.src='../images/placeholder/first8.jpg'">
+                        <img src="<?= htmlspecialchars($media['path']) ?>" alt="<?= htmlspecialchars($media['name']) ?>" class="w-100 h-100" style="object-fit:cover;" onerror="this.src='../icon.png'">
                         <button type="button" class="btn btn-delete-media" aria-label="Delete Media" title="Delete Media" data-id="<?= (int)$media['id'] ?>" data-filename="<?= htmlspecialchars($media['name']) ?>" data-csrf="<?= htmlspecialchars($_SESSION['csrf_token']) ?>">
                             <i class="fa-solid fa-trash-can"></i>
                         </button>

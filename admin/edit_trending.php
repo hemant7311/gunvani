@@ -8,8 +8,8 @@ require_once __DIR__ . '/../includes/upload.php';
 require_once 'db.php';
 // Fetch dynamic authors
 $authorList = ['Gunvani News Bureau'];
-$dbAdmins = $pdo->query("SELECT fullname FROM admins")->fetchAll(PDO::FETCH_COLUMN);
-$dbMembers = $pdo->query("SELECT name FROM members WHERE status = 'active'")->fetchAll(PDO::FETCH_COLUMN);
+$dbAdmins = $pdo->query("SELECT name FROM users WHERE status = 'active'")->fetchAll(PDO::FETCH_COLUMN);
+$dbMembers = $pdo->query("SELECT name FROM members WHERE status = 'approved'")->fetchAll(PDO::FETCH_COLUMN);
 $authorList = array_unique(array_merge($authorList, $dbAdmins, $dbMembers));
 
 
@@ -144,7 +144,7 @@ if (isset($_POST['save'])) {
 }
 
 function articleThumb($image) {
-    if (!$image) return '../images/placeholder/first8.jpg';
+    if (!$image) return '../icon.png';
     if (preg_match('#^(uploads/|images/)#', $image)) return '../' . $image;
     return '../uploads/news/' . $image;
 }
@@ -375,3 +375,4 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 <?php require_once 'admin_footer.php'; ?>
+

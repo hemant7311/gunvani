@@ -504,7 +504,7 @@ $catDesc = "Found " . count($articles) . " results for your query.";
                     <?php foreach ($articles as $art): ?>
                         <article class="news-card">
                             <a href="/article/<?= escape($art['slug']) ?>">
-                                <img src="<?= escape(articleImage($art['image'])) ?>" alt="<?= escape($art['title']) ?>" class="news-card-img" onerror="this.src='images/placeholder/first8.jpg'">
+                                <img src="<?= escape(articleImage($art['image'])) ?>" alt="<?= escape($art['title']) ?>" class="news-card-img" onerror="this.src='icon.png'">
                             </a>
                             <div class="news-card-body">
                                 <h4>

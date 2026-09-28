@@ -11,11 +11,11 @@ function escape($value) {
 }
 
 function memberPhotoPath($photo) {
-    if (!$photo) return 'images/placeholder/first8.jpg';
+    if (!$photo) return 'icon.png';
     if (preg_match('#^(images/|uploads/)#', $photo)) return $photo;
     if (file_exists(__DIR__ . '/admin/uploads/' . $photo)) return 'admin/uploads/' . $photo;
     if (file_exists(__DIR__ . '/uploads/' . $photo)) return 'uploads/' . $photo;
-    return 'images/placeholder/first8.jpg';
+    return 'icon.png';
 }
 
 function formatDateDisplay($date, $default = 'Dec 31, 2026') {
@@ -416,7 +416,7 @@ $defaultNavCategories = ['Agra', 'Lucknow', 'Mathura', 'Noida', 'Uttar Pradesh',
 
                 <div class="row align-items-center g-4">
                     <div class="col-sm-4 text-center">
-                        <img src="<?= escape(memberPhotoPath($found['photo'] ?? '')) ?>" alt="<?= escape($found['name']) ?>" class="member-avatar img-thumbnail rounded-circle shadow-sm" style="width:130px; height:130px; object-fit:cover;" onerror="this.src='images/placeholder/first8.jpg'">
+                        <img src="<?= escape(memberPhotoPath($found['photo'] ?? '')) ?>" alt="<?= escape($found['name']) ?>" class="member-avatar img-thumbnail rounded-circle shadow-sm" style="width:130px; height:130px; object-fit:cover;" onerror="this.src='icon.png'">
                     </div>
                     <div class="col-sm-8">
                         <h3 class="fw-bold mb-1 text-dark"><?= escape($found['name']) ?></h3>
