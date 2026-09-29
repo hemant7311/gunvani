@@ -48,6 +48,7 @@ $m_doi         = $member['doi'] ?? '';
 $m_doe         = $member['doe'] ?? '';
 $m_address     = $member['address'] ?? '';
 $m_photo       = $member['photo'] ?? '';
+$m_rni_no      = $member['rni_no'] ?? '';
 
 // 4. Dependencies
 if (!is_file(__DIR__.'/fpdf.php')) {
@@ -222,9 +223,16 @@ try {
     fixedText($pdf, $leftX, 61.6, $cellWidth, $m_doi, 'L', 7.8);
     fixedText($pdf, $leftX, 66.0, $cellWidth, $m_doe, 'L', 7.8);
 
+    // RNI Number (Rendered near top right, below the existing label)
+    if (!empty($m_rni_no)) {
+        // Label is around X=35, Y=1. Let's put value at Y=3.5. Available width ~14mm
+        fixedText($pdf, 35.0, 3.5, 14.0, $m_rni_no, 'C', 5, 'B'); // smaller font, bold, centered
+    }
+
     // QR Image (Fits perfectly into the red QR box on the bottom right)
     if (is_file($qrTemp) && is_readable($qrTemp)) {
-        $pdf->Image($qrTemp, 35.8, 78.5, 4.4, 4.4);
+        // Red box is ~7x6mm. Scaling QR to 5.5x5.5mm to be scannable while keeping quiet zone.
+        $pdf->Image($qrTemp, 35.7, 77.8, 5.5, 5.5);
     }
 
     /* -------------------------------------------------------

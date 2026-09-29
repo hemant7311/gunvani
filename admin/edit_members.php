@@ -33,6 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $designation = trim($_POST['designation'] ?? 'Press Reporter');
     $status = $_POST['status'] ?? 'approved';
     $rejection_reason = trim($_POST['rejection_reason'] ?? '');
+    $rni_no = trim($_POST['rni_no'] ?? '');
 
     if (empty($name) || empty($mobile) || empty($member_id)) {
         $error = "Member ID, Name, and Mobile Number are required fields.";
@@ -57,12 +58,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $upStmt = $pdo->prepare("UPDATE members SET 
                     member_id = ?, name = ?, dob = ?, doi = ?, doe = ?, mobile = ?, 
                     address = ?, location = ?, blood_group = ?, designation = ?, 
-                    photo = ?, status = ?, rejection_reason = ? WHERE id = ?");
+                    photo = ?, status = ?, rejection_reason = ?, rni_no = ? WHERE id = ?");
                 
                 $upStmt->execute([
                     $member_id, $name, $dob ?: null, $doi ?: null, $doe ?: null, 
                     $mobile, $address, $location, $blood, $designation, 
-                    $photoFilename, $status, $status === 'rejected' ? $rejection_reason : null, $id
+                    $photoFilename, $status, $status === 'rejected' ? $rejection_reason : null, $rni_no, $id
                 ]);
 
                 header("Location: members.php?success=status_updated");
@@ -191,3 +192,4 @@ require_once 'admin_header.php';
 </div>
 
 <?php require_once 'admin_footer.php'; ?>
+
