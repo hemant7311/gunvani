@@ -141,8 +141,8 @@ try {
     if (!empty($m_photo)) {
         $photoPath = __DIR__ . "/uploads/" . basename($m_photo);
         if (is_file($photoPath) && is_readable($photoPath)) {
-            // Target box coordinates and dimensions
-            $boxX = 18.7; $boxY = 15.2; $boxW = 13.1; $boxH = 15.6;
+            // Target box coordinates and dimensions (matched perfectly to the template's red frame)
+            $boxX = 18.6; $boxY = 13.8; $boxW = 13.5; $boxH = 15.4;
             
             // Generate a temporary cropped image using GD
             $croppedTemp = __DIR__ . '/uploads/temp_crop_' . $id . '_' . uniqid() . '.jpg';
