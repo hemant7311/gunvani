@@ -206,20 +206,21 @@ try {
         }
     }
 
-    $leftX = 23;
-    $cellWidth = 26; // Available space before the right edge (50.8 - 23 - 1.8 margin)
+    $leftX = 21.5; // Reduced by 1.5mm from 23mm
+    $cellWidth = 27.5; // Available space before the right edge
 
     // Adjusted Y-coordinates to align perfectly with the red labels on the new PDF template
     // Measured exactly from the template image pixels:
-    fixedText($pdf, $leftX, 31.0, $cellWidth, $m_member_id, 'L', 7);
-    fixedText($pdf, $leftX, 35.5, $cellWidth, $m_name, 'L', 7);
-    fixedText($pdf, $leftX, 40.1, $cellWidth, $m_designation, 'L', 7);
-    fixedText($pdf, $leftX, 44.3, $cellWidth, $m_mobile, 'L', 7);
-    fixedText($pdf, $leftX, 48.5, $cellWidth, $m_dob, 'L', 7);
-    fixedText($pdf, $leftX, 52.9, $cellWidth, $m_location, 'L', 7);
-    fixedText($pdf, $leftX, 57.2, $cellWidth, $m_blood_group, 'L', 7);
-    fixedText($pdf, $leftX, 61.6, $cellWidth, $m_doi, 'L', 7);
-    fixedText($pdf, $leftX, 66.0, $cellWidth, $m_doe, 'L', 7);
+    // Increased font size from 7 to 7.8 (approx +1px)
+    fixedText($pdf, $leftX, 31.0, $cellWidth, $m_member_id, 'L', 7.8);
+    fixedText($pdf, $leftX, 35.5, $cellWidth, $m_name, 'L', 7.8);
+    fixedText($pdf, $leftX, 40.1, $cellWidth, $m_designation, 'L', 7.8);
+    fixedText($pdf, $leftX, 44.3, $cellWidth, $m_mobile, 'L', 7.8);
+    fixedText($pdf, $leftX, 48.5, $cellWidth, $m_dob, 'L', 7.8);
+    fixedText($pdf, $leftX, 52.9, $cellWidth, $m_location, 'L', 7.8);
+    fixedText($pdf, $leftX, 57.2, $cellWidth, $m_blood_group, 'L', 7.8);
+    fixedText($pdf, $leftX, 61.6, $cellWidth, $m_doi, 'L', 7.8);
+    fixedText($pdf, $leftX, 66.0, $cellWidth, $m_doe, 'L', 7.8);
 
     // QR Image (Fits perfectly into the red QR box on the bottom right)
     if (is_file($qrTemp) && is_readable($qrTemp)) {
