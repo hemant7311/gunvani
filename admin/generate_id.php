@@ -144,31 +144,63 @@ try {
             // Target box coordinates and dimensions
             $boxX = 18.7; $boxY = 15.2; $boxW = 13.1; $boxH = 15.6;
             
-            // Get original image dimensions to prevent stretching
+            // Generate a temporary cropped image using GD
+            $croppedTemp = __DIR__ . '/uploads/temp_crop_' . $id . '_' . uniqid() . '.jpg';
+            
             $imgInfo = @getimagesize($photoPath);
-            if ($imgInfo) {
+            if ($imgInfo && extension_loaded('gd')) {
                 $origW = $imgInfo[0];
                 $origH = $imgInfo[1];
-                $ratio = $origW / $origH;
-                $boxRatio = $boxW / $boxH;
+                $mime = $imgInfo['mime'];
                 
-                if ($ratio > $boxRatio) {
-                    // Image is wider than box -> Fit by width
-                    $finalW = $boxW;
-                    $finalH = $boxW / $ratio;
-                    $finalX = $boxX;
-                    $finalY = $boxY + (($boxH - $finalH) / 2); // Center vertically
+                $srcImg = null;
+                if ($mime == 'image/jpeg') $srcImg = @imagecreatefromjpeg($photoPath);
+                elseif ($mime == 'image/png') $srcImg = @imagecreatefrompng($photoPath);
+                elseif ($mime == 'image/webp') $srcImg = @imagecreatefromwebp($photoPath);
+                
+                if ($srcImg) {
+                    $targetRatio = $boxW / $boxH;
+                    $origRatio = $origW / $origH;
+                    
+                    $cropW = $origW;
+                    $cropH = $origH;
+                    $cropX = 0;
+                    $cropY = 0;
+                    
+                    if ($origRatio > $targetRatio) {
+                        // Image is too wide, crop horizontally
+                        $cropW = (int)($origH * $targetRatio);
+                        $cropX = (int)(($origW - $cropW) / 2);
+                    } elseif ($origRatio < $targetRatio) {
+                        // Image is too tall, crop vertically
+                        $cropH = (int)($origW / $targetRatio);
+                        $cropY = (int)(($origH - $cropH) / 2);
+                    }
+                    
+                    // Create destination image matching exactly the target box ratio (scaled up for quality)
+                    $destW = 400; // high res width
+                    $destH = (int)($destW / $targetRatio);
+                    
+                    $destImg = imagecreatetruecolor($destW, $destH);
+                    imagecopyresampled($destImg, $srcImg, 0, 0, $cropX, $cropY, $destW, $destH, $cropW, $cropH);
+                    
+                    imagejpeg($destImg, $croppedTemp, 90);
+                    
+                    imagedestroy($srcImg);
+                    imagedestroy($destImg);
+                    
+                    // Place the perfectly cropped image
+                    $pdf->Image($croppedTemp, $boxX, $boxY, $boxW, $boxH);
+                    
+                    // Delete temp file immediately
+                    if (is_file($croppedTemp)) {
+                        @unlink($croppedTemp);
+                    }
                 } else {
-                    // Image is taller than box -> Fit by height
-                    $finalH = $boxH;
-                    $finalW = $boxH * $ratio;
-                    $finalY = $boxY;
-                    $finalX = $boxX + (($boxW - $finalW) / 2); // Center horizontally
+                    $pdf->Image($photoPath, $boxX, $boxY, $boxW, $boxH);
                 }
-                
-                $pdf->Image($photoPath, $finalX, $finalY, $finalW, $finalH);
             } else {
-                // Fallback if getimagesize fails
+                // Fallback
                 $pdf->Image($photoPath, $boxX, $boxY, $boxW, $boxH);
             }
         }
@@ -178,16 +210,16 @@ try {
     $cellWidth = 26; // Available space before the right edge (50.8 - 23 - 1.8 margin)
 
     // Adjusted Y-coordinates to align perfectly with the red labels on the new PDF template
-    // FPDF Cell Y is the top-left, so it matches the top edge of the red label text
-    fixedText($pdf, $leftX, 31.5, $cellWidth, $m_member_id, 'L', 7);
-    fixedText($pdf, $leftX, 36.5, $cellWidth, $m_name, 'L', 7);
-    fixedText($pdf, $leftX, 41.5, $cellWidth, $m_designation, 'L', 7);
-    fixedText($pdf, $leftX, 46.5, $cellWidth, $m_mobile, 'L', 7);
-    fixedText($pdf, $leftX, 51.5, $cellWidth, $m_dob, 'L', 7);
-    fixedText($pdf, $leftX, 56.5, $cellWidth, $m_location, 'L', 7);
-    fixedText($pdf, $leftX, 61.5, $cellWidth, $m_blood_group, 'L', 7);
-    fixedText($pdf, $leftX, 66.5, $cellWidth, $m_doi, 'L', 7);
-    fixedText($pdf, $leftX, 71.5, $cellWidth, $m_doe, 'L', 7);
+    // Measured exactly from the template image pixels:
+    fixedText($pdf, $leftX, 31.0, $cellWidth, $m_member_id, 'L', 7);
+    fixedText($pdf, $leftX, 35.5, $cellWidth, $m_name, 'L', 7);
+    fixedText($pdf, $leftX, 40.1, $cellWidth, $m_designation, 'L', 7);
+    fixedText($pdf, $leftX, 44.3, $cellWidth, $m_mobile, 'L', 7);
+    fixedText($pdf, $leftX, 48.5, $cellWidth, $m_dob, 'L', 7);
+    fixedText($pdf, $leftX, 52.9, $cellWidth, $m_location, 'L', 7);
+    fixedText($pdf, $leftX, 57.2, $cellWidth, $m_blood_group, 'L', 7);
+    fixedText($pdf, $leftX, 61.6, $cellWidth, $m_doi, 'L', 7);
+    fixedText($pdf, $leftX, 66.0, $cellWidth, $m_doe, 'L', 7);
 
     // QR Image (Fits perfectly into the red QR box on the bottom right)
     if (is_file($qrTemp) && is_readable($qrTemp)) {
