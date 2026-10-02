@@ -10,7 +10,9 @@ function articleImage($image) {
     if (strpos($image, 'http') === 0) return $image;
     
     $path = ltrim($image, '/');
-    if (strpos($path, 'uploads/') !== 0) {
+    if (strpos($path, '/') === false) {
+        $path = 'uploads/news/' . $path;
+    } elseif (strpos($path, 'uploads/') !== 0 && strpos($path, 'images/') !== 0) {
         $path = 'uploads/' . $path;
     }
     

@@ -15,7 +15,9 @@ function articleImage($image) {
     if (strpos($image, 'http') === 0) return $image;
     
     $path = ltrim($image, '/');
-    if (strpos($path, 'uploads/') !== 0 && strpos($path, 'images/') !== 0) {
+    if (strpos($path, '/') === false) {
+        $path = 'uploads/news/' . $path;
+    } elseif (strpos($path, 'uploads/') !== 0 && strpos($path, 'images/') !== 0) {
         $path = 'uploads/' . $path;
     }
     
@@ -48,7 +50,7 @@ $defaultNavCategories = ['Agra', 'Lucknow', 'Mathura', 'Noida', 'Uttar Pradesh',
 // 1. Fetch Featured Article for Hero (is_featured = 1 or latest published article)
 try {
     $featuredArticles = $pdo->query("SELECT a.*, 
-       m.name as category_name, m.slug as category_slug FROM articles a LEFT JOIN menus m ON m.id = a.category_id WHERE a.status = 'published' AND a.is_trending = 0 AND (a.video_url IS NULL OR a.video_url = '') AND (a.video_file IS NULL OR a.video_file = '') ORDER BY a.is_featured DESC, a.published_at DESC LIMIT 5")->fetchAll(PDO::FETCH_ASSOC);
+       m.name as category_name, m.slug as category_slug FROM articles a LEFT JOIN menus m ON m.id = a.category_id WHERE a.status = 'published' AND (a.video_url IS NULL OR a.video_url = '') AND (a.video_file IS NULL OR a.video_file = '') ORDER BY a.is_featured DESC, a.published_at DESC, a.id DESC LIMIT 5")->fetchAll(PDO::FETCH_ASSOC);
 } catch (Exception $e) { $featuredArticles = []; echo '<div class="alert alert-danger">FEATURED ERROR: ' . htmlspecialchars($e->getMessage()) . '</div>'; }
 
 if (empty($featuredArticles)) { $featuredArticles = [[ "title" => "Gunvani News CMS Activated", "summary" => "Welcome to Gunvani News. Publish news articles from admin panel to populate homepage.", "category_name" => "NEWS", "image" => "icon.png", "published_at" => date("Y-m-d H:i:s"), "slug" => "welcome-to-gunvani-news" ]]; }
@@ -65,7 +67,7 @@ try {
 // 3. Fetch 4 Supporting Articles for Hero Middle Column
 try {
     $featIds = array_column($featuredArticles ?? [], 'id'); $excludeSql = !empty($featIds) ? "AND a.id NOT IN (" . implode(',', $featIds) . ")" : ""; $supportingArticles = $pdo->query("SELECT a.*, 
-       m.name as category_name, m.slug as category_slug FROM articles a LEFT JOIN menus m ON m.id = a.category_id WHERE a.status = 'published' AND a.is_trending = 0 AND (a.video_url IS NULL OR a.video_url = '') AND (a.video_file IS NULL OR a.video_file = '') $excludeSql ORDER BY a.id DESC LIMIT 4")->fetchAll(PDO::FETCH_ASSOC);
+       m.name as category_name, m.slug as category_slug FROM articles a LEFT JOIN menus m ON m.id = a.category_id WHERE a.status = 'published' AND (a.video_url IS NULL OR a.video_url = '') AND (a.video_file IS NULL OR a.video_file = '') $excludeSql ORDER BY a.id DESC LIMIT 4")->fetchAll(PDO::FETCH_ASSOC);
 } catch (Exception $e) { $supportingArticles = []; echo '<div class="alert alert-danger">SUPPORTING ERROR: ' . htmlspecialchars($e->getMessage()) . '</div>'; }
 
 // 4. Fetch 5 Most Read Articles
@@ -224,8 +226,8 @@ try {
                                                 <span><i class="fa-regular fa-clock me-1"></i><?= formatDate($fa['published_at']) ?></span>
                                             </div>
                                             <div class="d-flex gap-1">
-                                                <button class="gn-ticker-nav-btn" data-bs-target="#heroCarousel" data-bs-slide="prev"><i class="fa-solid fa-chevron-left"></i></button>
-                                                <button class="gn-ticker-nav-btn" data-bs-target="#heroCarousel" data-bs-slide="next"><i class="fa-solid fa-chevron-right"></i></button>
+                                                <button type="button" class="gn-ticker-nav-btn" data-bs-target="#heroCarousel" data-bs-slide="prev"><i class="fa-solid fa-chevron-left"></i></button>
+                                                <button type="button" class="gn-ticker-nav-btn" data-bs-target="#heroCarousel" data-bs-slide="next"><i class="fa-solid fa-chevron-right"></i></button>
                                             </div>
                                         </div>
                                     </div>
@@ -479,6 +481,8 @@ try {
     <?php include __DIR__ . '/footer.php'; ?>
     </body>
 </html>
+
+
 
 
 
