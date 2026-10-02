@@ -55,19 +55,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
 
             if (empty($error)) {
-                $upStmt = $pdo->prepare("UPDATE members SET 
-                    member_id = ?, name = ?, dob = ?, doi = ?, doe = ?, mobile = ?, 
-                    address = ?, location = ?, blood_group = ?, designation = ?, 
-                    photo = ?, status = ?, rejection_reason = ?, rni_no = ? WHERE id = ?");
-                
-                $upStmt->execute([
-                    $member_id, $name, $dob ?: null, $doi ?: null, $doe ?: null, 
-                    $mobile, $address, $location, $blood, $designation, 
-                    $photoFilename, $status, $status === 'rejected' ? $rejection_reason : null, $rni_no, $id
-                ]);
+                // Auto-migrate rni_no column safely before update
+                try {
+                    $chkCol = $pdo->query("SHOW COLUMNS FROM members LIKE 'rni_no'");
+                    if ($chkCol && $chkCol->rowCount() == 0) {
+                        $pdo->exec("ALTER TABLE members ADD COLUMN rni_no VARCHAR(100) DEFAULT NULL AFTER blood_group");
+                    }
+                } catch (Throwable $t) {}
 
-                header("Location: members.php?success=status_updated");
-                exit();
+                try {
+                    $pdo->beginTransaction();
+                    
+                    if ($photoFilename) {
+                        $upStmt = $pdo->prepare("UPDATE members SET member_id = ?, name = ?, dob = ?, doi = ?, doe = ?, mobile = ?, address = ?, location = ?, blood_group = ?, designation = ?, photo = ?, status = ?, rejection_reason = ?, rni_no = ? WHERE id = ?");
+                        $upStmt->execute([
+                            $member_id, $name, $dob ?: null, $doi ?: null, $doe ?: null, $mobile, $address, $location, $blood, $designation, $photoFilename, $status, $status === 'rejected' ? $rejection_reason : null, $rni_no, $id
+                        ]);
+                    } else {
+                        $upStmt = $pdo->prepare("UPDATE members SET member_id = ?, name = ?, dob = ?, doi = ?, doe = ?, mobile = ?, address = ?, location = ?, blood_group = ?, designation = ?, status = ?, rejection_reason = ?, rni_no = ? WHERE id = ?");
+                        $upStmt->execute([
+                            $member_id, $name, $dob ?: null, $doi ?: null, $doe ?: null, $mobile, $address, $location, $blood, $designation, $status, $status === 'rejected' ? $rejection_reason : null, $rni_no, $id
+                        ]);
+                    }
+                    
+                    $pdo->commit();
+                    header("Location: members.php?success=status_updated");
+                    exit();
+                } catch (Throwable $e) {
+                    if ($pdo->inTransaction()) { $pdo->rollBack(); }
+                    if ($photoFilename && file_exists(__DIR__ . '/uploads/' . $photoFilename)) {
+                        unlink(__DIR__ . '/uploads/' . $photoFilename); // Cleanup orphaned file
+                    }
+                    error_log("edit_members.php UPDATE error: " . $e->getMessage());
+                    $error = "Failed to update member details. Please try again later.";
+                }
             }
         }
     }
@@ -192,4 +213,5 @@ require_once 'admin_header.php';
 </div>
 
 <?php require_once 'admin_footer.php'; ?>
+
 
