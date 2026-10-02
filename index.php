@@ -326,7 +326,7 @@ try {
                                               $bTitle = is_array($bItem) ? ($bItem['title'] ?? '') : $bItem;
                                               $bSlug = is_array($bItem) ? ($bItem['slug'] ?? '') : preg_replace('/[^a-z0-9]+/i', '-', strtolower(trim($bTitle)));
                                               ?>
-                                              <li><a href="/article/<?= escape($bSlug) ?>" class="line-clamp-3">â€¢ <?= escape($bTitle) ?></a></li>
+                                                <li><a href="/article/<?= escape($bSlug) ?>" class="line-clamp-3"><?= escape($bTitle) ?></a></li>
                                           <?php endforeach; ?>
                                       </ul>
                                     <div class="d-flex justify-content-between align-items-center mt-auto">
@@ -482,6 +482,7 @@ try {
     <?php include __DIR__ . '/footer.php'; ?>
     </body>
 </html>
+
 
 
 
