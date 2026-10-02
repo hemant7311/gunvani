@@ -13,9 +13,9 @@ $success = '';
 // Generate next suggested Member ID safely
 try {
     $lastIdQuery = $pdo->query("SELECT MAX(id) FROM members");
-    $lastId = (int)$lastIdQuery->fetchColumn();
+    $lastId = $lastIdQuery ? (int)$lastIdQuery->fetchColumn() : 0;
     $suggestedMemberId = 'GN-' . str_pad($lastId + 1001, 4, '0', STR_PAD_LEFT);
-} catch (Exception $e) {
+} catch (Throwable $e) {
     error_log("add_members.php error: " . $e->getMessage());
     $error = "Database connection error. Please contact administrator.";
     $suggestedMemberId = '';
@@ -45,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && empty($error)) {
             if ($chk->fetch()) {
                 $error = "Member ID '$member_id' already exists. Please choose a different one.";
             }
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             error_log("add_members.php duplicate check error: " . $e->getMessage());
             $error = "Database query failed.";
         }
@@ -86,7 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && empty($error)) {
                 
                 header("Location: members.php?success=added");
                 exit();
-            } catch (Exception $e) {
+            } catch (Throwable $e) {
                 error_log("add_members.php INSERT error: " . $e->getMessage());
                 $error = "Failed to save member. Please try again later.";
             }
@@ -214,3 +214,4 @@ require_once 'admin_header.php';
 </div>
 
 <?php require_once 'admin_footer.php'; ?>
+
