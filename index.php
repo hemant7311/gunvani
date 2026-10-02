@@ -40,35 +40,44 @@ $adHome300 = $adSettings['ad_home_300x250'] ?? '';
 // Fetch categories from database
 try {
     $categories = $pdo->query("SELECT id, name FROM menus WHERE status = 'active' ORDER BY display_order ASC, name ASC")->fetchAll(PDO::FETCH_ASSOC);
-} catch (Exception $e) {
-    $categories = [];
-}
+} catch (Exception $e) { error_log("index.php error (categories): " . $e->getMessage()); $categories = []; }
 
 // Default fallback categories matching screenshot if DB has few
 $defaultNavCategories = ['Agra', 'Lucknow', 'Mathura', 'Noida', 'Uttar Pradesh', 'India'];
 
 // 1. Fetch Featured Article for Hero (is_featured = 1 or latest published article)
 try {
-    $featuredArticles = $pdo->query("SELECT a.*, 
-       m.name as category_name, m.slug as category_slug FROM articles a LEFT JOIN menus m ON m.id = a.category_id WHERE a.status = 'published' AND (a.video_url IS NULL OR a.video_url = '') AND (a.video_file IS NULL OR a.video_file = '') ORDER BY a.is_featured DESC, a.published_at DESC, a.id DESC LIMIT 5")->fetchAll(PDO::FETCH_ASSOC);
-} catch (Exception $e) { $featuredArticles = []; echo '<div class="alert alert-danger">FEATURED ERROR: ' . htmlspecialchars($e->getMessage()) . '</div>'; }
+    $featuredArticles = $pdo->query("SELECT a.*, m.name as category_name, m.slug as category_slug FROM articles a LEFT JOIN menus m ON m.id = a.category_id WHERE a.status = 'published' AND (a.video_url IS NULL OR a.video_url = '') AND (a.video_file IS NULL OR a.video_file = '') ORDER BY a.is_featured DESC, a.published_at DESC, a.id DESC LIMIT 5")->fetchAll(PDO::FETCH_ASSOC);
+} catch (Throwable $e) {
+    error_log("index.php featuredArticles error: " . $e->getMessage());
+    $featuredArticles = [];
+}
 
-if (empty($featuredArticles)) { $featuredArticles = [[ "title" => "Gunvani News CMS Activated", "summary" => "Welcome to Gunvani News. Publish news articles from admin panel to populate homepage.", "category_name" => "NEWS", "image" => "icon.png", "published_at" => date("Y-m-d H:i:s"), "slug" => "welcome-to-gunvani-news" ]]; }
+if (empty($featuredArticles)) {
+    $featuredArticles = [[ "id" => 0, "title" => "Gunvani News CMS Activated", "summary" => "Welcome to Gunvani News. Publish news articles from admin panel to populate homepage.", "category_name" => "NEWS", "image" => "icon.png", "published_at" => date("Y-m-d H:i:s"), "slug" => "welcome-to-gunvani-news", "is_dummy" => true ]];
+}
 
 // 2. Fetch Breaking News items
 try {
     $breakingNews = $pdo->query(
         "SELECT title, slug FROM articles WHERE status = 'published' ORDER BY is_breaking DESC, published_at DESC LIMIT 5"
     )->fetchAll(PDO::FETCH_ASSOC);
-} catch (Exception $e) {
-    $breakingNews = [];
-}
+} catch (Exception $e) { error_log("index.php error (breakingNews): " . $e->getMessage()); $breakingNews = []; }
 
 // 3. Fetch 4 Supporting Articles for Hero Middle Column
 try {
-    $featIds = array_column($featuredArticles ?? [], 'id'); $excludeSql = !empty($featIds) ? "AND a.id NOT IN (" . implode(',', $featIds) . ")" : ""; $supportingArticles = $pdo->query("SELECT a.*, 
-       m.name as category_name, m.slug as category_slug FROM articles a LEFT JOIN menus m ON m.id = a.category_id WHERE a.status = 'published' AND (a.video_url IS NULL OR a.video_url = '') AND (a.video_file IS NULL OR a.video_file = '') $excludeSql ORDER BY a.id DESC LIMIT 4")->fetchAll(PDO::FETCH_ASSOC);
-} catch (Exception $e) { $supportingArticles = []; echo '<div class="alert alert-danger">SUPPORTING ERROR: ' . htmlspecialchars($e->getMessage()) . '</div>'; }
+    $featIds = array_filter(array_column($featuredArticles ?? [], 'id'));
+    $excludeSql = !empty($featIds) ? "AND a.id NOT IN (" . implode(',', $featIds) . ")" : "";
+    $supportingArticles = $pdo->query("SELECT a.*, m.name as category_name, m.slug as category_slug FROM articles a LEFT JOIN menus m ON m.id = a.category_id WHERE a.status = 'published' AND (a.video_url IS NULL OR a.video_url = '') AND (a.video_file IS NULL OR a.video_file = '') $excludeSql ORDER BY a.is_featured DESC, a.published_at DESC, a.id DESC LIMIT 4")->fetchAll(PDO::FETCH_ASSOC);
+    
+    // FALLBACK: If supporting is empty but we have multiple featured articles, reuse some for the supporting grid to avoid breaking layout
+    if (empty($supportingArticles) && count($featuredArticles) > 1 && empty($featuredArticles[0]['is_dummy'])) {
+        $supportingArticles = array_slice($featuredArticles, 1, 4);
+    }
+} catch (Throwable $e) {
+    error_log("index.php supportingArticles error: " . $e->getMessage());
+    $supportingArticles = [];
+}
 
 // 4. Fetch 5 Most Read Articles
 try {
@@ -78,9 +87,7 @@ try {
          ORDER BY a.views_count DESC, a.published_at DESC
          LIMIT 5"
     )->fetchAll(PDO::FETCH_ASSOC);
-} catch (Exception $e) {
-    $mostReadArticles = [];
-}
+} catch (Exception $e) { error_log("index.php error (mostReadArticles): " . $e->getMessage()); $mostReadArticles = []; }
 
 // 5. Fetch Trending Stories (Max 8)
 try {
@@ -90,9 +97,7 @@ try {
          ORDER BY a.id DESC
          LIMIT 8"
     )->fetchAll(PDO::FETCH_ASSOC);
-} catch (Exception $e) {
-    $trendingStories = [];
-}
+} catch (Exception $e) { error_log("index.php error (trendingStories): " . $e->getMessage()); $trendingStories = []; }
 
 // 6. Fetch Latest Headlines for Sidebar
 try {
@@ -102,9 +107,7 @@ try {
          ORDER BY a.id DESC
          LIMIT 5"
     )->fetchAll(PDO::FETCH_ASSOC);
-} catch (Exception $e) {
-    $latestHeadlines = [];
-}
+} catch (Exception $e) { error_log("index.php error (latestHeadlines): " . $e->getMessage()); $latestHeadlines = []; }
 
 // 7. Dynamic City News per major city (using active submenus)
   $cityNews = [];
@@ -134,7 +137,7 @@ try {
               ];
           }
       }
-  } catch (Exception $e) {}
+  } catch (Exception $e) { error_log("index.php error: " . $e->getMessage()); }
 
 // 8. Dynamic Video News Dataset
 try {
@@ -151,9 +154,7 @@ try {
     )->fetchAll(PDO::FETCH_ASSOC);
 
     
-} catch (Exception $e) {
-    $videoNews = [];
-}
+} catch (Exception $e) { error_log("index.php error (videoNews): " . $e->getMessage()); $videoNews = []; }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -481,6 +482,7 @@ try {
     <?php include __DIR__ . '/footer.php'; ?>
     </body>
 </html>
+
 
 
 
