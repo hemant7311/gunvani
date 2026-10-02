@@ -923,9 +923,9 @@ $defaultNavCategories = ['Agra', 'Lucknow', 'Mathura', 'Noida', 'Uttar Pradesh',
 
                     <div class="article-body-text">
                         <?php if (!empty($article['content'])): ?>
-                            <?= nl2br($article['content']) ?>
+                            <?= nl2br(trim(str_replace(["\xC3\xA2\xE2\x82\xAC\xC2\xA2".' ', "\xC3\xA2\xE2\x82\xAC\xC2\xA2"], '', $article['content']))) ?>
                         <?php else: ?>
-                            <p class="lead font-weight-semibold"><?= escape($article['summary']) ?></p>
+                            <p class="lead font-weight-semibold"><?= escape(trim(str_replace(["\xC3\xA2\xE2\x82\xAC\xC2\xA2".' ', "\xC3\xA2\xE2\x82\xAC\xC2\xA2"], '', $article['summary']))) ?></p>
                         <?php endif; ?>
                     </div>
 
