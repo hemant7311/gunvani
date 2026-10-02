@@ -7,7 +7,17 @@ function escape($value) {
 }
 function articleImage($image) {
     if (!$image) return '/icon.png';
-    return (strpos($image, 'http') === 0) ? $image : '/uploads/' . ltrim($image, '/');
+    if (strpos($image, 'http') === 0) return $image;
+    
+    $path = ltrim($image, '/');
+    if (strpos($path, 'uploads/') !== 0) {
+        $path = 'uploads/' . $path;
+    }
+    
+    if (is_file(__DIR__ . '/' . $path)) {
+        return '/' . $path;
+    }
+    return '/icon.png';
 }
 function formatDate($dateStr) {
     if (!$dateStr) return '';
@@ -136,6 +146,5 @@ $pageTitle = htmlspecialchars($menu['name']) . ' News - Gunvani';
 
     <?php include __DIR__ . '/footer.php'; ?>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="/js/main.js"></script>
-</body>
+    </body>
 </html>

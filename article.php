@@ -11,13 +11,18 @@ function escape($value) {
 }
 
 function articleImage($image) {
-    if (!$image) {
-        return 'icon.png';
+    if (!$image) return '/icon.png';
+    if (strpos($image, 'http') === 0) return $image;
+    
+    $path = ltrim($image, '/');
+    if (strpos($path, 'uploads/') !== 0 && strpos($path, 'images/') !== 0) {
+        $path = 'uploads/' . $path;
     }
-    if (preg_match('#^(uploads/|images/)#', $image)) {
-        return $image;
+    
+    if (is_file(__DIR__ . '/' . $path)) {
+        return '/' . $path;
     }
-    return 'uploads/news/' . $image;
+    return '/icon.png';
 }
 
 function formatDate($date) {
