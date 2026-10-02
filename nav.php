@@ -19,7 +19,7 @@ if (!function_exists('escape')) {
             <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
                 <div class="d-flex align-items-center gap-2">
                     <i class="fa-regular fa-calendar-days"></i>
-                    <span id="top-date-display" class="fw-semibold">Monday, September 14, 2026</span>
+                    <span id="top-date-display" class="fw-semibold"><?= date('d-m-Y') ?></span>
                 </div>
 
                 <div class="d-flex align-items-center flex-wrap gap-2 gap-sm-3 ms-auto ms-sm-0">
