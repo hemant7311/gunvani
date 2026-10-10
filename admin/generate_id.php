@@ -231,10 +231,17 @@ try {
     fixedText($pdf, $leftX, 61.6, $cellWidth, $m_doi, 'L', 7.8);
     fixedText($pdf, $leftX, 66.0, $cellWidth, $m_doe, 'L', 7.8);
 
-    // RNI Number (Rendered near top right, below the existing label)
+    // RNI Number (Rendered near top right, perfectly aligned on one line)
     if (!empty($m_rni_no)) {
-        // Label is around X=35, Y=1. Let's put value at Y=3.5. Available width ~14mm
-        fixedText($pdf, 35.0, 3.5, 14.0, $m_rni_no, 'C', 5, 'B'); // smaller font, bold, centered
+        // Erase baked-in "RNI NO." label (X=35 to X=42, Y=0.5 to Y=3)
+        // Card top-right background color is approx R:244 G:242 B:243
+        $pdf->SetFillColor(244, 242, 243);
+        $pdf->Rect(34.0, 0.5, 16.0, 3.5, 'F');
+        
+        // Print combined label + value, right-aligned to edge of card
+        $pdf->SetTextColor(0, 0, 0); // Black text
+        // X = 20, Y = 1.0, W = 29.5 (leaves 1.3mm padding on right edge)
+        fixedText($pdf, 20.0, 1.0, 29.5, 'RNI NO.: ' . $m_rni_no, 'R', 5, 'B');
     }
 
     // QR Image (Fits perfectly into the red QR box on the bottom right)
