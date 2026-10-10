@@ -258,9 +258,10 @@ try {
     $backCellWidth = 40;
     $lineHeight = 2.5;
 
-    $pdf->SetXY($backLeftX, 18);
-    $pdf->SetFont('Arial', '', 4.5);
-    $pdf->MultiCell($backCellWidth, $lineHeight, $m_address, 0, 'L');
+    // Address printing removed as requested
+    // $pdf->SetXY($backLeftX, 18);
+    // $pdf->SetFont('Arial', '', 4.5);
+    // $pdf->MultiCell($backCellWidth, $lineHeight, $m_address, 0, 'L');
 
     /* -------------------------------------------------------
        OUTPUT
