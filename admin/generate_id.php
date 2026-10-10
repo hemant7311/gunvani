@@ -218,6 +218,14 @@ try {
     fixedText($pdf, $leftX, 40.1, $cellWidth, $m_designation, 'L', 7.8);
     fixedText($pdf, $leftX, 44.3, $cellWidth, $m_mobile, 'L', 7.8);
     fixedText($pdf, $leftX, 48.5, $cellWidth, $m_dob, 'L', 7.8);
+
+    // Dynamic patch: Change "Location:" label to "Working Area:"
+    $pdf->SetFillColor(246, 246, 246);
+    $pdf->Rect(2, 50.3, 19.3, 3.5, 'F');
+    $pdf->SetTextColor(167, 31, 41);
+    fixedText($pdf, 2.5, 52.9, 18.5, 'Working Area :', 'L', 7.5, 'B');
+    $pdf->SetTextColor(0, 0, 0);
+
     fixedText($pdf, $leftX, 52.9, $cellWidth, $m_location, 'L', 7.8);
     fixedText($pdf, $leftX, 57.2, $cellWidth, $m_blood_group, 'L', 7.8);
     fixedText($pdf, $leftX, 61.6, $cellWidth, $m_doi, 'L', 7.8);
@@ -279,3 +287,4 @@ try {
     }
 }
 exit;
+

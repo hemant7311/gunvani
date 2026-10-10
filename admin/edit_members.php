@@ -162,7 +162,7 @@ require_once 'admin_header.php';
 
                     <div class="row g-3 mb-3">
                         <div class="col-md-6">
-                            <label class="form-label font-weight-bold">City / Location</label>
+                            <label class="form-label font-weight-bold">Working Area</label>
                             <input type="text" name="location" class="form-control form-control-admin" value="<?= htmlspecialchars($member['location'] ?? '') ?>">
                         </div>
                         <div class="col-md-6">
@@ -213,5 +213,6 @@ require_once 'admin_header.php';
 </div>
 
 <?php require_once 'admin_footer.php'; ?>
+
 
 
