@@ -207,8 +207,8 @@ try {
         }
     }
 
-    $leftX = 25.5; // Shifted right to fit Working Area label
-    $cellWidth = 23.5; // Available space before the right edge
+    $leftX = 28.5; // Shifted further right to fit larger Working Area label
+    $cellWidth = 20.5; // Available space before the right edge
 
     // Adjusted Y-coordinates to align perfectly with the red labels on the new PDF template
     // Measured exactly from the template image pixels:
@@ -225,7 +225,7 @@ try {
     $pdf->Rect(2.0, 50.8, 19.0, 6.0, 'F');
     $pdf->SetTextColor(167, 31, 41);
     // Left-align the label to match X=5.9 of other labels, using size 8.0 to match visual thickness
-    fixedText($pdf, 5.9, 52.9, 19.3, 'Working Area:', 'L', 8.0, 'B');
+    fixedText($pdf, 5.9, 52.9, 22.5, 'Working Area:', 'L', 9.0, 'B');
     $pdf->SetTextColor(0, 0, 0);
 
     fixedText($pdf, $leftX, 52.9, $cellWidth, $m_location, 'L', 7.8);
