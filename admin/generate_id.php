@@ -221,9 +221,11 @@ try {
 
     // Dynamic patch: Change "Location:" label to "Working Area:"
     $pdf->SetFillColor(246, 246, 246);
-    $pdf->Rect(2, 50.3, 19.3, 3.5, 'F');
+    // Perfectly cover the old "Location:" text without touching "Blood G.:"
+    $pdf->Rect(2.0, 50.8, 19.0, 6.0, 'F');
     $pdf->SetTextColor(167, 31, 41);
-    fixedText($pdf, 2.5, 52.9, 18.5, 'Working Area :', 'L', 7.5, 'B');
+    // Right-align the label so it matches the other labels exactly
+    fixedText($pdf, 2.0, 52.9, 18.9, 'Working Area :', 'R', 7.0, 'B');
     $pdf->SetTextColor(0, 0, 0);
 
     fixedText($pdf, $leftX, 52.9, $cellWidth, $m_location, 'L', 7.8);
