@@ -114,10 +114,9 @@ class PDF extends FPDF {
 function fixedText($pdf, $x, $y, $w, $text, $align='L', $size=7, $bold='') {
     $text = (string)$text;
     $pdf->SetFont('Arial', $bold, $size);
-    // Dynamically reduce font size if text is too wide
-    while ($pdf->GetStringWidth($text) > $w && $size > 4) {
-        $size -= 0.5;
-        $pdf->SetFont('Arial', $bold, $size);
+    // DO NOT auto-shrink font size. Truncate text if it exceeds width.
+    while ($pdf->GetStringWidth($text) > $w && mb_strlen($text) > 0) {
+        $text = mb_substr($text, 0, -1);
     }
     $pdf->SetXY($x, $y);
     $pdf->Cell($w, 4, $text, 0, 0, $align);
@@ -207,8 +206,8 @@ try {
         }
     }
 
-    $leftX = 21.5; // Reduced by 1.5mm from 23mm
-    $cellWidth = 27.5; // Available space before the right edge
+    $leftX = 19.5; // Moved left to give more width for values, safe from labels
+    $cellWidth = 29.5; // Increased available space before the right edge
 
     // Adjusted Y-coordinates to align perfectly with the red labels on the new PDF template
     // Measured exactly from the template image pixels:
