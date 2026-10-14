@@ -142,7 +142,7 @@ try {
         $photoPath = __DIR__ . "/uploads/" . basename($m_photo);
         if (is_file($photoPath) && is_readable($photoPath)) {
             // Target box coordinates and dimensions (matched perfectly to the template's red frame)
-            $boxX = 18.6; $boxY = 13.8; $boxW = 13.5; $boxH = 15.4;
+            $boxX = 18.6; $boxY = 14.46; $boxW = 13.5; $boxH = 14.08;
             
             // Generate a temporary cropped image using GD
             $croppedTemp = __DIR__ . '/uploads/temp_crop_' . $id . '_' . uniqid() . '.jpg';
@@ -254,13 +254,32 @@ try {
     }
 
     $backLeftX = 5.5;
-    $backCellWidth = 40;
-    $lineHeight = 2.5;
+    $backCellWidth = 39.8;
 
-    // Address printing removed as requested
-    // $pdf->SetXY($backLeftX, 18);
-    // $pdf->SetFont('Arial', '', 4.5);
-    // $pdf->MultiCell($backCellWidth, $lineHeight, $m_address, 0, 'L');
+    // Print Address on back card if available
+    if (!empty(trim($m_address))) {
+        // Red label "Address:" matching template style
+        $pdf->SetTextColor(167, 31, 41);
+        $pdf->SetFont('Arial', 'B', 5.5);
+        $pdf->SetXY($backLeftX, 13.5);
+        $pdf->Cell($backCellWidth, 3.0, 'Address:', 0, 1, 'L');
+
+        // Address value in regular black font, multi-line wrapping
+        $pdf->SetTextColor(0, 0, 0);
+        $fontSize = 4.5;
+        $lineHeight = 2.2;
+        $pdf->SetFont('Arial', '', $fontSize);
+
+        // Adjust font size slightly if address is long to prevent overlapping instructions at Y=23.6
+        if ($pdf->GetStringWidth($m_address) > ($backCellWidth * 2.5)) {
+            $fontSize = 4.0;
+            $lineHeight = 2.0;
+            $pdf->SetFont('Arial', '', $fontSize);
+        }
+
+        $pdf->SetXY($backLeftX, 16.5);
+        $pdf->MultiCell($backCellWidth, $lineHeight, $m_address, 0, 'L');
+    }
 
     /* -------------------------------------------------------
        OUTPUT

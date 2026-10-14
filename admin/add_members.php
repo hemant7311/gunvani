@@ -164,7 +164,7 @@ require_once 'admin_header.php';
 
                     <div class="row g-3 mb-3">
                         <div class="col-md-6">
-                            <label class="form-label font-weight-bold">Working Area</label>
+                            <label class="form-label font-weight-bold">Work Area</label>
                             <input type="text" name="location" class="form-control form-control-admin" placeholder="e.g. Agra, UP" value="<?= htmlspecialchars($_POST['location'] ?? '') ?>">
                         </div>
                         <div class="col-md-6">
