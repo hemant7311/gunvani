@@ -212,7 +212,7 @@ try {
     // Adjusted Y-coordinates to align perfectly with the red labels on the new PDF template
     // Measured exactly from the template image pixels:
     // Increased font size from 7 to 7.8 (approx +1px)
-    fixedText($pdf, $leftX, 31.0, $cellWidth, $m_member_id, 'L', 7.8);
+    fixedText($pdf, $leftX, 30.15, $cellWidth, $m_member_id, 'L', 7.8);
     fixedText($pdf, $leftX, 35.5, $cellWidth, $m_name, 'L', 7.8);
     fixedText($pdf, $leftX, 40.1, $cellWidth, $m_designation, 'L', 7.8);
     fixedText($pdf, $leftX, 44.3, $cellWidth, $m_mobile, 'L', 7.8);
@@ -256,29 +256,33 @@ try {
     $backLeftX = 5.5;
     $backCellWidth = 39.8;
 
-    // Print Address on back card if available
+    // Print Address on back card on the same line, with aligned multi-line wrap
     if (!empty(trim($m_address))) {
-        // Red label "Address:" matching template style
-        $pdf->SetTextColor(167, 31, 41);
-        $pdf->SetFont('Arial', 'B', 5.5);
-        $pdf->SetXY($backLeftX, 13.5);
-        $pdf->Cell($backCellWidth, 3.0, 'Address:', 0, 1, 'L');
-
-        // Address value in regular black font, multi-line wrapping
-        $pdf->SetTextColor(0, 0, 0);
-        $fontSize = 4.5;
+        $backValX = 14.8;
+        $backValW = 30.5;
+        $backY = 14.0;
         $lineHeight = 2.2;
-        $pdf->SetFont('Arial', '', $fontSize);
+        $fontSize = 4.5;
 
-        // Adjust font size slightly if address is long to prevent overlapping instructions at Y=23.6
-        if ($pdf->GetStringWidth($m_address) > ($backCellWidth * 2.5)) {
+        // If address is very long, slightly reduce font size to prevent overlapping Hindi instructions
+        if ($pdf->GetStringWidth($m_address) > ($backValW * 2.5)) {
             $fontSize = 4.0;
             $lineHeight = 2.0;
-            $pdf->SetFont('Arial', '', $fontSize);
         }
 
-        $pdf->SetXY($backLeftX, 16.5);
-        $pdf->MultiCell($backCellWidth, $lineHeight, $m_address, 0, 'L');
+        // 1. Red label "Address:" on line 1
+        $pdf->SetXY($backLeftX, $backY);
+        $pdf->SetTextColor(167, 31, 41);
+        $pdf->SetFont('Arial', 'B', 5.0);
+        $pdf->Cell($backValX - $backLeftX, $lineHeight, 'Address:', 0, 0, 'L');
+
+        // 2. Address value starting on the same line, wrapping aligned to $backValX
+        $pdf->SetTextColor(0, 0, 0);
+        $pdf->SetFont('Arial', '', $fontSize);
+        $pdf->SetLeftMargin($backValX);
+        $pdf->SetXY($backValX, $backY);
+        $pdf->MultiCell($backValW, $lineHeight, $m_address, 0, 'L');
+        $pdf->SetLeftMargin(0);
     }
 
     /* -------------------------------------------------------
