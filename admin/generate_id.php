@@ -267,7 +267,7 @@ try {
 
     // RNI Number (Rendered near top right, perfectly aligned on one line)
     if (!empty($m_rni_no)) {
-        // Erase baked-in "RNI NO." label (X=35 to X=42, Y=0.5 to Y=3)
+        // Erase baked-in "RNI NO." label (X=34 to X=50, Y=0.5 to Y=4)
         // Card top-right background color is approx R:244 G:242 B:243
         $pdf->SetFillColor(244, 242, 243);
         $pdf->Rect(34.0, 0.5, 16.0, 3.5, 'F');
@@ -276,6 +276,10 @@ try {
         $pdf->SetTextColor(0, 0, 0); // Black text
         // X = 20, Y = 1.0, W = 29.5 (leaves 1.3mm padding on right edge)
         fixedText($pdf, 20.0, 1.0, 29.5, 'RNI NO.: ' . $m_rni_no, 'R', 5, 'B');
+    } else {
+        // If RNI is empty, do not print an unwanted empty label (cover baked-in label)
+        $pdf->SetFillColor(244, 242, 243);
+        $pdf->Rect(34.0, 0.5, 16.0, 3.5, 'F');
     }
 
     // QR Image (Fits perfectly into the red QR box on the bottom right)
@@ -295,27 +299,28 @@ try {
         error_log('[Gunvani generate_id Warning] Back template not found: ' . $backTemplate);
     }
 
-    $backLeftX = 5.5;
-    $backCellWidth = 39.8;
+    $backLeftX = 4.0; // Shifted further left into watermark area
+    $backCellWidth = 42.0;
 
     // Print Address on back card on the same line, with aligned multi-line wrap
     if (!empty(trim($m_address))) {
         $backValX = 14.8;
-        $backValW = 30.5;
+        $backValW = 32.0;
         $backY = 14.0;
-        $lineHeight = 2.2;
-        $fontSize = 4.5;
+        $fontSize = 6.0; // Increased by 3px equivalent
+        $lineHeight = 2.6;
 
-        // If address is very long, slightly reduce font size to prevent overlapping Hindi instructions
-        if ($pdf->GetStringWidth($m_address) > ($backValW * 2.5)) {
-            $fontSize = 4.0;
-            $lineHeight = 2.0;
+        $pdf->SetFont('Arial', '', $fontSize);
+        // If address is exceptionally long, slightly reduce font size to prevent overlapping Hindi instructions at Y=23.64
+        if ($pdf->GetStringWidth($m_address) > ($backValW * 2.3)) {
+            $fontSize = 5.0;
+            $lineHeight = 2.2;
         }
 
         // 1. Red label "Address:" on line 1
         $pdf->SetXY($backLeftX, $backY);
         $pdf->SetTextColor(167, 31, 41);
-        $pdf->SetFont('Arial', 'B', 5.0);
+        $pdf->SetFont('Arial', 'B', 6.0);
         $pdf->Cell($backValX - $backLeftX, $lineHeight, 'Address:', 0, 0, 'L');
 
         // 2. Address value starting on the same line, wrapping aligned to $backValX
@@ -332,13 +337,23 @@ try {
     --------------------------------------------------------- */
     ob_end_clean(); // Clean output buffer before sending PDF headers
 
+    // Format download filename using sanitized reporter name
+    $cleanName = trim($m_name);
+    // Replace whitespace with underscores
+    $cleanName = preg_replace('/\s+/', '_', $cleanName);
+    // Remove unsafe characters, slashes, quotes, control characters
+    $cleanName = preg_replace('/[^A-Za-z0-9_-]/', '', $cleanName);
+    $cleanName = trim($cleanName, '._-');
+
+    $pdfFilename = !empty($cleanName) ? $cleanName . '.pdf' : 'Member_ID_Card.pdf';
+
     header("Content-Type: application/pdf");
-    header("Content-Disposition: attachment; filename=\"VisitingCard_" . preg_replace('/[^A-Za-z0-9_-]/', '', $m_member_id) . ".pdf\"");
+    header("Content-Disposition: attachment; filename=\"" . $pdfFilename . "\"");
     header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
     header("Cache-Control: post-check=0, pre-check=0", false);
     header("Pragma: no-cache");
 
-    $pdf->Output('D');
+    $pdf->Output('D', $pdfFilename);
 
 } catch (Exception $e) {
     error_log('[Gunvani generate_id FPDF Error] ' . $e->getMessage());

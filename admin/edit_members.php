@@ -33,7 +33,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $designation = trim($_POST['designation'] ?? 'Press Reporter');
     $status = $_POST['status'] ?? 'approved';
     $rejection_reason = trim($_POST['rejection_reason'] ?? '');
-    $rni_no = trim($_POST['rni_no'] ?? '');
+    // Preserve existing RNI data if omitted, or update if provided
+    $rni_no = isset($_POST['rni_no']) ? trim($_POST['rni_no']) : ($member['rni_no'] ?? '');
 
     if (empty($name) || empty($mobile) || empty($member_id)) {
         $error = "Member ID, Name, and Mobile Number are required fields.";
@@ -124,11 +125,15 @@ require_once 'admin_header.php';
 
                 <form method="POST" enctype="multipart/form-data">
                     <div class="row g-3 mb-3">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <label class="form-label font-weight-bold">Member ID <span class="text-danger">*</span></label>
                             <input type="text" name="member_id" class="form-control form-control-admin fw-bold text-success" value="<?= htmlspecialchars($member['member_id']) ?>" required>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
+                            <label class="form-label font-weight-bold">RNI Number</label>
+                            <input type="text" name="rni_no" class="form-control form-control-admin" placeholder="e.g. UPHIN/2023/12345" value="<?= htmlspecialchars($member['rni_no'] ?? '') ?>">
+                        </div>
+                        <div class="col-md-4">
                             <label class="form-label font-weight-bold">Full Name <span class="text-danger">*</span></label>
                             <input type="text" name="name" class="form-control form-control-admin" required value="<?= htmlspecialchars($member['name']) ?>">
                         </div>
