@@ -141,11 +141,11 @@ try {
     if (!empty($m_photo)) {
         $photoPath = __DIR__ . "/uploads/" . basename($m_photo);
         if (is_file($photoPath) && is_readable($photoPath)) {
-            // Target box coordinates and dimensions (matched perfectly to the template's red frame)
-            $boxX = 18.6; $boxY = 14.46; $boxW = 13.5; $boxH = 14.08;
+            // Target box coordinates: fills red frame cleanly with no top/bottom gaps
+            $boxX = 18.55; $boxY = 13.75; $boxW = 13.7; $boxH = 15.5;
             
-            // Generate a temporary cropped image using GD
-            $croppedTemp = __DIR__ . '/uploads/temp_crop_' . $id . '_' . uniqid() . '.jpg';
+            // Generate a temporary cropped PNG image with 5px rounded corners using GD
+            $croppedTemp = __DIR__ . '/uploads/temp_crop_' . $id . '_' . uniqid() . '.png';
             
             $imgInfo = @getimagesize($photoPath);
             if ($imgInfo && extension_loaded('gd')) {
@@ -172,24 +172,66 @@ try {
                         $cropW = (int)($origH * $targetRatio);
                         $cropX = (int)(($origW - $cropW) / 2);
                     } elseif ($origRatio < $targetRatio) {
-                        // Image is too tall, crop vertically
+                        // Image is too tall, crop vertically (preserve head/face by biasing towards the upper part)
                         $cropH = (int)($origW / $targetRatio);
-                        $cropY = (int)(($origH - $cropH) / 2);
+                        $topBias = ($origRatio < 0.85) ? 0.15 : 0.35;
+                        $cropY = (int)(($origH - $cropH) * $topBias);
                     }
                     
-                    // Create destination image matching exactly the target box ratio (scaled up for quality)
-                    $destW = 400; // high res width
+                    // Create destination image matching exactly the target box ratio (high res)
+                    $destW = 400;
                     $destH = (int)($destW / $targetRatio);
                     
                     $destImg = imagecreatetruecolor($destW, $destH);
                     imagecopyresampled($destImg, $srcImg, 0, 0, $cropX, $cropY, $destW, $destH, $cropW, $cropH);
                     
-                    imagejpeg($destImg, $croppedTemp, 90);
+                    // Apply 5px rounded corners with transparent background
+                    $roundedImg = imagecreatetruecolor($destW, $destH);
+                    imagealphablending($roundedImg, false);
+                    imagesavealpha($roundedImg, true);
+                    $transparent = imagecolorallocatealpha($roundedImg, 0, 0, 0, 127);
+                    imagefill($roundedImg, 0, 0, $transparent);
+                    imagecopy($roundedImg, $destImg, 0, 0, 0, 0, $destW, $destH);
+                    
+                    // 5px corner radius scaled to high-res image
+                    $radius = 14;
+                    $corners = [
+                        ['cx' => $radius, 'cy' => $radius, 'x1' => 0, 'x2' => $radius, 'y1' => 0, 'y2' => $radius],
+                        ['cx' => $destW - $radius - 1, 'cy' => $radius, 'x1' => $destW - $radius, 'x2' => $destW, 'y1' => 0, 'y2' => $radius],
+                        ['cx' => $radius, 'cy' => $destH - $radius - 1, 'x1' => 0, 'x2' => $radius, 'y1' => $destH - $radius, 'y2' => $destH],
+                        ['cx' => $destW - $radius - 1, 'cy' => $destH - $radius - 1, 'x1' => $destW - $radius, 'x2' => $destW, 'y1' => $destH - $radius, 'y2' => $destH]
+                    ];
+                    foreach ($corners as $c) {
+                        $cx = $c['cx'];
+                        $cy = $c['cy'];
+                        for ($x = $c['x1']; $x < $c['x2']; $x++) {
+                            for ($y = $c['y1']; $y < $c['y2']; $y++) {
+                                $dx = $x - $cx;
+                                $dy = $y - $cy;
+                                $dist = sqrt($dx * $dx + $dy * $dy);
+                                if ($dist > $radius) {
+                                    imagesetpixel($roundedImg, $x, $y, $transparent);
+                                } elseif ($dist > $radius - 1.0) {
+                                    $factor = $dist - ($radius - 1.0);
+                                    $rgb = imagecolorat($roundedImg, $x, $y);
+                                    $r = ($rgb >> 16) & 0xFF;
+                                    $g = ($rgb >> 8) & 0xFF;
+                                    $b = $rgb & 0xFF;
+                                    $origAlpha = ($rgb >> 24) & 0x7F;
+                                    $newAlpha = (int)($origAlpha + (127 - $origAlpha) * $factor);
+                                    imagesetpixel($roundedImg, $x, $y, imagecolorallocatealpha($roundedImg, $r, $g, $b, min(127, $newAlpha)));
+                                }
+                            }
+                        }
+                    }
+                    
+                    imagepng($roundedImg, $croppedTemp, 6);
                     
                     imagedestroy($srcImg);
                     imagedestroy($destImg);
+                    imagedestroy($roundedImg);
                     
-                    // Place the perfectly cropped image
+                    // Place the perfectly cropped rounded image
                     $pdf->Image($croppedTemp, $boxX, $boxY, $boxW, $boxH);
                     
                     // Delete temp file immediately
